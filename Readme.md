@@ -21,8 +21,8 @@ Nope, maybe in the future
 Must to have - I want to finish it to end of march
 - [ ] Server
 	- [x] Folder structure 
-    - [ ] First Tests
-	- [ ] Simple http server with host
+    - [x] First Tests
+	- [x] Simple http server with host
 	- [ ] Startup builder
 	- [ ] Middleware
 	- [ ] Routing
