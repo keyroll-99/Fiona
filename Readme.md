@@ -24,9 +24,9 @@ Must to have - I want to finish it to end of march
     - [x] First Tests
 	- [x] Simple http server with host
 	- [ ] Startup builder
-	- [ ] Middleware
 	- [ ] Routing
-	- [ ] Simple Controller 
+	- [ ] Simple Controller
+	- [ ] Middleware
 	- [ ] Parsing body to object
 	- [ ] Parsing parameters
 	- [ ] Response (status codes etc)

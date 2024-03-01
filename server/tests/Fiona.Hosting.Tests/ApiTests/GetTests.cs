@@ -1,26 +1,29 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using FionaServerTest.Utils;
-using FionaServerTest.Utils.Models;
+using Fiona.Hosting.Tests.Utils;
+using Fiona.Hosting.Tests.Utils.Models;
 using FluentAssertions;
 
-namespace FionaServerTest.ApiTests;
+namespace Fiona.Hosting.Tests.ApiTests;
 
-public class GetTests : IDisposable
+public class GetTests :  IClassFixture<FionaHostBuilder>
 {
-    private HttpClient _httpClient = new HttpClient()
+    private readonly HttpClient _httpClient = new HttpClient()
     {
         BaseAddress = new Uri("http://localhost:7000/"),
     };
     
     private FionaTestServerBuilder _fionaTestServerBuilder = new FionaTestServerBuilder();
 
-    public GetTests()
-    {
-        _fionaTestServerBuilder.RunServer();
-    }
     
+    [Fact]
+    public async Task When_Call_Server_Should_Got_Response()
+    {
+        var response = await _httpClient.GetAsync("");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
     
     [Fact]
     public async Task When_Call_Home_Page_By_Http_Get_Return_Home_String()
@@ -140,8 +143,4 @@ public class GetTests : IDisposable
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
-    public void Dispose()
-    {
-        _fionaTestServerBuilder.Dispose();
-    }
 }

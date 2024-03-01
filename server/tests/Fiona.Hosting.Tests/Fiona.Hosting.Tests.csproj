@@ -24,7 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\FionaServer\FionaServer\FionaServer.csproj" />
+      <ProjectReference Include="..\..\src\Fiona.Hosting\Fiona.Hosting.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="BuildTest\" />
     </ItemGroup>
 
 </Project>

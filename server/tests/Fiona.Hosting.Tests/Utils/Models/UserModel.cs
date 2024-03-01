@@ -1,4 +1,4 @@
-namespace FionaServerTest.Utils.Models;
+namespace Fiona.Hosting.Tests.Utils.Models;
 
 public class UserModel
 {

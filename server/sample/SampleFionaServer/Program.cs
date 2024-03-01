@@ -1,3 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿
+using Fiona.Hosting;
 
-Console.WriteLine("Hello, World!");
+var serviceBuilder = FionaHostBuilder.CreateHost();
+
+using var host = serviceBuilder.Build();
+Console.WriteLine();

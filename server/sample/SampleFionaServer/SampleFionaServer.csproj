@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\FionaServer\FionaServer\FionaServer.csproj" />
+      <ProjectReference Include="..\..\src\Fiona.Hosting\Fiona.Hosting.csproj" />
     </ItemGroup>
 
 </Project>

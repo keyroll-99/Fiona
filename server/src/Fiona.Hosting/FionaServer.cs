@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace FionaServer;
+namespace Fiona.Hosting;
 
 public class FionaServer : IDisposable
 {
@@ -10,7 +10,7 @@ public class FionaServer : IDisposable
     public FionaServer(string port)
     {
         _httpListener = new HttpListener();
-        _httpListener.Prefixes.Add($"http://localhost:{port}/");
+        _httpListener.Prefixes.Add($"https://localhost:{port}/");
     }
     
     public void Start()
