@@ -4,12 +4,14 @@
 TODO logo
 
 ---
-EasyApi is a web api framework written in .Net. As developer you will be able to create API in easily and quacky way.
+Fiona is a web api framework written in .Net. As developer you will be able to create API in easily and quacky way.
 The planned key feature is a GUI where developer will be able create API using blocks like blueprint in UE.
 
 At the begin I use HttpListener, but in the distant future I want to write own http hand shake.
 
 The project was initiated as part of the "100 commits" competition
+
+Repo will be rename after 100 commits competition, because I came up with the idea for the name after registering the repo.
 
 ## Is is ready on production
 Nope, maybe in the future
@@ -18,6 +20,7 @@ Nope, maybe in the future
 
 Must to have - I want to finish it to end of march
 - [ ] Server
+	- [x] Folder structure 
     - [ ] First Tests
 	- [ ] Simple http server with host
 	- [ ] Startup builder
@@ -57,7 +60,9 @@ Nice to have - 30 days
 	- [ ] Security
 
 Would to have
+- [ ] Debugger
 - [ ] Own http hand shake
+
 
 ## How to run it?
 To do
