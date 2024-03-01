@@ -18,7 +18,7 @@ Nope, maybe in the future
 
 Must to have - I want to finish it to end of march
 - [ ] Server
-    - [ ] Firsts Test
+    	- [ ] First Tests
 	- [ ] Simple http server with host
 	- [ ] Startup builder
 	- [ ] Middleware
