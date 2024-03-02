@@ -4,25 +4,24 @@ namespace Fiona.Hosting.Tests.Utils;
 
 public class FionaTestServerBuilder : IDisposable
 {
-    private IFionaHost _host;
-    private Task _hostTask;
-    
+    public IFionaHost Host { get; private set; } = null!;
+    public IFionaHostBuilder Builder { get; private set; } = null!;
 
-    public FionaTestServerBuilder(string port = "7000") 
+    public FionaTestServerBuilder() 
     {
-        RunServer(port);
+        RunServer("7000");
     }
 
     public void RunServer(string port)
     {
-        var builder = FionaHostBuilder.CreateHost();
-        builder.SetPort(port);
-        _host = builder.Build();
-        _hostTask = Task.Run(() => _host.Run());
+        Builder = FionaHostBuilder.CreateHostBuilder();
+        Builder.SetPort(port);
+        Host = Builder.Build();
+        Task.Run(Host.Run);
     }
 
     public void Dispose()
     {
-        _host.Dispose();
+        Host.Dispose();
     }
 }

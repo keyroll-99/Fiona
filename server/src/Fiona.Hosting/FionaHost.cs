@@ -1,13 +1,12 @@
 using System.Net;
 using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Models;
+using Fiona.Hosting.Routing;
 
 namespace Fiona.Hosting;
 
-internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig config) : IFionaHost
+internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig config, Router router) : IFionaHost
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
-    private readonly HostConfig _config = config;
     private readonly HttpListener _httpListener = new();
 
     public void Dispose()
@@ -19,13 +18,12 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
     {
         ThrowErrorIfServerAlreadyRunning();
         ConfigureListener();
-        
+        RunHost().GetAwaiter().GetResult();
     }
 
     private void ConfigureListener()
     {
-        _httpListener.Prefixes.Add($"{_config.Url}:{_config.Port}/");
-        RunHost().GetAwaiter().GetResult();
+        _httpListener.Prefixes.Add($"{config.Url}:{config.Port}/");
     }
 
     private Task RunHost()

@@ -20,10 +20,10 @@ Nope, maybe in the future
 
 Must to have - I want to finish it to end of march
 - [ ] Server
-	- [x] Folder structure 
-    - [x] First Tests
-	- [x] Simple http server with host
-	- [ ] Startup builder
+	- [X] Folder structure 
+    - [X] First Tests
+	- [X] Simple http server with host
+	- [X] Startup builder
 	- [ ] Routing
 	- [ ] Simple Controller
 	- [ ] Middleware
