@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 namespace Fiona.Hosting.Routing;
 
 [Flags]
@@ -8,4 +10,12 @@ public enum HttpMethodType
     Put = 1 << 2,
     Patch = 1 << 3,
     Delete = 1 << 4
+}
+
+internal static class ExtensionMethods
+{
+    public static IEnumerable<HttpMethodType> GetMethodTypes(this HttpMethodType httpMethodTypes)
+    {
+        return Enum.GetValues<HttpMethodType>().Where(value => httpMethodTypes.HasFlag(value));
+    }
 }

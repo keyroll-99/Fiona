@@ -14,7 +14,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
     private readonly HostConfig _config = new();
     private readonly object _lock = new();
     private readonly Assembly _startupAssembly;
-    private readonly IList<object> _controllers = new List<object>();
+    private readonly RouterBuilder _routerBuilder = new();
 
     private FionaHostBuilder(Assembly assembly)
     {
@@ -52,7 +52,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         {
             lock (_lock)
             {
-                _host ??= new FionaHost(Service.BuildServiceProvider(), _config, new Router());
+                _host ??= new FionaHost(Service.BuildServiceProvider(), _config, _routerBuilder.Build());
             }
         }
     }
@@ -62,6 +62,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         foreach (var controllerType in ControllerUtils.GetControllers(_startupAssembly))
         {
             Service.AddTransient(controllerType);
+            _routerBuilder.AddController(controllerType);
         }
     }
 
