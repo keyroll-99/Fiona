@@ -43,19 +43,21 @@ internal sealed class RouterBuilder
             }
 
             StringBuilder urlBuilder = new(50);
-            foreach (var method in controller.GetMethods().Where(m => m is { IsAbstract: false, IsPublic: true }))
+            foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
             {
                 urlBuilder.Append(baseRoute);
                 RouteAttribute? routeAttribute = (RouteAttribute?)method.GetCustomAttribute(typeof(RouteAttribute));
-                
+
                 if (routeAttribute?.Route is not null)
                 {
                     if (!routeAttribute.Route.StartsWith('/'))
                     {
                         urlBuilder.Append('/');
                     }
+
                     urlBuilder.Append(routeAttribute.Route);
                 }
+
                 HttpMethodType methodTypes = routeAttribute?.HttpMethodType ?? HttpMethodType.Get;
                 string url = urlBuilder.ToString();
                 if (routes.TryGetValue(url, out Dictionary<HttpMethodType, MethodInfo>? value))
@@ -67,7 +69,7 @@ internal sealed class RouterBuilder
                             throw new RouteConflictException(method.DeclaringType!.FullName!,
                                 conflictingMethod.DeclaringType!.FullName!);
                         }
-                    
+
                         value.Add(methodType, method);
                     }
                 }
@@ -79,11 +81,22 @@ internal sealed class RouterBuilder
                         routes[url].Add(methodType, method);
                     }
                 }
-                
+
                 urlBuilder.Clear();
             }
         }
 
+        var sortedKeys = routes.Keys.OrderBy(key => key.Length).ToList();
+        if (sortedKeys[0] == string.Empty)
+        {
+            foreach (var actions in routes[sortedKeys[0]])
+            {
+                head.Insert(actions.Key, actions.Value, sortedKeys[0]);
+                sortedKeys.RemoveAt(0);
+            }
+        }
+
+        
         return head;
     }
 }

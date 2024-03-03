@@ -11,9 +11,9 @@ public class AboutController
         return Task.FromResult("Home");
     }
     
-    [Route(HttpMethodType.Get | HttpMethodType.Post, "Dupa")]
-    public Task<string> DupaResult()
+    [Route(HttpMethodType.Get | HttpMethodType.Post, "another/route")]
+    public Task<string> AnotherRoute()
     {
-        return Task.FromResult("Home");
+        return Task.FromResult("another/route");
     }
 }
