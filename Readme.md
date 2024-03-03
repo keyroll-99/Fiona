@@ -1,4 +1,4 @@
-# Easy Api
+# Fiona
 
 ---
 TODO logo
@@ -13,7 +13,7 @@ The project was initiated as part of the "100 commits" competition
 
 Repo will be rename after 100 commits competition, because I came up with the idea for the name after registering the repo.
 
-## Is is ready on production
+## Is it ready on production
 Nope, maybe in the future
 
 ## Road map
