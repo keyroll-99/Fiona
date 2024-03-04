@@ -87,15 +87,14 @@ internal sealed class RouterBuilder
         }
 
         var sortedKeys = routes.Keys.OrderBy(key => key.Length).ToList();
-        if (sortedKeys[0] == string.Empty)
+
+        foreach (var key in sortedKeys)
         {
-            foreach (var actions in routes[sortedKeys[0]])
+            foreach (var (httpMethodType, method) in routes[key])
             {
-                head.Insert(actions.Key, actions.Value, sortedKeys[0]);
-                sortedKeys.RemoveAt(0);
+                head.Insert(httpMethodType, method, key);
             }
         }
-
         
         return head;
     }

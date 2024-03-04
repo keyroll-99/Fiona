@@ -1,8 +1,5 @@
 namespace Fiona.Hosting.Exceptions;
 
-public sealed class ServerAlreadyRunningException : Exception
+public sealed class ServerAlreadyRunningException() : Exception("Server is already running.")
 {
-    ServerAlreadyRunningException() : base("Server is already running.")
-    {
-    }
 }
