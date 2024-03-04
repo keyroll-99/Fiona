@@ -12,10 +12,23 @@ public enum HttpMethodType
     Delete = 1 << 4
 }
 
-internal static class ExtensionMethods
+internal static class HttpMethodTypeExtensionMethods
 {
     public static IEnumerable<HttpMethodType> GetMethodTypes(this HttpMethodType httpMethodTypes)
     {
         return Enum.GetValues<HttpMethodType>().Where(value => httpMethodTypes.HasFlag(value));
+    }
+
+    public static HttpMethodType? GetHttpMethodType(string method)
+    {
+        return method.ToUpper() switch
+        {
+            "GET" => HttpMethodType.Get,
+            "POST" => HttpMethodType.Post,
+            "PUT" => HttpMethodType.Put,
+            "PATCH" => HttpMethodType.Patch,
+            "DELETE" => HttpMethodType.Delete,
+            _ => null
+        };
     }
 }

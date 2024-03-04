@@ -19,6 +19,22 @@ internal sealed class RouteNode(string route)
 
         Insert(methodType, method, route, 0);
     }
+    
+    public RouteNode? FindNode(string route)
+    {
+        if (route == _route)
+        {
+            return this;
+        }
+
+        RouteNode? next = _children.FirstOrDefault(ch => route.StartsWith(ch._route));
+        return next?.FindNode(route);
+    }
+    
+    public MethodInfo? CallAction(HttpMethodType methodType)
+    {
+        return _actions.TryGetValue(methodType, out MethodInfo? method) ? method : null;
+    }
 
     private void Insert(HttpMethodType methodType, MethodInfo method, string route, int depth)
     {

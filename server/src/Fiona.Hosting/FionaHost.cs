@@ -32,6 +32,12 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
         while (_httpListener.IsListening)
         {
             var context = _httpListener.GetContext();
+            HttpListenerRequest request = context.Request;
+
+            var rr = router.CallEndpoint(request.Url,
+                HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get, serviceProvider);
+            
+            
             var response = context.Response;
             var responseString = "test";
             var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);

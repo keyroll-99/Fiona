@@ -17,6 +17,5 @@ public class InfrastructureTest(FionaTestServerBuilder testBuilder)
         // Assert
         provider.Any(x => x.ServiceType == typeof(HomeController)).Should().BeTrue();
         provider.Any(x => x.ServiceType == typeof(AboutController)).Should().BeTrue();
-
     }
 }
