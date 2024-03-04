@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text;
-using Fiona.Hosting.Controller;
 using Fiona.Hosting.Exceptions;
 
 namespace Fiona.Hosting.Routing;
@@ -23,69 +22,16 @@ internal sealed class RouterBuilder
     // Todo: refactor this method
     private RouteNode BuildRouteTree()
     {
+        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = GenerateRoutesDictionary();
+
+        var head = GenerateRouteTree(routes);
+
+        return head;
+    }
+
+    private static RouteNode GenerateRouteTree(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes)
+    {
         RouteNode head = new RouteNode(string.Empty);
-        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = new() { };
-        foreach (var controller in _controllers)
-        {
-            string baseRoute;
-            RouteAttribute? controllerRouteAttribute =
-                (RouteAttribute?)controller.GetCustomAttribute(typeof(RouteAttribute));
-            if (controllerRouteAttribute is not null)
-            {
-                baseRoute = controllerRouteAttribute.Route;
-            }
-            else
-            {
-                ControllerAttribute? controllerAttribute =
-                    (ControllerAttribute?)controller.GetCustomAttribute(typeof(ControllerAttribute));
-                MissingControllerAttributeException.ThrowIfNull(controllerAttribute);
-                baseRoute = controllerAttribute!.Route;
-            }
-
-            StringBuilder urlBuilder = new(50);
-            foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
-            {
-                urlBuilder.Append(baseRoute);
-                RouteAttribute? routeAttribute = (RouteAttribute?)method.GetCustomAttribute(typeof(RouteAttribute));
-
-                if (routeAttribute?.Route is not null)
-                {
-                    if (!routeAttribute.Route.StartsWith('/'))
-                    {
-                        urlBuilder.Append('/');
-                    }
-
-                    urlBuilder.Append(routeAttribute.Route);
-                }
-
-                HttpMethodType methodTypes = routeAttribute?.HttpMethodType ?? HttpMethodType.Get;
-                string url = urlBuilder.ToString();
-                if (routes.TryGetValue(url, out Dictionary<HttpMethodType, MethodInfo>? value))
-                {
-                    foreach (var methodType in methodTypes.GetMethodTypes())
-                    {
-                        if (value.TryGetValue(methodType, out var conflictingMethod))
-                        {
-                            throw new RouteConflictException(method.DeclaringType!.FullName!,
-                                conflictingMethod.DeclaringType!.FullName!);
-                        }
-
-                        value.Add(methodType, method);
-                    }
-                }
-                else
-                {
-                    routes.Add(url, new Dictionary<HttpMethodType, MethodInfo>());
-                    foreach (var methodType in methodTypes.GetMethodTypes())
-                    {
-                        routes[url].Add(methodType, method);
-                    }
-                }
-
-                urlBuilder.Clear();
-            }
-        }
-
         var sortedKeys = routes.Keys.OrderBy(key => key.Length).ToList();
 
         foreach (var key in sortedKeys)
@@ -95,7 +41,74 @@ internal sealed class RouterBuilder
                 head.Insert(httpMethodType, method, key);
             }
         }
-        
+
         return head;
     }
+
+    private Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> GenerateRoutesDictionary()
+    {
+        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = new() { };
+        foreach (var controller in _controllers)
+        {
+            var baseRoute = RoutingAttribute.GetBaseRoute(controller);
+            // maybe it's should be run in parallel way?
+            InsertRoutesForMethodsInController(controller, baseRoute, routes);
+        }
+
+        return routes;
+    }
+
+    private static void InsertRoutesForMethodsInController(Type controller, string baseRoute, Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes)
+    {
+        StringBuilder urlBuilder = new(50);
+        foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance |
+                                                     BindingFlags.DeclaredOnly))
+        {
+            var (route, methodTypes) = RoutingAttribute.GetMetadataFromRouteAttribute(method);
+            urlBuilder.Append(baseRoute);
+            urlBuilder.Append(route);
+            string url = urlBuilder.ToString();
+            InsertRoute(routes, url, methodTypes, method);
+            urlBuilder.Clear();
+        }
+    }
+
+    private static void InsertRoute(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes, string url, HttpMethodType methodTypes, MethodInfo method)
+    {
+        bool routeExists = routes.TryGetValue(url, out Dictionary<HttpMethodType, MethodInfo>? value);
+
+        if (routeExists)
+        {
+            UpdateRoute(methodTypes, method, value!);
+        }
+        else
+        {
+            AddNewRoute(routes, url, methodTypes, method);
+        }
+    }
+
+    private static void UpdateRoute(HttpMethodType methodTypes, MethodInfo method, Dictionary<HttpMethodType, MethodInfo> value)
+    {
+        foreach (var methodType in methodTypes.GetMethodTypes())
+        {
+            if (value.TryGetValue(methodType, out var conflictingMethod))
+            {
+                throw new RouteConflictException(method.DeclaringType!.FullName!,
+                    conflictingMethod.DeclaringType!.FullName!);
+            }
+
+            value.Add(methodType, method);
+        }
+    }
+    
+    private static void AddNewRoute(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes, string url, HttpMethodType methodTypes, MethodInfo method)
+    {
+        routes.Add(url, new Dictionary<HttpMethodType, MethodInfo>());
+        foreach (var methodType in methodTypes.GetMethodTypes())
+        {
+            routes[url].Add(methodType, method);
+        }
+    }
+
+
 }

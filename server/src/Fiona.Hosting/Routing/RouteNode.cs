@@ -4,8 +4,8 @@ namespace Fiona.Hosting.Routing;
 
 internal sealed class RouteNode(string route)
 {
-    private string _route = route;
-    private readonly IList<RouteNode> _children = new List<RouteNode>();
+    private readonly string _route = route;
+    private readonly List<RouteNode> _children = [];
     private readonly IDictionary<HttpMethodType, MethodInfo> _actions = new Dictionary<HttpMethodType, MethodInfo>();
 
 

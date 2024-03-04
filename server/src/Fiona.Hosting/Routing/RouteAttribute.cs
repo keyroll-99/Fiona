@@ -1,20 +1,12 @@
 namespace Fiona.Hosting.Routing;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-public sealed class RouteAttribute: Attribute
+public sealed class RouteAttribute(HttpMethodType httpMethodType, string route) : Attribute
 {
-    public HttpMethodType HttpMethodType { get; }
-    public string Route { get; }
+    public HttpMethodType HttpMethodType { get; } = httpMethodType;
+    public string Route { get; } = route;
 
-    public RouteAttribute(HttpMethodType httpMethodType, string route)
+    public RouteAttribute(HttpMethodType httpMethodType) : this(httpMethodType, string.Empty)
     {
-        HttpMethodType = httpMethodType;
-        Route = route;
-    }
-
-    public RouteAttribute(HttpMethodType httpMethodType)
-    {
-        HttpMethodType = httpMethodType;
-        Route = string.Empty;
     }
 }

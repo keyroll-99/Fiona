@@ -1,3 +1,5 @@
+using Fiona.Hosting.Routing;
+
 namespace Fiona.Hosting.Controller;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]

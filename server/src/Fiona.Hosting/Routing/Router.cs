@@ -4,11 +4,11 @@ namespace Fiona.Hosting.Routing;
 
 internal sealed class Router
 {
-    private RouteNode Head;
+    private RouteNode _head;
     
     internal Router(RouteNode head)
     {
-        Head = head;
+        _head = head;
     }
     
 }
