@@ -2,13 +2,14 @@ using System.Net;
 using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Models;
 using Fiona.Hosting.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiona.Hosting;
 
-internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig config, Router router) : IFionaHost
+internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig config) : IFionaHost
 {
     private readonly HttpListener _httpListener = new();
-
+    
     public void Dispose()
     {
         ((IDisposable)_httpListener).Dispose();
@@ -29,13 +30,15 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
     private Task RunHost()
     {
         _httpListener.Start();
+        var router = serviceProvider.GetRequiredService<Router>();
+        
         while (_httpListener.IsListening)
         {
             var context = _httpListener.GetContext();
             HttpListenerRequest request = context.Request;
 
             var rr = router.CallEndpoint(request.Url,
-                HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get, serviceProvider);
+                HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get);
             
             
             var response = context.Response;

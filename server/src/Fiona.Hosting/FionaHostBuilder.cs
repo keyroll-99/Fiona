@@ -48,12 +48,15 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
 
     private void CreateHost()
     {
-        if (_host is null)
+        if (_host is not null)
         {
-            lock (_lock)
-            {
-                _host ??= new FionaHost(Service.BuildServiceProvider(), _config, _routerBuilder.Build());
-            }
+            return;
+        }
+
+        lock (_lock)
+        {
+            Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
+            _host ??= new FionaHost(Service.BuildServiceProvider(), _config);
         }
     }
 
@@ -65,6 +68,4 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
             _routerBuilder.AddController(controllerType);
         }
     }
-
-
 }

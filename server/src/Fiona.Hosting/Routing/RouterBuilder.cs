@@ -14,9 +14,9 @@ internal sealed class RouterBuilder
         return this;
     }
 
-    public Router Build()
+    public Router Build(IServiceProvider provider)
     {
-        return new Router(BuildRouteTree());
+        return new Router(BuildRouteTree(), provider);
     }
 
     // Todo: refactor this method

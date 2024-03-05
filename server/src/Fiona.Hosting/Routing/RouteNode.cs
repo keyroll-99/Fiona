@@ -31,7 +31,7 @@ internal sealed class RouteNode(string route)
         return next?.FindNode(route);
     }
     
-    public MethodInfo? CallAction(HttpMethodType methodType)
+    public MethodInfo? GetAction(HttpMethodType methodType)
     {
         return _actions.TryGetValue(methodType, out MethodInfo? method) ? method : null;
     }

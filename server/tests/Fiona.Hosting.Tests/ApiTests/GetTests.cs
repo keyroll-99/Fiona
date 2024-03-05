@@ -11,7 +11,7 @@ namespace Fiona.Hosting.Tests.ApiTests;
 public class GetTests(FionaTestServerBuilder testBuilder)
 {
     private FionaTestServerBuilder _testServerBuilder = testBuilder;
-    
+
     private readonly HttpClient _httpClient = new HttpClient()
     {
         BaseAddress = new Uri("http://localhost:7000/"),
@@ -41,6 +41,32 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         var content = await response.Content.ReadAsStringAsync();
 
         content.Should().Be("About");
+    }
+
+    [Fact]
+    public async Task When_Call_About_Page_By_Http_Get_Return_About_Another_Route_String()
+    {
+        var response = await _httpClient.GetAsync("about/another/route");
+        var content = await response.Content.ReadAsStringAsync();
+
+        content.Should().Be("another/route");
+    }
+
+    [Fact]
+    public async Task When_Call_About_Page_By_Http_Post_Return_About_Another_Route_String()
+    {
+        var response = await _httpClient.GetAsync("about/another/route");
+        var content = await response.Content.ReadAsStringAsync();
+
+        content.Should().Be("another/route");
+    }
+
+    [Fact]
+    public async Task When_Call_About_Page_By_Http_Put_Return_404_Not_Found()
+    {
+        var response = await _httpClient.GetAsync("about/another/route");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
