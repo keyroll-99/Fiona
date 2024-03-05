@@ -1,5 +1,7 @@
 using System.Net;
+using System.Text.Json;
 using Fiona.Hosting.Abstractions;
+using Fiona.Hosting.Controller;
 using Fiona.Hosting.Models;
 using Fiona.Hosting.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +11,7 @@ namespace Fiona.Hosting;
 internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig config) : IFionaHost
 {
     private readonly HttpListener _httpListener = new();
-    
+
     public void Dispose()
     {
         ((IDisposable)_httpListener).Dispose();
@@ -27,31 +29,44 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
         _httpListener.Prefixes.Add($"{config.Url}:{config.Port}/");
     }
 
-    private Task RunHost()
+    private async Task RunHost()
     {
         _httpListener.Start();
         var router = serviceProvider.GetRequiredService<Router>();
-        
+
         while (_httpListener.IsListening)
         {
             var context = _httpListener.GetContext();
             HttpListenerRequest request = context.Request;
 
-            var rr = router.CallEndpoint(request.Url,
+            ObjectResult result = await router.CallEndpoint(request.Url,
                 HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get);
-            
-            
+
+            Type resultType = result.Result?.GetType();
+
+            string? responseString = string.Empty;
+            if (resultType is not null)
+            {
+                if (resultType.IsPrimitive || resultType == typeof(string))
+                {
+                    responseString = result.Result?.ToString();
+                }
+                else
+                {
+                    responseString = JsonSerializer.Serialize(result.Result);
+                }
+            }
+
             var response = context.Response;
-            var responseString = "test";
+
             var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             var output = response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
             output.Close();
         }
-        
+
         _httpListener.Close();
-        return Task.CompletedTask; // Tmp, I will be use async to hanlde requests
     }
 
     private void ThrowErrorIfServerAlreadyRunning()

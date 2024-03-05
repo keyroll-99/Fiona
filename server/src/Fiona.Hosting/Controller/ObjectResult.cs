@@ -2,8 +2,8 @@ using System.Net;
 
 namespace Fiona.Hosting.Controller;
 
-public sealed class ObjectResult<T>(T? result, HttpStatusCode statusCode) : IResult
+public sealed class ObjectResult(object result, HttpStatusCode statusCode) : IResult
 {
-    private T? Result { get; } = result;
+    public object Result { get; } = result;
     public HttpStatusCode StatusCode { get; } = statusCode;
 }

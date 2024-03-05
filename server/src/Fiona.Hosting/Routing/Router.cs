@@ -15,33 +15,40 @@ internal sealed class Router
         _provider = provider;
     }
 
-    public async Task<ObjectResult<object>> CallEndpoint(Uri uri, HttpMethodType methodType)
+    public async Task<ObjectResult> CallEndpoint(Uri uri, HttpMethodType methodType)
     {
         RouteNode? node = _head.FindNode(uri.AbsolutePath[1..]);
 
         if (node is null)
         {
-            return await Task.FromResult(new ObjectResult<object>(null, HttpStatusCode.NotFound));
+            return await Task.FromResult(new ObjectResult(null, HttpStatusCode.NotFound));
         }
 
         MethodInfo? methodInfo = node.GetAction(methodType);
         if (methodInfo is null)
         {
-            return await Task.FromResult(new ObjectResult<object>(null, HttpStatusCode.NotFound));
+            return await Task.FromResult(new ObjectResult(null, HttpStatusCode.NotFound));
         }
 
-        var controller = _provider.GetService(methodInfo.DeclaringType!);
-        var resultTask = (Task)methodInfo.Invoke(controller, [])!;
-
-        await resultTask.ConfigureAwait(false);
-
-        object result = (object)((dynamic)resultTask).Result;
+        object? controller = _provider.GetService(methodInfo.DeclaringType!);
+        Type returnType = methodInfo.ReturnType;
         
-        if (result is IResult)
+        if (typeof(Task).IsAssignableTo(returnType))
         {
-            return result as ObjectResult<object>;
+            await ((Task)methodInfo.Invoke(controller, [])!);
+            // TODO: Catch exceptions and return 500
+            return await Task.FromResult(new ObjectResult(null, HttpStatusCode.OK));
         }
 
-        return new ObjectResult<object>(result, HttpStatusCode.OK);
+        object? result = methodInfo.Invoke(controller, []);
+        if(result is not null && returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+        {
+            dynamic resultTask = result;
+            await resultTask;
+            
+            return await Task.FromResult(new ObjectResult(resultTask.Result, HttpStatusCode.OK));
+        }
+        
+        return await Task.FromResult(new ObjectResult(result, HttpStatusCode.OK));
     }
 }

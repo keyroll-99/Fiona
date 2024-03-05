@@ -19,7 +19,6 @@ internal sealed class RouterBuilder
         return new Router(BuildRouteTree(), provider);
     }
 
-    // Todo: refactor this method
     private RouteNode BuildRouteTree()
     {
         Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = GenerateRoutesDictionary();
@@ -51,7 +50,6 @@ internal sealed class RouterBuilder
         foreach (var controller in _controllers)
         {
             var baseRoute = RoutingAttribute.GetBaseRoute(controller);
-            // maybe it's should be run in parallel way?
             InsertRoutesForMethodsInController(controller, baseRoute, routes);
         }
 
