@@ -1,7 +1,7 @@
 # Fiona
 
 ---
-TODO logo
+![logo](assets/logo.jpg)
 
 ---
 Fiona is a web api framework written in .Net. As developer you will be able to create API in easily and quacky way.
@@ -26,8 +26,8 @@ Must to have - I want to finish it to end of march
 	- [X] Startup builder
 	- [X] Routing
 	- [X] Simple Controller
-	- [ ] Middleware
 	- [ ] Parsing body to object
+	- [ ] Middleware
 	- [ ] Parsing parameters
 	- [ ] Response (status codes etc)
 	- [ ] Async handle request
@@ -54,6 +54,7 @@ Nice to have - 30 days
 - [ ] Server
 	- [ ] Inject service to controller method
 	- [ ] Auto impl register
+	- [ ] Auto inject to method
 	- [ ] Add user login option
 	- [ ] Extension for EF
 	- [ ] HttpClient - user can easy use it

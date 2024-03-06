@@ -4,7 +4,7 @@ using Fiona.Hosting.Exceptions;
 
 namespace Fiona.Hosting.Routing;
 
-public static class RoutingAttribute
+internal static class RouteAttributeUtils
 {
     public static string GetBaseRoute(MemberInfo controller)
     {

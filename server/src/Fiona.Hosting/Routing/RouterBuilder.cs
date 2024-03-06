@@ -49,7 +49,7 @@ internal sealed class RouterBuilder
         Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = new() { };
         foreach (var controller in _controllers)
         {
-            var baseRoute = RoutingAttribute.GetBaseRoute(controller);
+            var baseRoute = RouteAttributeUtils.GetBaseRoute(controller);
             InsertRoutesForMethodsInController(controller, baseRoute, routes);
         }
 
@@ -62,7 +62,7 @@ internal sealed class RouterBuilder
         foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance |
                                                      BindingFlags.DeclaredOnly))
         {
-            var (route, methodTypes) = RoutingAttribute.GetMetadataFromRouteAttribute(method);
+            var (route, methodTypes) = RouteAttributeUtils.GetMetadataFromRouteAttribute(method);
             urlBuilder.Append(baseRoute);
             urlBuilder.Append(route);
             string url = urlBuilder.ToString();
