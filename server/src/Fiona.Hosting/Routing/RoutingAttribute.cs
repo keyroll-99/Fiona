@@ -22,7 +22,7 @@ public static class RoutingAttribute
             return (route, methodType);
         }
         
-        return (route.StartsWith('/') ? route : $"/{route}", methodType);
+        return ( string.IsNullOrWhiteSpace(route) ||route.StartsWith('/') ? route : $"/{route}", methodType);
     }
 
     private static RouteAttribute? GetRouteAttribute(MemberInfo memberInfo)

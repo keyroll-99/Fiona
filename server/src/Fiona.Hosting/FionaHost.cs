@@ -58,9 +58,10 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
             }
 
             var response = context.Response;
-
+    
             var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
+            response.StatusCode = (int)result.StatusCode;
             var output = response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
             output.Close();

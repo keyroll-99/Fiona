@@ -24,8 +24,8 @@ Must to have - I want to finish it to end of march
     - [X] First Tests
 	- [X] Simple http server with host
 	- [X] Startup builder
-	- [ ] Routing
-	- [ ] Simple Controller
+	- [X] Routing
+	- [X] Simple Controller
 	- [ ] Middleware
 	- [ ] Parsing body to object
 	- [ ] Parsing parameters
@@ -58,6 +58,7 @@ Nice to have - 30 days
 	- [ ] Extension for EF
 	- [ ] HttpClient - user can easy use it
 	- [ ] Security
+	- [ ] Before call action, as attribute
 
 Would to have
 - [ ] Debugger

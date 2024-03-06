@@ -64,7 +64,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
     [Fact]
     public async Task When_Call_About_Page_By_Http_Put_Return_404_Not_Found()
     {
-        var response = await _httpClient.GetAsync("about/another/route");
+        var response = await _httpClient.PutAsync("about/another/route", new StringContent(""));
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
