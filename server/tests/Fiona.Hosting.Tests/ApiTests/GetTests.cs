@@ -66,7 +66,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
     {
         var response = await _httpClient.PutAsync("about/another/route", new StringContent(""));
 
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
     }
 
     [Fact]

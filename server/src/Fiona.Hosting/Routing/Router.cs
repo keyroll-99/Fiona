@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using Fiona.Hosting.Controller;
 
 namespace Fiona.Hosting.Routing;
@@ -15,7 +16,7 @@ internal sealed class Router
         _provider = provider;
     }
 
-    public async Task<ObjectResult> CallEndpoint(Uri uri, HttpMethodType methodType)
+    public async Task<ObjectResult> CallEndpoint(Uri uri, HttpMethodType methodType, Stream? body)
     {
         RouteNode? routeNode = GetNode(uri, methodType);
 
@@ -23,7 +24,7 @@ internal sealed class Router
         {
             return new ObjectResult(null, HttpStatusCode.NotFound);
         }
-        
+
         MethodInfo? methodInfo = routeNode.GetAction(methodType);
 
         if (methodInfo is null)
@@ -33,25 +34,28 @@ internal sealed class Router
 
         object? controller = _provider.GetService(methodInfo.DeclaringType!);
 
-        return await InvokeEndpoint(methodInfo, controller);
+        return await InvokeEndpoint(methodInfo, controller, body);
     }
 
-    private RouteNode?GetNode(Uri uri, HttpMethodType methodType)
+    private RouteNode? GetNode(Uri uri, HttpMethodType methodType)
     {
         return _head.FindNode(uri.AbsolutePath[1..]);
     }
 
-    private static async Task<ObjectResult> InvokeEndpoint(MethodInfo methodInfo, object? controller)
+    private static async Task<ObjectResult> InvokeEndpoint(MethodInfo methodInfo, object? controller, Stream? body)
     {
         Type returnType = methodInfo.ReturnType;
+        var endpointParameters = methodInfo.GetParameters();
+
+        var parameters = await GetEndpointParameters(body, endpointParameters);
 
         if (typeof(Task).IsAssignableTo(returnType))
         {
-            await ((Task)methodInfo.Invoke(controller, [])!);
-            return await Task.FromResult(new ObjectResult(null, HttpStatusCode.OK));
+            await ((Task)methodInfo.Invoke(controller, parameters)!);
+            return new ObjectResult(null, HttpStatusCode.OK);
         }
 
-        object? result = methodInfo.Invoke(controller, []);
+        object? result = methodInfo.Invoke(controller, parameters);
 
         if (result is not null && returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
         {
@@ -61,5 +65,20 @@ internal sealed class Router
         }
 
         return await Task.FromResult(new ObjectResult(result, HttpStatusCode.OK));
+    }
+
+    private static async Task<object[]> GetEndpointParameters(Stream? body, ParameterInfo[] endpointParameters)
+    {
+        List<object> parameters = [];
+        if (endpointParameters.Length > 0)
+        {
+            if (endpointParameters.Length == 1 || endpointParameters.Any(p =>
+                    p.CustomAttributes.Any(a => a.AttributeType == typeof(BodyAttribute))))
+            {
+                parameters.Add(await JsonSerializer.DeserializeAsync(body, endpointParameters[0].ParameterType));
+            }
+        }
+
+        return parameters.ToArray();
     }
 }

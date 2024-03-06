@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Controller;
@@ -36,11 +37,15 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
 
         while (_httpListener.IsListening)
         {
-            var context = _httpListener.GetContext();
+            HttpListenerContext context = await _httpListener.GetContextAsync();
             HttpListenerRequest request = context.Request;
 
+
             ObjectResult result = await router.CallEndpoint(request.Url,
-                HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get);
+                HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get,
+                request.HasEntityBody
+                    ? request.InputStream
+                    : null);
 
             Type resultType = result.Result?.GetType();
 
@@ -58,7 +63,7 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
             }
 
             var response = context.Response;
-    
+
             var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             response.StatusCode = (int)result.StatusCode;

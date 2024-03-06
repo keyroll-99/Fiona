@@ -28,10 +28,11 @@ Must to have - I want to finish it to end of march
 	- [X] Simple Controller
 	- [ ] Parsing body to object
 	- [ ] Middleware
-	- [ ] Parsing parameters
+	- [ ] Parsing parameters and args from route
 	- [ ] Response (status codes etc)
 	- [ ] Async handle request
 	- [ ] Configuration like a baseUrl, port ETC
+	- [ ] Cookies
 	- [ ] Logger
 	- [ ] Documentation :)
 - [ ] Tools

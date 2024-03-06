@@ -14,4 +14,10 @@ public sealed class UserController
             Id = 1, Name = "John"
         };
     }
+    
+    [Route(HttpMethodType.Post | HttpMethodType.Patch | HttpMethodType.Put)]
+    public UserModel Create(UserModel user)
+    {
+        return user;
+    }
 }
