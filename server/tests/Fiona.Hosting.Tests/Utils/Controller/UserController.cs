@@ -1,3 +1,4 @@
+using System.Net;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing;
 using Fiona.Hosting.Tests.Utils.Models;
@@ -19,5 +20,24 @@ public sealed class UserController
     public UserModel Create(UserModel user)
     {
         return user;
+    }
+    
+    [Route(HttpMethodType.Post, "/another")]
+    public ObjectResult CreateAnother(UserModel user)
+    {
+        return new ObjectResult(user, HttpStatusCode.Created);
+    }
+    
+    [Route(HttpMethodType.Patch, "/another")]
+    public Task<ObjectResult> PatchAnother(UserModel user)
+    {
+        return Task.FromResult(new ObjectResult(user, HttpStatusCode.OK));
+    }
+    
+    
+    [Route(HttpMethodType.Put, "/another")]
+    public Task<ObjectResult> PutAnother(UserModel user)
+    {
+        return Task.FromResult(new ObjectResult(user, HttpStatusCode.OK));
     }
 }

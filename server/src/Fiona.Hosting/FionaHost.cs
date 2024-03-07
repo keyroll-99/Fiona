@@ -47,7 +47,7 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
                     ? request.InputStream
                     : null);
 
-            Type resultType = result.Result?.GetType();
+            Type? resultType = result.Result?.GetType();
 
             string? responseString = string.Empty;
             if (resultType is not null)
@@ -64,11 +64,11 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
 
             var response = context.Response;
 
-            var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+            var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             response.StatusCode = (int)result.StatusCode;
             var output = response.OutputStream;
-            output.Write(buffer, 0, buffer.Length);
+            await output.WriteAsync(buffer);
             output.Close();
         }
 

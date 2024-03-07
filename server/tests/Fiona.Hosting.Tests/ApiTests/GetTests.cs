@@ -168,4 +168,54 @@ public class GetTests(FionaTestServerBuilder testBuilder)
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+    
+    [Fact]
+    public async Task When_Call_User_Another_By_Http_Post_Should_Return_201_Created()
+    {
+        var user = new UserModel() { Id = 2, Name = "Jane" };
+        var json = JsonSerializer.Serialize(user);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _httpClient.PostAsync("user/another", data);
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+
+        userFromResponse.Should().BeOfType<UserModel>().And.BeEquivalentTo(user);
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+    }    
+    
+    [Fact]
+    public async Task When_Call_User_Another_By_Http_Put_Should_Return_200_OK()
+    {
+        var user = new UserModel() { Id = 2, Name = "Jane" };
+        var json = JsonSerializer.Serialize(user);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _httpClient.PutAsync("user/another", data);
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+
+        userFromResponse.Should().BeOfType<UserModel>().And.BeEquivalentTo(user);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }    
+    [Fact]
+    public async Task When_Call_User_Another_By_Http_Patch_Should_Return_200_OK()
+    {
+        var user = new UserModel() { Id = 2, Name = "Jane" };
+        var json = JsonSerializer.Serialize(user);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _httpClient.PatchAsync("user/another", data);
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+
+        userFromResponse.Should().BeOfType<UserModel>().And.BeEquivalentTo(user);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }
