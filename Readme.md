@@ -26,7 +26,7 @@ Must to have - I want to finish it to end of march
 	- [X] Startup builder
 	- [X] Routing
 	- [X] Simple Controller
-	- [ ] Parsing body to object
+	- [X] Parsing body to object
 	- [ ] Middleware
 	- [ ] Parsing parameters and args from route
 	- [ ] Response (status codes etc)
