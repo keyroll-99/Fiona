@@ -18,14 +18,14 @@ internal sealed class Router
 
     public async Task<ObjectResult> CallEndpoint(Uri uri, HttpMethodType methodType, Stream? body)
     {
-        RouteNode? routeNode = GetNode(uri, methodType);
+        RouteNode? routeNode = GetNode(uri);
 
         if (routeNode is null)
         {
             return new ObjectResult(null, HttpStatusCode.NotFound);
         }
 
-        MethodInfo? methodInfo = routeNode.GetAction(methodType);
+        MethodInfo? methodInfo = routeNode.Actions.GetValueOrDefault(methodType);
 
         if (methodInfo is null)
         {
@@ -33,25 +33,23 @@ internal sealed class Router
         }
 
         object? controller = _provider.GetService(methodInfo.DeclaringType!);
-
-        return await InvokeEndpoint(methodInfo, controller, body);
+        object?[] parameters = await routeNode.GetEndpointParameters(uri, methodType, body);
+        
+        return await InvokeEndpoint(methodInfo, controller, parameters);
     }
 
-    private RouteNode? GetNode(Uri uri, HttpMethodType methodType)
+    private RouteNode? GetNode(Uri uri)
     {
         return _head.FindNode(uri.AbsolutePath[1..]);
     }
 
-    private static async Task<ObjectResult> InvokeEndpoint(MethodInfo methodInfo, object? controller, Stream? body)
+    private static async Task<ObjectResult> InvokeEndpoint(MethodInfo methodInfo, object? controller, object?[] parameters)
     {
         Type returnType = methodInfo.ReturnType;
-        var endpointParameters = methodInfo.GetParameters();
-
-        var parameters = await GetEndpointParameters(body, endpointParameters);
 
         if (typeof(Task).IsAssignableTo(returnType))
         {
-            await ((Task)methodInfo.Invoke(controller, parameters)!);
+            await (Task)methodInfo.Invoke(controller, parameters)!;
             return new ObjectResult(null, HttpStatusCode.OK);
         }
 
@@ -61,10 +59,10 @@ internal sealed class Router
         {
             dynamic resultTask = result;
 
-            return ObjectResult.FromObject(await resultTask);
+            return new ObjectResult(await resultTask, HttpStatusCode.OK);
         }
 
-        return await Task.FromResult(new ObjectResult(result, HttpStatusCode.OK));
+        return new ObjectResult(result, HttpStatusCode.OK);
     }
 
     private static async Task<object[]> GetEndpointParameters(Stream? body, ParameterInfo[] endpointParameters)

@@ -31,4 +31,9 @@ internal static class HttpMethodTypeExtensionMethods
             _ => null
         };
     }
+
+    public static bool HasBody(this HttpMethodType methodType)
+    {
+        return methodType is HttpMethodType.Put or HttpMethodType.Post or HttpMethodType.Patch;
+    }
 }
