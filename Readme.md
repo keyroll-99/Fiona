@@ -34,6 +34,7 @@ Must to have - I want to finish it to end of march
 	- [ ] Configuration like a baseUrl, port ETC
 	- [ ] Cookies
 	- [ ] Logger
+	- [ ] Error handler
 	- [ ] Documentation :)
 - [ ] Tools
     - [ ] Github actions to build it

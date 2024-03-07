@@ -43,7 +43,6 @@ internal sealed class Router
         return _head.FindNode(uri.AbsolutePath[1..]);
     }
 
-    // TODO refactor this method
     private static async Task<ObjectResult> InvokeEndpoint(MethodInfo methodInfo, object? controller, object?[] parameters)
     {
         Type returnType = methodInfo.ReturnType;
@@ -55,11 +54,15 @@ internal sealed class Router
         }
 
         object? result = methodInfo.Invoke(controller, parameters);
+        return await CastResultToObjectResult(result, returnType);
+    }
 
+    private static async Task<ObjectResult> CastResultToObjectResult(object? result, Type returnType)
+    {
         if (result is not null && returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
         {
             dynamic resultTask = result;
-            if (returnType.GetGenericArguments().First() == typeof(ObjectResult))
+            if (returnType.GetGenericArguments().First().IsAssignableTo(typeof(IResult)))
             {
                 return await resultTask;
             }
@@ -67,7 +70,7 @@ internal sealed class Router
             return new ObjectResult(await resultTask, HttpStatusCode.OK);
         }
 
-        if (returnType == typeof(ObjectResult))
+        if (returnType.IsAssignableTo(typeof(IResult)))
         {
             return (ObjectResult)result;
         }
