@@ -4,5 +4,5 @@ namespace Fiona.Hosting.Middleware;
 
 public interface IMiddleware
 {
-    public Task Invoke(HttpListenerRequest request, Delegate next);
+    public Task Invoke(HttpListenerContext request, Delegate next);
 }

@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Models;
 using Fiona.Hosting.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,43 +34,13 @@ internal sealed class FionaHost(IServiceProvider serviceProvider, HostConfig con
     private async Task RunHost()
     {
         _httpListener.Start();
-        var router = serviceProvider.GetRequiredService<Router>();
 
         while (_httpListener.IsListening)
         {
             HttpListenerContext context = await _httpListener.GetContextAsync();
-            HttpListenerRequest request = context.Request;
-
-
-            ObjectResult result = await router.CallEndpoint(request.Url,
-                HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get,
-                request.HasEntityBody
-                    ? request.InputStream
-                    : null);
-
-            Type? resultType = result.Result?.GetType();
-
-            string? responseString = string.Empty;
-            if (resultType is not null)
-            {
-                if (resultType.IsPrimitive || resultType == typeof(string))
-                {
-                    responseString = result.Result?.ToString();
-                }
-                else
-                {
-                    responseString = JsonSerializer.Serialize(result.Result);
-                }
-            }
-
-            var response = context.Response;
-
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            response.StatusCode = (int)result.StatusCode;
-            var output = response.OutputStream;
-            await output.WriteAsync(buffer);
-            output.Close();
+            using var scope = serviceProvider.CreateScope();
+            MiddlewareCallStack callStack = scope.ServiceProvider.GetRequiredService<MiddlewareCallStack>();
+            await callStack.Invoke(context);
         }
 
         _httpListener.Close();

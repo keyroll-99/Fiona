@@ -1,6 +1,7 @@
 using System.Reflection;
 using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Models;
 using Fiona.Hosting.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,11 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         return this;
     }
 
+    public IFionaHostBuilder AddMiddleware<T>() where T : IMiddleware
+    {
+        Service.AddTransient(typeof(IMiddleware), typeof(T));
+        return this;
+    }
 
     private void CreateHost()
     {
@@ -56,6 +62,8 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         lock (_lock)
         {
             Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
+            AddMiddleware<CallEndpointMiddleware>();
+            Service.AddTransient<MiddlewareCallStack>();
             _host ??= new FionaHost(Service.BuildServiceProvider(), _config);
         }
     }

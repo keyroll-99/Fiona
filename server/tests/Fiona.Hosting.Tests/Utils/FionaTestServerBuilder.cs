@@ -12,7 +12,7 @@ public class FionaTestServerBuilder : IDisposable
         RunServer("7000");
     }
 
-    public void RunServer(string port)
+    private void RunServer(string port)
     {
         Builder = FionaHostBuilder.CreateHostBuilder();
         Builder.SetPort(port);
