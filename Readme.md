@@ -39,7 +39,7 @@ Must to have - I want to finish it to end of march
 - [ ] Tools
     - [ ] Github actions to build it
 
-Good to have - 30-60 days ( depending on how fast I go UI )
+Good to have - 30-60 days
 - [ ] GUI
 	- [ ] Simple view where user can drag and drop boxes
 	- [ ] User can connect boxes
