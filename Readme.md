@@ -4,7 +4,7 @@
 ![logo](assets/logo.jpg)
 
 ---
-Fiona is a web api framework written in .Net. As developer you will be able to create API in easily and quacky way.
+Fiona is a web api framework written in .Net. As developer you will be able to create API in easily and quick way.
 The planned key feature is a GUI where developer will be able create API using blocks like blueprint in UE.
 
 At the begin I use HttpListener, but in the distant future I want to write own http hand shake.
