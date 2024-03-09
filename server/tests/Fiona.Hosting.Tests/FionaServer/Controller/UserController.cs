@@ -40,4 +40,13 @@ public sealed class UserController
     {
         return Task.FromResult(new ObjectResult(user, HttpStatusCode.OK));
     }
+    
+    [Route(HttpMethodType.Post, "/param/{id}")]
+    public Task<UserModel> UserAndParams(int id, UserModel user)
+    {
+        return Task.FromResult(new UserModel
+        {
+            Id = id, Name = user.Name
+        });
+    }
 }
