@@ -27,7 +27,7 @@ Must to have - I want to finish it to end of march
 	- [X] Routing
 	- [X] Simple Controller
 	- [X] Parsing body to object
-	- [ ] Middleware
+	- [X] Middleware
 	- [ ] Parsing parameters and args from route
 	- [ ] Response (status codes etc)
 	- [ ] Async handle request
@@ -61,6 +61,7 @@ Nice to have - 30 days
 	- [ ] Extension for EF
 	- [ ] HttpClient - user can easy use it
 	- [ ] Security
+		- [ ] CORS
 	- [ ] Before call action, as attribute
 
 Would to have

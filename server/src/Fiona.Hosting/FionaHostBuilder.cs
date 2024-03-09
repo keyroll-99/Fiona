@@ -1,5 +1,6 @@
 using System.Reflection;
 using Fiona.Hosting.Abstractions;
+using Fiona.Hosting.Abstractions.Middleware;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Models;
@@ -31,7 +32,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
     {
         LoadControllers();
         CreateHost();
-        return _host;
+        return _host!;
     }
 
     public IFionaHostBuilder SetUrl(string url)

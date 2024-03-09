@@ -1,11 +1,7 @@
 using System.Net;
-using System.Text;
-using System.Text.Json;
 using Fiona.Hosting.Abstractions;
-using Fiona.Hosting.Controller;
 using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Models;
-using Fiona.Hosting.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiona.Hosting;

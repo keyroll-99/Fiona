@@ -1,5 +1,5 @@
 using System.Net;
-using Fiona.Hosting.Abstractions;
+using Fiona.Hosting.Abstractions.Middleware;
 
 namespace Fiona.Hosting.Middleware;
 

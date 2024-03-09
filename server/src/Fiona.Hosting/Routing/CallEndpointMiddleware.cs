@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using Fiona.Hosting.Abstractions;
+using Fiona.Hosting.Abstractions.Middleware;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Middleware;
 
@@ -9,19 +10,34 @@ namespace Fiona.Hosting.Routing;
 
 internal class CallEndpointMiddleware(Router router) : IMiddleware
 {
-
-    public async Task Invoke(HttpListenerContext context, RequestDelegate next)
+    public async Task Invoke(HttpListenerContext context, NextMiddlewareDelegate next)
     {
         HttpListenerRequest request = context.Request;
+        var result = await CallEndpoint(request);
+        var responseString = GetResponseString(result);
+        await SetResponse(context, responseString, result);
+    }
 
-        ObjectResult result = await router.CallEndpoint(request.Url,
-            HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get,
-            request.HasEntityBody
-                ? request.InputStream
-                : null);
+    private async Task<ObjectResult> CallEndpoint(HttpListenerRequest request)
+    {
+        return await router.CallEndpoint(request.Url!, GetHttpMethodType(request), GetBody(request));
+    }
 
+    private static HttpMethodType GetHttpMethodType(HttpListenerRequest request)
+    {
+        return HttpMethodTypeExtensionMethods.GetHttpMethodType(request.HttpMethod) ?? HttpMethodType.Get;
+    }
+
+    private static Stream? GetBody(HttpListenerRequest request)
+    {
+        return request.HasEntityBody
+            ? request.InputStream
+            : null;
+    }
+
+    private static string? GetResponseString(ObjectResult result)
+    {
         Type? resultType = result.Result?.GetType();
-
         string? responseString = string.Empty;
         if (resultType is not null)
         {
@@ -35,8 +51,12 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
             }
         }
 
-        var response = context.Response;
+        return responseString;
+    }
 
+    private static async Task SetResponse(HttpListenerContext context, string? responseString, IResult result)
+    {
+        var response = context.Response;
         var buffer = Encoding.UTF8.GetBytes(responseString);
         response.ContentLength64 = buffer.Length;
         response.StatusCode = (int)result.StatusCode;

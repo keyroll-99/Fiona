@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Fiona.Hosting.Tests.Utils;
-using Fiona.Hosting.Tests.Utils.Models;
+using Fiona.Hosting.Tests.FionaServer;
+using Fiona.Hosting.Tests.FionaServer.Models;
 using FluentAssertions;
 
 namespace Fiona.Hosting.Tests.ApiTests;

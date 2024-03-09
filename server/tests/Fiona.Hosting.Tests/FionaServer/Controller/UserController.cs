@@ -1,9 +1,9 @@
 using System.Net;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing;
-using Fiona.Hosting.Tests.Utils.Models;
+using Fiona.Hosting.Tests.FionaServer.Models;
 
-namespace Fiona.Hosting.Tests.Utils.Controller;
+namespace Fiona.Hosting.Tests.FionaServer.Controller;
 
 [Controller("user")]
 public sealed class UserController

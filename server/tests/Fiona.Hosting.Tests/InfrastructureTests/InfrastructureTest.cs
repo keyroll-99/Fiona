@@ -1,5 +1,5 @@
-using Fiona.Hosting.Tests.Utils;
-using Fiona.Hosting.Tests.Utils.Controller;
+using Fiona.Hosting.Tests.FionaServer;
+using Fiona.Hosting.Tests.FionaServer.Controller;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -9,7 +9,7 @@ namespace Fiona.Hosting.Tests.InfrastructureTests;
 [Collection("FionaTests")]
 public class InfrastructureTest(FionaTestServerBuilder testBuilder)
 {
-    private readonly HttpClient _httpClient = new HttpClient()
+    private readonly HttpClient _httpClient = new()
     {
         BaseAddress = new Uri("http://localhost:7000/"),
     };
@@ -31,9 +31,10 @@ public class InfrastructureTest(FionaTestServerBuilder testBuilder)
     public async Task Should_Call_Middleware_When_Request_Is_Received()
     {
         // Arrange
-        var response = await _httpClient.GetAsync("");
+        await _httpClient.GetAsync("");
+        await _httpClient.GetAsync("");
         
         // Assert
-        testBuilder.CallMock.Received(2);
+        await testBuilder.CallMock.Received(4).Call();
     }
 }

@@ -1,3 +1,4 @@
+using Fiona.Hosting.Abstractions.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiona.Hosting.Abstractions;

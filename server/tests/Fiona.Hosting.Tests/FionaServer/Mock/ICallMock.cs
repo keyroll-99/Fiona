@@ -1,4 +1,4 @@
-namespace Fiona.Hosting.Tests.Utils.Mock;
+namespace Fiona.Hosting.Tests.FionaServer.Mock;
 
 public interface ICallMock
 {

@@ -1,7 +1,7 @@
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing;
 
-namespace Fiona.Hosting.Tests.Utils.Controller;
+namespace Fiona.Hosting.Tests.FionaServer.Controller;
 
 [Controller("about")]
 public sealed class AboutController
