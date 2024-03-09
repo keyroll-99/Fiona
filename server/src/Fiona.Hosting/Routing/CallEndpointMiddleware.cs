@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Middleware;
 
@@ -9,7 +10,7 @@ namespace Fiona.Hosting.Routing;
 internal class CallEndpointMiddleware(Router router) : IMiddleware
 {
 
-    public async Task Invoke(HttpListenerContext context, Delegate next)
+    public async Task Invoke(HttpListenerContext context, RequestDelegate next)
     {
         HttpListenerRequest request = context.Request;
 
