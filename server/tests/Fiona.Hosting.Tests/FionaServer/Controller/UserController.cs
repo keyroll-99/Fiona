@@ -48,5 +48,23 @@ public sealed class UserController
         {
             Id = id, Name = user.Name
         });
+    }    
+    
+    [Route(HttpMethodType.Get, "/param/{id}/and/{name}")]
+    public Task<UserModel> UserAndTwoParams(int id, string name)
+    {
+        return Task.FromResult(new UserModel
+        {
+            Id = id, Name = name
+        });
+    }  
+    
+    [Route(HttpMethodType.Get, "/param/id/and/name")]
+    public Task<UserModel> UserAndOneParams()
+    {
+        return Task.FromResult(new UserModel
+        {
+            Id = 21, Name = "Jan"
+        });
     }
 }

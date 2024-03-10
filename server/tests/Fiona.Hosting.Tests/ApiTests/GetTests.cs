@@ -218,4 +218,57 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         userFromResponse.Should().BeOfType<UserModel>().And.BeEquivalentTo(user);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task When_Url_Has_One_Parameter_Then_Should_Call_Endpoint_With_Parameter()
+    {
+        //Arrange
+        var user = new UserModel() { Id = 2, Name = "Jane" };
+        var json = JsonSerializer.Serialize(user);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        
+        // Act
+        var response = await _httpClient.PostAsync("user/param/1", data);
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+
+        // Assert
+        userFromResponse.Id.Should().Be(1);
+        userFromResponse.Name.Should().Be(user.Name);
+    }
+    
+    [Fact]
+    public async Task When_Url_Has_Many_Parameter_Then_Should_Call_Endpoint_With_Parameter()
+    {
+        // Act
+        var response = await _httpClient.GetAsync("user/param/1/and/jhon");
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+        
+        // Assert
+        userFromResponse.Name.Should().Be("jhon");
+        userFromResponse.Id.Should().Be(1);
+    }
+    
+    [Fact]
+    public async Task Should_Firs_Call_Unparameterized_Url()
+    {
+        // Act
+        var response = await _httpClient.GetAsync("user/param/id/and/name");
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+        
+        // Assert
+        userFromResponse.Name.Should().Be("Jan");
+        userFromResponse.Id.Should().Be(21);
+    }
 }

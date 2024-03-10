@@ -54,6 +54,7 @@ Nice to have - 30 days
 - [ ] Tools
 	- [ ] Docker image
 - [ ] Server
+    - [ ] File upload
 	- [ ] Inject service to controller method
 	- [ ] Auto impl register
 	- [ ] Auto inject to method

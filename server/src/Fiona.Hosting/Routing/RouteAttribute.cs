@@ -10,8 +10,13 @@ public sealed class RouteAttribute(HttpMethodType httpMethodType, string route, 
     public RouteAttribute(HttpMethodType httpMethodType) : this(httpMethodType, string.Empty, [])
     {
     }
-    
+
     public RouteAttribute(HttpMethodType httpMethodType, string route) : this(httpMethodType, route, [])
+    {
+    }
+
+    public RouteAttribute(HttpMethodType httpMethodType, string[] queryParameters) : this(httpMethodType, string.Empty,
+        queryParameters)
     {
     }
 }

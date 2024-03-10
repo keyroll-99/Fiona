@@ -4,12 +4,48 @@ using Fiona.Hosting.Controller;
 
 namespace Fiona.Hosting.Routing;
 
-internal sealed class RouteNode(string route)
+internal sealed class RouteNode
 {
     public Dictionary<HttpMethodType, MethodInfo> Actions { get; } = new();
     private readonly Dictionary<HttpMethodType, ParameterInfo> _bodyParameters = new();
-    private readonly string _route = route;
+    private readonly string _route;
+    private readonly HashSet<string> _queryParameters = []; // string, Guid, primitive types
+    private readonly HashSet<string> _routeParameters = []; // string, Guid, primitive types
+    private bool _isParameterized;
     private readonly List<RouteNode> _children = [];
+
+    public RouteNode(string route)
+    {
+        _route = route;
+        BuildRouteParameters(route);
+        _isParameterized = route.EndsWith('}');
+    }
+
+    private void BuildRouteParameters(string route)
+    {
+        if (!route.Contains('{'))
+        {
+            return;
+        }
+
+        int offset = 0;
+        while (true)
+        {
+            int indexOfOpen = route.IndexOf('{', offset);
+            if (indexOfOpen == -1)
+            {
+                break;
+            }
+
+            int indexOfClose = route.IndexOf('}', offset);
+            string variableName = route.Substring(indexOfOpen + 1, indexOfClose - indexOfOpen - 1);
+            if (!_routeParameters.Add(variableName))
+            {
+                throw new ConflictNameOfRouteParameters(route);
+            }
+            offset = indexOfClose + 1;
+        }
+    }
 
     public void Insert(HttpMethodType methodType, MethodInfo method, string route)
     {
@@ -52,7 +88,7 @@ internal sealed class RouteNode(string route)
         {
             ParameterInfo? bodyParameter =
                 _bodyParameters.GetValueOrDefault(methodType);
-            
+
             if (bodyParameter is not null)
             {
                 parameters.Add(body is not null
