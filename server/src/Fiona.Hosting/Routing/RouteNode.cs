@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Fiona.Hosting.Controller;
 
 namespace Fiona.Hosting.Routing;
@@ -11,42 +12,20 @@ internal sealed class RouteNode
     private readonly string _route;
     private readonly HashSet<string> _queryParameters = []; // string, Guid, primitive types
     private readonly HashSet<string> _routeParameters = []; // string, Guid, primitive types
-    private bool _isParameterized;
+    private readonly bool _isParameterized;
     private readonly List<RouteNode> _children = [];
 
+    private const string OpenParameter = "{";
+    private const string CloseParameter = "}";
+    
     public RouteNode(string route)
     {
-        _route = route;
         BuildRouteParameters(route);
-        _isParameterized = route.EndsWith('}');
+        _isParameterized = route.EndsWith(CloseParameter);
+        _route = (string)route.Clone();
+        _route = Regex.Replace(_route, @"\{[^{}]*\}", "{param}");
     }
-
-    private void BuildRouteParameters(string route)
-    {
-        if (!route.Contains('{'))
-        {
-            return;
-        }
-
-        int offset = 0;
-        while (true)
-        {
-            int indexOfOpen = route.IndexOf('{', offset);
-            if (indexOfOpen == -1)
-            {
-                break;
-            }
-
-            int indexOfClose = route.IndexOf('}', offset);
-            string variableName = route.Substring(indexOfOpen + 1, indexOfClose - indexOfOpen - 1);
-            if (!_routeParameters.Add(variableName))
-            {
-                throw new ConflictNameOfRouteParameters(route);
-            }
-            offset = indexOfClose + 1;
-        }
-    }
-
+    
     public void Insert(HttpMethodType methodType, MethodInfo method, string route)
     {
         if (route == string.Empty)
@@ -66,6 +45,7 @@ internal sealed class RouteNode
         }
 
         RouteNode? next = _children.FirstOrDefault(ch => route.StartsWith(ch._route));
+        next ??= _children.FirstOrDefault(ch => ch._isParameterized);
         return next?.FindNode(route);
     }
 
@@ -106,6 +86,7 @@ internal sealed class RouteNode
         if (splitRoute.Length == (depth + 1))
         {
             RouteNode? child = _children.FirstOrDefault(ch => ch._route == route);
+            child ??= _children.FirstOrDefault(ch => ch._isParameterized);
             if (child is null)
             {
                 child = new RouteNode(route);
@@ -149,5 +130,30 @@ internal sealed class RouteNode
     private void AddChild(RouteNode node)
     {
         _children.Add(node);
+    }
+    
+    private void BuildRouteParameters(string route)
+    {
+        if (!route.Contains(OpenParameter))
+        {
+            return;
+        }
+
+        int offset = 0;
+        while (true)
+        {
+            int indexOfOpen = route.IndexOf(OpenParameter, offset, StringComparison.Ordinal);
+            if (indexOfOpen == -1)
+            {
+                break;
+            }
+            int indexOfClose = route.IndexOf(CloseParameter, offset, StringComparison.Ordinal);
+            string variableName = route.Substring(indexOfOpen + 1, indexOfClose - indexOfOpen - 1);
+            if (!_routeParameters.Add(variableName))
+            {
+                throw new ConflictNameOfRouteParameters(route);
+            }
+            offset = indexOfClose + 1;
+        }
     }
 }

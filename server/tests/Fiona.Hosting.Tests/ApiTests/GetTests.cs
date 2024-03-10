@@ -270,5 +270,21 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         // Assert
         userFromResponse.Name.Should().Be("Jan");
         userFromResponse.Id.Should().Be(21);
+    }    
+    
+    [Fact]
+    public async Task When_Two_Route_With_Different_Parameter_Should_Call_Correct_Endpoint()
+    {
+        // Act
+        var response = await _httpClient.GetAsync("user/param/marek/and/id");
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+        
+        // Assert
+        userFromResponse.Name.Should().Be("marek");
+        userFromResponse.Id.Should().Be(21);
     }
 }
