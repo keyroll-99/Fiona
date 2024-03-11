@@ -29,7 +29,7 @@ internal sealed class RouterBuilder
 
     private static RouteNode GenerateRouteTree(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes)
     {
-        RouteNode head = new RouteNode(string.Empty);
+        RouteNode head = RouteNode.GetHead();
         var sortedKeys = routes.Keys.OrderBy(key => key.Length).ToList();
 
         foreach (var key in sortedKeys)
