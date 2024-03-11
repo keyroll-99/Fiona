@@ -18,17 +18,16 @@ internal sealed class RouteNode
     private const string OpenParameter = "{";
     private const string CloseParameter = "}";
     
-    public RouteNode(string route)
+    public RouteNode(Url route)
     {
-        BuildRouteParameters(route);
-        _isParameterized = route.EndsWith(CloseParameter);
-        _route = (string)route.Clone();
-        _route = Regex.Replace(_route, @"\{[^{}]*\}", "{param}");
+        BuildRouteParameters(route.OriginalUrl);
+        _isParameterized = route.OriginalUrl.EndsWith(CloseParameter);
+        _route = route.NormalizeUrl;
     }
     
-    public void Insert(HttpMethodType methodType, MethodInfo method, string route)
+    public void Insert(HttpMethodType methodType, MethodInfo method, Url route)
     {
-        if (route == string.Empty)
+        if (route.OriginalUrl == string.Empty)
         {
             AddAction(methodType, method);
             return;
@@ -80,16 +79,15 @@ internal sealed class RouteNode
         return parameters.ToArray();
     }
 
-    private void Insert(HttpMethodType methodType, MethodInfo method, string route, int depth)
+    private void Insert(HttpMethodType methodType, MethodInfo method, Url route, int depth)
     {
-        string[] splitRoute = route.Split('/');
-        if (splitRoute.Length == (depth + 1))
+        if (route.SplitUrl.Length == (depth + 1))
         {
-            RouteNode? child = _children.FirstOrDefault(ch => ch._route == route);
+            RouteNode? child = _children.FirstOrDefault(ch => ch._route == route.NormalizeUrl);
             child ??= _children.FirstOrDefault(ch => ch._isParameterized);
             if (child is null)
             {
-                child = new RouteNode(route);
+                child = new RouteNode(route.NormalizeUrl);
                 AddChild(child);
             }
 
@@ -97,10 +95,10 @@ internal sealed class RouteNode
             return;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => route.StartsWith(ch._route));
+        RouteNode? next = _children.FirstOrDefault(ch => route.NormalizeUrl.StartsWith(ch._route));
         if (next is null)
         {
-            next = new RouteNode(string.Join("/", splitRoute[..(depth + 1)]));
+            next = new RouteNode(route.GetPartOfUrl(depth + 1));
             AddChild(next);
         }
 
