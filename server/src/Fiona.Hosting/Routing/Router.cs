@@ -72,7 +72,7 @@ internal sealed class Router
 
         if (returnType.IsAssignableTo(typeof(IResult)))
         {
-            return (ObjectResult)result;
+            return (ObjectResult)result!;
         }
         
         return new ObjectResult(result, HttpStatusCode.OK);

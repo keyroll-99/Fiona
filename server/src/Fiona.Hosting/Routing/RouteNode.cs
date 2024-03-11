@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Fiona.Hosting.Controller;
 
 namespace Fiona.Hosting.Routing;
@@ -84,10 +83,9 @@ internal sealed class RouteNode
         if (route.SplitUrl.Length == (depth + 1))
         {
             RouteNode? child = _children.FirstOrDefault(ch => ch._route == route.NormalizeUrl);
-            child ??= _children.FirstOrDefault(ch => ch._isParameterized);
             if (child is null)
             {
-                child = new RouteNode(route.NormalizeUrl);
+                child = new RouteNode(route);
                 AddChild(child);
             }
 
