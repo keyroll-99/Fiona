@@ -33,7 +33,7 @@ internal sealed class Router
         }
 
         object? controller = _provider.GetService(methodInfo.DeclaringType!);
-        object?[] parameters = await routeNode.GetEndpointParameters(uri, methodType, body);
+        object?[] parameters = await routeNode.GetBodyParameter(uri, methodType, body);
         
         return await InvokeEndpoint(methodInfo, controller, parameters);
     }

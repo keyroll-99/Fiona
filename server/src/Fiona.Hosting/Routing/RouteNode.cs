@@ -17,6 +17,8 @@ internal sealed class RouteNode
         _route = route;
     }
     
+    public static RouteNode GetHead() => new(string.Empty);
+    
     public void Insert(HttpMethodType methodType, MethodInfo method, Url route)
     {
         bool isHead = route.OriginalUrl == string.Empty;
@@ -36,11 +38,12 @@ internal sealed class RouteNode
             return this;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => route.NormalizeUrl.StartsWith(ch._route.NormalizeUrl));
+        RouteNode? next = _children.FirstOrDefault(ch => route.ContainsIn(ch._route));
         return next?.FindNode(route);
     }
 
-    public async Task<object?[]> GetEndpointParameters(Uri uri, HttpMethodType methodType, Stream? body)
+    // TODO: Refactor
+    public async Task<object?[]> GetBodyParameter(Uri uri, HttpMethodType methodType, Stream? body)
     {
         List<object?> parameters = [];
         MethodInfo method = Actions[methodType];
@@ -70,14 +73,17 @@ internal sealed class RouteNode
 
         return parameters.ToArray();
     }
-
-    public static RouteNode GetHead() => new(string.Empty);
-
+    
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_route, Actions);
+    }
+    
     private void Insert(HttpMethodType methodType, MethodInfo method, Url route, int depth)
     {
         if (route.SplitUrl.Length == (depth + 1))
         {
-            RouteNode? child = _children.FirstOrDefault(ch => ch._route.Equals(route.NormalizeUrl));
+            RouteNode? child = _children.FirstOrDefault(ch => ch._route.Equals(route));
             if (child is null)
             {
                 child = new RouteNode(route);
@@ -88,7 +94,7 @@ internal sealed class RouteNode
             return;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => route.NormalizeUrl.StartsWith(ch._route.NormalizeUrl));
+        RouteNode? next = _children.FirstOrDefault(ch => route.ContainsIn(ch._route));
         if (next is null)
         {
             next = new RouteNode(route.GetPartOfUrl(depth + 1));
