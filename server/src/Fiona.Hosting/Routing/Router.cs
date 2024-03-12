@@ -2,6 +2,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Routing;
 
@@ -33,7 +34,7 @@ internal sealed class Router
         }
 
         object? controller = _provider.GetService(methodInfo.DeclaringType!);
-        object?[] parameters = await routeNode.GetBodyParameter(uri, methodType, body);
+        object?[] parameters = await routeNode.GetParameters(uri, methodType, body);
         
         return await InvokeEndpoint(methodInfo, controller, parameters);
     }

@@ -1,4 +1,4 @@
-namespace Fiona.Hosting.Routing;
+namespace Fiona.Hosting.Routing.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
 public sealed class RouteAttribute(HttpMethodType httpMethodType, string route, string[] queryParameters) : Attribute

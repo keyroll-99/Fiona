@@ -2,7 +2,7 @@ using System.Reflection;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Exceptions;
 
-namespace Fiona.Hosting.Routing;
+namespace Fiona.Hosting.Routing.Attributes;
 
 internal static class RouteAttributeUtils
 {

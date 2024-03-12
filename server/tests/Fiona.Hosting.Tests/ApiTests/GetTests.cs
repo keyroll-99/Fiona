@@ -140,9 +140,23 @@ public class GetTests(FionaTestServerBuilder testBuilder)
     }
 
     [Fact]
-    public async Task When_Given_User_Props_In_Args_Should_Return_Model()
+    public async Task When_Given_User_Props_And_Method_Doesnt_Have_Route_Attribute_Then_Should_Math_Args_And_Return_Model()
     {
         var response = await _httpClient.GetAsync("userFromArgs?userId=2&name=Jane");
+        var content = await response.Content.ReadAsStringAsync();
+        var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+
+        var user = new UserModel() { Id = 2, Name = "Jane" };
+        userFromResponse.Should().BeOfType<UserModel>().And.BeEquivalentTo(user);
+    }
+    
+    [Fact]
+    public async Task When_Given_User_Props_And_Method_Has_Route_Attribute_Then_Should_Use_Attribute_And_Return_Model()
+    {
+        var response = await _httpClient.GetAsync("userFromArgs/second?userId=2&name=Jane");
         var content = await response.Content.ReadAsStringAsync();
         var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
         {

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Routing;
 
@@ -8,17 +9,20 @@ internal sealed class RouteNode
 {
     public Dictionary<HttpMethodType, MethodInfo> Actions { get; } = new();
     private readonly Dictionary<HttpMethodType, ParameterInfo> _bodyParameters = new();
+
+    private readonly Dictionary<HttpMethodType, HashSet<string>>
+        _queryParameters = new(); // string, Guid, primitive types
+
     private readonly Url _route;
-    private readonly HashSet<string> _queryParameters = []; // string, Guid, primitive types
     private readonly List<RouteNode> _children = [];
-    
+
     private RouteNode(Url route)
     {
         _route = route;
     }
-    
+
     public static RouteNode GetHead() => new(string.Empty);
-    
+
     public void Insert(HttpMethodType methodType, MethodInfo method, Url route)
     {
         bool isHead = route.OriginalUrl == string.Empty;
@@ -42,43 +46,56 @@ internal sealed class RouteNode
         return next?.FindNode(route);
     }
 
-    // TODO: Refactor
-    public async Task<object?[]> GetBodyParameter(Uri uri, HttpMethodType methodType, Stream? body)
+    public async Task<object?[]> GetParameters(Uri uri, HttpMethodType methodType, Stream? body)
     {
-        List<object?> parameters = [];
-        MethodInfo method = Actions[methodType];
-        ParameterInfo[] methodParameters = method.GetParameters();
-        if (methodParameters.Length == 1 && methodType.HasBody())
+        List<object> parameters = new();
+        object? bodyParameter = await GetBodyParameter(methodType, body);
+        if(bodyParameter is not null)
         {
-            if (body is null)
-            {
-                return [methodParameters[0].DefaultValue];
-            }
-
-            return [await JsonSerializer.DeserializeAsync(body, methodParameters[0].ParameterType)];
-        }
-
-        if (methodType.HasBody())
-        {
-            ParameterInfo? bodyParameter =
-                _bodyParameters.GetValueOrDefault(methodType);
-
-            if (bodyParameter is not null)
-            {
-                parameters.Add(body is not null
-                    ? await JsonSerializer.DeserializeAsync(body, bodyParameter.ParameterType)
-                    : bodyParameter.DefaultValue);
-            }
+            parameters.Add(bodyParameter);
         }
 
         return parameters.ToArray();
     }
     
+    // TODO: Refactor
+    private async Task<object?> GetBodyParameter(HttpMethodType methodType, Stream? body)
+    {
+        MethodInfo method = Actions[methodType];
+        ParameterInfo[] methodParameters = method.GetParameters();
+        if (!methodType.HasBody())
+        {
+            return null;
+        }
+
+        if (methodParameters.Length == 1)
+        {
+            if (body is null)
+            {
+                return methodParameters[0].DefaultValue;
+            }
+
+            return await JsonSerializer.DeserializeAsync(body, methodParameters[0].ParameterType);
+        }
+
+        ParameterInfo? bodyParameter =
+            _bodyParameters.GetValueOrDefault(methodType);
+
+        if (bodyParameter is not null)
+        {
+            return body is not null
+                ? await JsonSerializer.DeserializeAsync(body, bodyParameter.ParameterType)
+                : bodyParameter.DefaultValue;
+        }
+        
+        return null;
+    }
+
     public override int GetHashCode()
     {
         return HashCode.Combine(_route, Actions);
     }
-    
+
     private void Insert(HttpMethodType methodType, MethodInfo method, Url route, int depth)
     {
         if (route.SplitUrl.Length == (depth + 1))
@@ -109,6 +126,11 @@ internal sealed class RouteNode
         Actions.Add(methodType, method);
 
         ParameterInfo[] parameters = method.GetParameters();
+        AddBodyParameter(methodType, parameters);
+    }
+
+    private void AddBodyParameter(HttpMethodType methodType, ParameterInfo[] parameters)
+    {
         if (!methodType.HasBody())
         {
             return;

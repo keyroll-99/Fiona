@@ -7,7 +7,7 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
     public string NormalizeUrl { get; } = NormalizeUrlRegex().Replace(url, "{param}");
     public string OriginalUrl { get; } = url;
     public string[] SplitUrl { get; } = url.Split('/');
-    public HashSet<string> ParametersName { get; } = GetParameters(url);
+    public HashSet<string> ParametersName { get; } = GetParameters(url); // string, Guid, primitive types
 
     private const string OpenParameter = "{";
     private const string CloseParameter = "}";
@@ -48,7 +48,7 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
         return NormalizeUrl.StartsWith(url.NormalizeUrl);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return Equals(obj as Url);
     }

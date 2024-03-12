@@ -1,5 +1,6 @@
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing;
+using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Tests.FionaServer.Controller;
 
