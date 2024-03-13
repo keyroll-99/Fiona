@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text.Json;
-using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Routing;
@@ -48,7 +47,7 @@ internal sealed class RouteNode
 
     public async Task<object?[]> GetParameters(Uri uri, HttpMethodType methodType, Stream? body)
     {
-        List<object> parameters = new();
+        List<object> parameters = [];
         object? bodyParameter = await GetBodyParameter(methodType, body);
         if(bodyParameter is not null)
         {
@@ -125,6 +124,7 @@ internal sealed class RouteNode
     {
         Actions.Add(methodType, method);
 
+        // Rebuild
         ParameterInfo[] parameters = method.GetParameters();
         AddBodyParameter(methodType, parameters);
     }
