@@ -100,7 +100,8 @@ public sealed class UserController
                 new UserModel
                 {
                     Id = userId, Name = name
-                }, HttpStatusCode.OK
+                },
+                HttpStatusCode.OK
             )
         );
     }

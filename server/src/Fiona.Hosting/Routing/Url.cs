@@ -7,7 +7,6 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
     public string NormalizeUrl { get; } = NormalizeUrlRegex().Replace(url, "{param}");
     public string OriginalUrl { get; } = url;
     public string[] SplitUrl { get; } = url.Split('/');
-    public HashSet<string> ParametersName { get; } = GetParameters(url); // string, Guid, primitive types
 
     private const string OpenParameter = "{";
     private const string CloseParameter = "}";
@@ -58,11 +57,11 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
         return HashCode.Combine(OriginalUrl);
     }
 
-    private static HashSet<string> GetParameters(string url)
+    public HashSet<string> GetParameters()
     {
         HashSet<string> result = [];
 
-        if (!url.Contains(OpenParameter))
+        if (!OriginalUrl.Contains(OpenParameter))
         {
             return result;
         }
@@ -70,17 +69,17 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
         int offset = 0;
         while (true)
         {
-            int indexOfOpen = url.IndexOf(OpenParameter, offset, StringComparison.Ordinal);
+            int indexOfOpen = OriginalUrl.IndexOf(OpenParameter, offset, StringComparison.Ordinal);
             if (indexOfOpen == -1)
             {
                 break;
             }
 
-            int indexOfClose = url.IndexOf(CloseParameter, offset, StringComparison.Ordinal);
-            string variableName = url.Substring(indexOfOpen + 1, indexOfClose - indexOfOpen - 1);
+            int indexOfClose = OriginalUrl.IndexOf(CloseParameter, offset, StringComparison.Ordinal);
+            string variableName = OriginalUrl.Substring(indexOfOpen + 1, indexOfClose - indexOfOpen - 1);
             if (!result.Add(variableName))
             {
-                throw new ConflictNameOfRouteParameters(url);
+                throw new ConflictNameOfRouteParameters(OriginalUrl);
             }
 
             offset = indexOfClose + 1;

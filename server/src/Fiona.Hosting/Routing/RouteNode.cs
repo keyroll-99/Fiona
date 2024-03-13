@@ -6,8 +6,7 @@ namespace Fiona.Hosting.Routing;
 
 internal sealed class RouteNode
 {
-    public Dictionary<HttpMethodType, MethodInfo> Actions { get; } = new();
-    private readonly Dictionary<HttpMethodType, ParameterInfo> _bodyParameters = new();
+    public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();
 
     private readonly Dictionary<HttpMethodType, HashSet<string>>
         _queryParameters = new(); // string, Guid, primitive types
@@ -27,7 +26,7 @@ internal sealed class RouteNode
         bool isHead = route.OriginalUrl == string.Empty;
         if (isHead)
         {
-            AddAction(methodType, method);
+            AddAction(methodType, method, route);
             return;
         }
 
@@ -45,50 +44,50 @@ internal sealed class RouteNode
         return next?.FindNode(route);
     }
 
-    public async Task<object?[]> GetParameters(Uri uri, HttpMethodType methodType, Stream? body)
-    {
-        List<object> parameters = [];
-        object? bodyParameter = await GetBodyParameter(methodType, body);
-        if(bodyParameter is not null)
-        {
-            parameters.Add(bodyParameter);
-        }
+    // public async Task<object?[]> GetParameters(Uri uri, HttpMethodType methodType, Stream? body)
+    // {
+    //     List<object> parameters = [];
+    //     object? bodyParameter = await GetBodyParameter(methodType, body);
+    //     if (bodyParameter is not null)
+    //     {
+    //         parameters.Add(bodyParameter);
+    //     }
+    //
+    //     return parameters.ToArray();
+    // }
 
-        return parameters.ToArray();
-    }
-    
     // TODO: Refactor
-    private async Task<object?> GetBodyParameter(HttpMethodType methodType, Stream? body)
-    {
-        MethodInfo method = Actions[methodType];
-        ParameterInfo[] methodParameters = method.GetParameters();
-        if (!methodType.HasBody())
-        {
-            return null;
-        }
-
-        if (methodParameters.Length == 1)
-        {
-            if (body is null)
-            {
-                return methodParameters[0].DefaultValue;
-            }
-
-            return await JsonSerializer.DeserializeAsync(body, methodParameters[0].ParameterType);
-        }
-
-        ParameterInfo? bodyParameter =
-            _bodyParameters.GetValueOrDefault(methodType);
-
-        if (bodyParameter is not null)
-        {
-            return body is not null
-                ? await JsonSerializer.DeserializeAsync(body, bodyParameter.ParameterType)
-                : bodyParameter.DefaultValue;
-        }
-        
-        return null;
-    }
+    // private async Task<object?> GetBodyParameter(HttpMethodType methodType, Stream? body)
+    // {
+    //     MethodInfo method = Actions[methodType];
+    //     ParameterInfo[] methodParameters = method.GetParameters();
+    //     if (!methodType.HasBody())
+    //     {
+    //         return null;
+    //     }
+    //
+    //     if (methodParameters.Length == 1)
+    //     {
+    //         if (body is null)
+    //         {
+    //             return methodParameters[0].DefaultValue;
+    //         }
+    //
+    //         return await JsonSerializer.DeserializeAsync(body, methodParameters[0].ParameterType);
+    //     }
+    //
+    //     ParameterInfo? bodyParameter =
+    //         _bodyParameters.GetValueOrDefault(methodType);
+    //
+    //     if (bodyParameter is not null)
+    //     {
+    //         return body is not null
+    //             ? await JsonSerializer.DeserializeAsync(body, bodyParameter.ParameterType)
+    //             : bodyParameter.DefaultValue;
+    //     }
+    //
+    //     return null;
+    // }
 
     public override int GetHashCode()
     {
@@ -106,7 +105,7 @@ internal sealed class RouteNode
                 AddChild(child);
             }
 
-            child.AddAction(methodType, method);
+            child.AddAction(methodType, method, route);
             return;
         }
 
@@ -120,30 +119,9 @@ internal sealed class RouteNode
         next.Insert(methodType, method, route, depth + 1);
     }
 
-    private void AddAction(HttpMethodType methodType, MethodInfo method)
+    private void AddAction(HttpMethodType methodType, MethodInfo method, Url url)
     {
-        Actions.Add(methodType, method);
-
-        // Rebuild
-        ParameterInfo[] parameters = method.GetParameters();
-        AddBodyParameter(methodType, parameters);
-    }
-
-    private void AddBodyParameter(HttpMethodType methodType, ParameterInfo[] parameters)
-    {
-        if (!methodType.HasBody())
-        {
-            return;
-        }
-
-        ParameterInfo? bodyParameter =
-            parameters.FirstOrDefault(p => p.GetCustomAttribute<BodyAttribute>() is not null) ??
-            parameters.FirstOrDefault(p => !p.GetCustomAttributes().Any());
-
-        if (bodyParameter is not null)
-        {
-            _bodyParameters.Add(methodType, bodyParameter);
-        }
+        Actions.Add(methodType, new Endpoint(method, url));
     }
 
     private void AddChild(RouteNode node)
