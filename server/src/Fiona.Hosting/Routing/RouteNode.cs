@@ -4,6 +4,10 @@ using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Routing;
 
+
+// TODO: Rebuild RouteNode
+// Osobne wyszukiwanie routa
+// osobne dodawanie
 internal sealed class RouteNode
 {
     public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();
@@ -118,7 +122,7 @@ internal sealed class RouteNode
             return;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => route.ContainsIn(ch._route));
+        RouteNode? next = _children.FirstOrDefault(ch => route.NormalizeUrl.StartsWith(ch._route.NormalizeUrl));
         if (next is null)
         {
             next = new RouteNode(route.GetPartOfUrl(depth + 1));

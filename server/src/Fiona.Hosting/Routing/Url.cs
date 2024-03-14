@@ -11,10 +11,11 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
 
     private const string OpenParameter = "{";
     private const string CloseParameter = "}";
+    private const string ParamMark = "{param}";
 
     private Url(string url)
     {
-        NormalizeUrl = NormalizeUrlRegex().Replace(url, "{param}");
+        NormalizeUrl = NormalizeUrlRegex().Replace(url, ParamMark);
         OriginalUrl = url;
         SplitUrl = url.Split('/');
         IndexesOfParameters = GetIndexesOfParameters();
@@ -37,8 +38,13 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
         {
             return false;
         }
+        string[] splitUrl = (string[])SplitUrl.Clone();
+        foreach (var parameter in other.IndexesOfParameters)
+        {
+            splitUrl[parameter] = ParamMark;
+        }
 
-        return NormalizeUrl == other.NormalizeUrl;
+        return other.NormalizeUrl ==  string.Join('/', splitUrl);
     }
 
     public bool Equals(string? other)
@@ -54,7 +60,12 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
     public bool ContainsIn(Url url)
     {
         // TODO: Url from api doesn't have {} at parameter, i have to looking for a parameter parent if not found exactly same url
-        return NormalizeUrl.StartsWith(url.NormalizeUrl);
+        string[] splitUrl = (string[])SplitUrl.Clone();
+        foreach (var parameter in url.IndexesOfParameters)
+        {
+            splitUrl[parameter] = ParamMark;
+        }
+        return string.Join('/', splitUrl).StartsWith(url.NormalizeUrl);
     }
 
     public override bool Equals(object? obj)
@@ -105,7 +116,7 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
         for (var index = 0; index < splitNormalizedUrl.Count; index++)
         {
             var url = splitNormalizedUrl[index];
-            if (url == "{param}")
+            if (url == ParamMark)
             {
                 result.Add(index);
             }
