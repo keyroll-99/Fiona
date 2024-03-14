@@ -8,34 +8,48 @@ namespace Fiona.Hosting.Routing;
 
 internal sealed class Endpoint
 {
-    private MethodInfo _method;
-    private HashSet<string> _parametersName; // string, Guid, primitive types
-    private ParameterInfo? _bodyParameter;
-    private HashSet<Stream> _queryParameters;
-    private RouteAttribute? _routeAttribute;
+    private readonly MethodInfo _method;
+    private HashSet<string> _routeParameterNames; // string, Guid, primitive types
+    private readonly HashSet<string> _queryParameterNames; // string, Guid, primitive types
+    private readonly ParameterInfo? _bodyParameter;
+    private readonly RouteAttribute? _routeAttribute;
+    private readonly Url _url;
 
     public Endpoint(MethodInfo method, Url url)
     {
         _method = method;
         _routeAttribute = method.GetCustomAttribute<RouteAttribute>();
-        _parametersName = url.GetParameters();
+        _routeParameterNames = url.GetUrlParameters();
         _bodyParameter = GetBodyParameter();
-        _queryParameters = GetQueryParameters();
+        _queryParameterNames = GetQueryParameters();
+        _url = url;
     }
 
-    public async Task<ObjectResult> Invoke(Uri url, Stream? body, IServiceProvider _serviceProvider)
+    public async Task<ObjectResult> Invoke(Uri url, Stream? body, IServiceProvider serviceProvider)
     {
-        object? controller = _serviceProvider.GetService(_method.DeclaringType!);
+        object? controller = serviceProvider.GetService(_method.DeclaringType!);
         object?[] parameters = await GetParameters(url, body);
         Type returnType = _method.ReturnType;
 
+        return await InvokeAndCastResultToObjectResult(returnType, controller, parameters);
+    }
+
+    private async Task<ObjectResult> InvokeAndCastResultToObjectResult(Type returnType, object? controller, object?[] parameters)
+    {
         if (typeof(Task).IsAssignableTo(returnType))
         {
             await (Task)_method.Invoke(controller, parameters)!;
             return new ObjectResult(null, HttpStatusCode.OK);
         }
 
+        if (typeof(void).IsAssignableTo(returnType))
+        {
+            _method.Invoke(controller, parameters);
+            return new ObjectResult(null, HttpStatusCode.OK);
+        }
+        
         object? result = _method.Invoke(controller, parameters);
+
         return await CastResultToObjectResult(result, returnType);
     }
 
@@ -81,19 +95,26 @@ internal sealed class Endpoint
 
     private async Task<object?[]> GetParameters(Uri uri, Stream? body)
     {
-        List<object> parameters = new();
+        List<object> parameters = [];
         object? bodyParameter = await GetBodyParameter(body);
-        if (bodyParameter is not null)
-        {
-            parameters.Add(bodyParameter);
-        }
-
+        IEnumerable<object?> routeParameters = GetRouteParameters(uri);
+        IEnumerable<object?> queryParameters = GetQueryParameters();
+        
         return parameters.ToArray();
     }
 
-    private HashSet<Stream> GetQueryParameters()
+    private IEnumerable<object?> GetRouteParameters(Uri uri)
     {
-        return new();
+        List<string> routeParameterValues = uri.AbsolutePath.Split("/").ToList();
+        List<object?> result = [];
+        result.AddRange(_url.IndexesOfParameters.Select(index => routeParameterValues[index]));
+
+        return result;
+    }
+
+    private HashSet<string> GetQueryParameters()
+    {
+        return _routeAttribute is not null ? _routeAttribute.QueryParameters : [];
     }
 
     private async Task<object?> GetBodyParameter(Stream? body)

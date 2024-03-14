@@ -2,15 +2,24 @@ using System.Text.RegularExpressions;
 
 namespace Fiona.Hosting.Routing;
 
-internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<string>
+internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
 {
-    public string NormalizeUrl { get; } = NormalizeUrlRegex().Replace(url, "{param}");
-    public string OriginalUrl { get; } = url;
-    public string[] SplitUrl { get; } = url.Split('/');
+    public string NormalizeUrl { get; }
+    public string OriginalUrl { get; }
+    public string[] SplitUrl { get; }
+    public IEnumerable<int> IndexesOfParameters { get; }
 
     private const string OpenParameter = "{";
     private const string CloseParameter = "}";
 
+    private Url(string url)
+    {
+        NormalizeUrl = NormalizeUrlRegex().Replace(url, "{param}");
+        OriginalUrl = url;
+        SplitUrl = url.Split('/');
+        IndexesOfParameters = GetIndexesOfParameters();
+    }
+    
     public Url GetPartOfUrl(int howManyParts)
     {
         string[] parts = OriginalUrl.Split('/');
@@ -44,6 +53,7 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
 
     public bool ContainsIn(Url url)
     {
+        // TODO: Url from api doesn't have {} at parameter, i have to looking for a parameter parent if not found exactly same url
         return NormalizeUrl.StartsWith(url.NormalizeUrl);
     }
 
@@ -56,8 +66,8 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
     {
         return HashCode.Combine(OriginalUrl);
     }
-
-    public HashSet<string> GetParameters()
+    
+    public HashSet<string> GetUrlParameters()
     {
         HashSet<string> result = [];
 
@@ -87,4 +97,21 @@ internal sealed partial class Url(string url) : IEquatable<Url>, IEquatable<stri
 
         return result;
     }
+    
+    private IEnumerable<int> GetIndexesOfParameters()
+    {
+        List<int> result = [];
+        List<string> splitNormalizedUrl = NormalizeUrl.Split("/").ToList();
+        for (var index = 0; index < splitNormalizedUrl.Count; index++)
+        {
+            var url = splitNormalizedUrl[index];
+            if (url == "{param}")
+            {
+                result.Add(index);
+            }
+        }
+
+        return result;
+    }
+
 }

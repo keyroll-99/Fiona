@@ -5,7 +5,7 @@ public sealed class RouteAttribute(HttpMethodType httpMethodType, string route, 
 {
     public HttpMethodType HttpMethodType { get; } = httpMethodType;
     public string Route { get; } = route;
-    public List<string> QueryParameters { get; } = queryParameters.ToList();
+    public HashSet<string> QueryParameters { get; } = queryParameters.ToHashSet();
 
     public RouteAttribute(HttpMethodType httpMethodType) : this(httpMethodType, string.Empty, [])
     {

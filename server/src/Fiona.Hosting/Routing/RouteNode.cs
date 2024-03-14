@@ -13,10 +13,19 @@ internal sealed class RouteNode
 
     private readonly Url _route;
     private readonly List<RouteNode> _children = [];
+    private readonly bool isParameterized;
 
     private RouteNode(Url route)
     {
         _route = route;
+        if (route.IndexesOfParameters.Any())
+        {
+            isParameterized = route.IndexesOfParameters.Last() == (route.SplitUrl.Length - 1);
+        }
+        else
+        {
+            isParameterized = false;
+        }
     }
 
     public static RouteNode GetHead() => new(string.Empty);
