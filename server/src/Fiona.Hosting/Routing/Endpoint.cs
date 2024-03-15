@@ -34,7 +34,8 @@ internal sealed class Endpoint
         return await InvokeAndCastResultToObjectResult(returnType, controller, parameters);
     }
 
-    private async Task<ObjectResult> InvokeAndCastResultToObjectResult(Type returnType, object? controller, object?[] parameters)
+    private async Task<ObjectResult> InvokeAndCastResultToObjectResult(Type returnType, object? controller,
+        object?[] parameters)
     {
         if (typeof(Task).IsAssignableTo(returnType))
         {
@@ -47,10 +48,17 @@ internal sealed class Endpoint
             _method.Invoke(controller, parameters);
             return new ObjectResult(null, HttpStatusCode.OK);
         }
-        
-        object? result = _method.Invoke(controller, parameters);
 
-        return await CastResultToObjectResult(result, returnType);
+        try
+        {
+            object? result = _method.Invoke(controller, parameters);
+
+            return await CastResultToObjectResult(result, returnType);
+        }
+        catch (Exception e)
+        {
+            return new ObjectResult(e.ToString(), HttpStatusCode.InternalServerError);
+        }
     }
 
     private static async Task<ObjectResult> CastResultToObjectResult(object? result, Type returnType)
@@ -99,7 +107,7 @@ internal sealed class Endpoint
         object? bodyParameter = await GetBodyParameter(body);
         IEnumerable<object?> routeParameters = GetRouteParameters(uri);
         IEnumerable<object?> queryParameters = GetQueryParameters();
-        
+
         return parameters.ToArray();
     }
 

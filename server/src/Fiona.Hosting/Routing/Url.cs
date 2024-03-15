@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace Fiona.Hosting.Routing;
 
+// TODO: 2 objects one fot keep it in routeNode second for request
 internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
 {
     public string NormalizeUrl { get; }

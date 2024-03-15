@@ -11,39 +11,26 @@ namespace Fiona.Hosting.Routing;
 internal sealed class RouteNode
 {
     public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();
-
-    private readonly Dictionary<HttpMethodType, HashSet<string>>
-        _queryParameters = new(); // string, Guid, primitive types
-
     private readonly Url _route;
     private readonly List<RouteNode> _children = [];
-    private readonly bool isParameterized;
 
     private RouteNode(Url route)
     {
         _route = route;
-        if (route.IndexesOfParameters.Any())
-        {
-            isParameterized = route.IndexesOfParameters.Last() == (route.SplitUrl.Length - 1);
-        }
-        else
-        {
-            isParameterized = false;
-        }
     }
 
     public static RouteNode GetHead() => new(string.Empty);
 
-    public void Insert(HttpMethodType methodType, MethodInfo method, Url route)
+    public void Insert(HttpMethodType methodType, MethodInfo method, Url url)
     {
-        bool isHead = route.OriginalUrl == string.Empty;
+        bool isHead = url.NormalizeUrl == string.Empty;
         if (isHead)
         {
-            AddAction(methodType, method, route);
+            AddAction(methodType, method, url);
             return;
         }
 
-        Insert(methodType, method, route, 0);
+        Insert(methodType, method, url, 0);
     }
 
     public RouteNode? FindNode(Url route)
@@ -107,29 +94,29 @@ internal sealed class RouteNode
         return HashCode.Combine(_route, Actions);
     }
 
-    private void Insert(HttpMethodType methodType, MethodInfo method, Url route, int depth)
+    private void Insert(HttpMethodType methodType, MethodInfo method, Url url, int depth)
     {
-        if (route.SplitUrl.Length == (depth + 1))
+        if (url.SplitUrl.Length == (depth + 1))
         {
-            RouteNode? child = _children.FirstOrDefault(ch => ch._route.Equals(route));
+            RouteNode? child = _children.FirstOrDefault(ch => ch._route.NormalizeUrl == url.NormalizeUrl);
             if (child is null)
             {
-                child = new RouteNode(route);
+                child = new RouteNode(url);
                 AddChild(child);
             }
 
-            child.AddAction(methodType, method, route);
+            child.AddAction(methodType, method, url);
             return;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => route.NormalizeUrl.StartsWith(ch._route.NormalizeUrl));
+        RouteNode? next = _children.FirstOrDefault(ch => url.NormalizeUrl.StartsWith(ch._route.NormalizeUrl));
         if (next is null)
         {
-            next = new RouteNode(route.GetPartOfUrl(depth + 1));
+            next = new RouteNode(url.GetPartOfUrl(depth + 1));
             AddChild(next);
         }
 
-        next.Insert(methodType, method, route, depth + 1);
+        next.Insert(methodType, method, url, depth + 1);
     }
 
     private void AddAction(HttpMethodType methodType, MethodInfo method, Url url)
