@@ -15,7 +15,7 @@ public class InfrastructureTest(FionaTestServerBuilder testBuilder)
     };
     
     [Fact]
-    public async Task Before_Host_Run_Should_Add_Automatically_Controllers()
+    public Task Before_Host_Run_Should_Add_Automatically_Controllers()
     {
         // Arrange
         var provider = testBuilder.Builder.Service;
@@ -24,6 +24,7 @@ public class InfrastructureTest(FionaTestServerBuilder testBuilder)
         provider.Any(x => x.ServiceType == typeof(HomeController)).Should().BeTrue();
         provider.Any(x => x.ServiceType == typeof(AboutController)).Should().BeTrue();
         provider.Any(x => x.ServiceType == typeof(UserController)).Should().BeTrue();
+        return Task.CompletedTask;
     }
     
     

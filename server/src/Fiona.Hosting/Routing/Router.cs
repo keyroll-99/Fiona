@@ -30,7 +30,7 @@ internal sealed class Router
 
     private RouteNode? GetNode(Uri uri)
     {
-        return _head.FindNode(uri.AbsolutePath[1..]);
+        return _head.FindNode(uri);
     }
 
 }

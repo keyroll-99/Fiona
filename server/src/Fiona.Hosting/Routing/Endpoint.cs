@@ -1,6 +1,8 @@
+using System.Collections.Specialized;
 using System.Net;
 using System.Reflection;
 using System.Text.Json;
+using System.Web;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing.Attributes;
 
@@ -9,7 +11,7 @@ namespace Fiona.Hosting.Routing;
 internal sealed class Endpoint
 {
     private readonly MethodInfo _method;
-    private HashSet<string> _routeParameterNames; // string, Guid, primitive types
+    private readonly HashSet<string> _routeParameterNames; // string, Guid, primitive types
     private readonly HashSet<string> _queryParameterNames; // string, Guid, primitive types
     private readonly ParameterInfo? _bodyParameter;
     private readonly RouteAttribute? _routeAttribute;
@@ -19,9 +21,9 @@ internal sealed class Endpoint
     {
         _method = method;
         _routeAttribute = method.GetCustomAttribute<RouteAttribute>();
-        _routeParameterNames = url.GetUrlParameters();
+        _routeParameterNames = url.GetNameOfUrlParameters();
         _bodyParameter = GetBodyParameter();
-        _queryParameterNames = GetQueryParameters();
+        _queryParameterNames = _routeAttribute?.QueryParameters ?? [];
         _url = url;
     }
 
@@ -91,7 +93,8 @@ internal sealed class Endpoint
 
         bool shouldMatchArgumentAsBodyArgument = bodyArgument is null && parameters.Length == 1 &&
                                                  (_routeAttribute is null ||
-                                                  _routeAttribute.QueryParameters.Count == 0);
+                                                  _routeAttribute.QueryParameters.Count == 0) &&
+                                                 _routeParameterNames.Count == 0;
 
         if (shouldMatchArgumentAsBodyArgument)
         {
@@ -103,26 +106,48 @@ internal sealed class Endpoint
 
     private async Task<object?[]> GetParameters(Uri uri, Stream? body)
     {
-        List<object> parameters = [];
+        List<object?> parameters = [];
         object? bodyParameter = await GetBodyParameter(body);
-        IEnumerable<object?> routeParameters = GetRouteParameters(uri);
-        IEnumerable<object?> queryParameters = GetQueryParameters();
+        IEnumerable<(object? value, string name)> routeParameters = GetRouteParameters(uri);
+        IEnumerable<(object? value, string name)> queryParameters = GetQueryParameters(uri);
+
+        foreach (ParameterInfo parameterInfo in _method.GetParameters())
+        {
+            if (parameterInfo.ParameterType == _bodyParameter?.ParameterType)
+            {
+                parameters.Add(bodyParameter);
+                continue;
+            }
+
+        }
+
 
         return parameters.ToArray();
     }
 
-    private IEnumerable<object?> GetRouteParameters(Uri uri)
+    private IEnumerable<(object? value, string name)> GetRouteParameters(Uri uri)
     {
         List<string> routeParameterValues = uri.AbsolutePath.Split("/").ToList();
-        List<object?> result = [];
-        result.AddRange(_url.IndexesOfParameters.Select(index => routeParameterValues[index]));
+        List<(object? value, string name)> result = [];
+        foreach (var indexesOfParameter in _url.IndexesOfParameters)
+        {
+            result.Add((value: routeParameterValues[indexesOfParameter], name: _url.SplitUrl[indexesOfParameter][1..^1]));
+        }
+        
 
         return result;
     }
 
-    private HashSet<string> GetQueryParameters()
+    private HashSet<(object? value, string name)> GetQueryParameters(Uri uri)
     {
-        return _routeAttribute is not null ? _routeAttribute.QueryParameters : [];
+        HashSet<(object? value, string name)> result = [];
+        NameValueCollection queries = HttpUtility.ParseQueryString(uri.Query);
+        foreach (var queryParameter in _queryParameterNames)
+        {
+            result.Add((value: queries.Get(queryParameter) ?? string.Empty, name: queryParameter));
+        }
+
+        return result;
     }
 
     private async Task<object?> GetBodyParameter(Stream? body)

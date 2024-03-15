@@ -142,7 +142,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
     [Fact]
     public async Task When_Given_User_Props_And_Method_Doesnt_Have_Route_Attribute_Then_Should_Math_Args_And_Return_Model()
     {
-        var response = await _httpClient.GetAsync("userFromArgs?userId=2&name=Jane");
+        var response = await _httpClient.GetAsync("user/userFromArgs?userId=2&name=Jane");
         var content = await response.Content.ReadAsStringAsync();
         var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
         {
@@ -156,7 +156,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
     [Fact]
     public async Task When_Given_User_Props_And_Method_Has_Route_Attribute_Then_Should_Use_Attribute_And_Return_Model()
     {
-        var response = await _httpClient.GetAsync("userFromArgs/second?userId=2&name=Jane");
+        var response = await _httpClient.GetAsync("user/userFromArgs/second?userId=2&name=Jane");
         var content = await response.Content.ReadAsStringAsync();
         var userFromResponse = JsonSerializer.Deserialize<UserModel>(content, new JsonSerializerOptions
         {
@@ -250,7 +250,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         });
 
         // Assert
-        userFromResponse.Id.Should().Be(1);
+        userFromResponse!.Id.Should().Be(1);
         userFromResponse.Name.Should().Be(user.Name);
     }
     
@@ -266,7 +266,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         });
         
         // Assert
-        userFromResponse.Name.Should().Be("jhon");
+        userFromResponse!.Name.Should().Be("jhon");
         userFromResponse.Id.Should().Be(1);
     }
     
@@ -282,7 +282,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         });
         
         // Assert
-        userFromResponse.Name.Should().Be("Jan");
+        userFromResponse!.Name.Should().Be("Jan");
         userFromResponse.Id.Should().Be(21);
     }    
     
@@ -298,7 +298,7 @@ public class GetTests(FionaTestServerBuilder testBuilder)
         });
         
         // Assert
-        userFromResponse.Name.Should().Be("marek");
+        userFromResponse!.Name.Should().Be("marek");
         userFromResponse.Id.Should().Be(21);
     }
 }

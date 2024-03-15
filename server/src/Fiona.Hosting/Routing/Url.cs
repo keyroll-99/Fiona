@@ -2,8 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace Fiona.Hosting.Routing;
 
-// TODO: 2 objects one fot keep it in routeNode second for request
-internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
+internal sealed partial class Url : IEquatable<Uri>
 {
     public string NormalizeUrl { get; }
     public string OriginalUrl { get; }
@@ -21,7 +20,7 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
         SplitUrl = url.Split('/');
         IndexesOfParameters = GetIndexesOfParameters();
     }
-    
+
     public Url GetPartOfUrl(int howManyParts)
     {
         string[] parts = OriginalUrl.Split('/');
@@ -33,53 +32,40 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
     [GeneratedRegex(@"\{[^{}]*\}")]
     private static partial Regex NormalizeUrlRegex();
 
-    public bool Equals(Url? other)
+    public bool Equals(Uri? other)
     {
-        if (other is null)
-        {
-            return false;
-        }
-        string[] splitUrl = (string[])SplitUrl.Clone();
-        foreach (var parameter in other.IndexesOfParameters)
-        {
-            splitUrl[parameter] = ParamMark;
-        }
-
-        return other.NormalizeUrl ==  string.Join('/', splitUrl);
-    }
-
-    public bool Equals(string? other)
-    {
-        if (other is null)
+        string? uri = other?.AbsolutePath;
+        if (uri is null)
         {
             return false;
         }
 
-        return OriginalUrl == other;
-    }
-
-    public bool ContainsIn(Url url)
-    {
-        // TODO: Url from api doesn't have {} at parameter, i have to looking for a parameter parent if not found exactly same url
-        string[] splitUrl = (string[])SplitUrl.Clone();
-        foreach (var parameter in url.IndexesOfParameters)
+        string[] splitUrl = other!.AbsolutePath[1..].Split('/');
+        foreach (var parameter in IndexesOfParameters)
         {
             splitUrl[parameter] = ParamMark;
         }
-        return string.Join('/', splitUrl).StartsWith(url.NormalizeUrl);
+
+        return NormalizeUrl == string.Join('/', splitUrl);
     }
 
-    public override bool Equals(object? obj)
+    public bool IsSubUrl(Uri uri)
     {
-        return Equals(obj as Url);
+        string[] splitUrl = uri.AbsolutePath[1..].Split('/');
+        foreach (var parameter in IndexesOfParameters)
+        {
+            splitUrl[parameter] = ParamMark;
+        }
+
+        return string.Join('/', splitUrl).StartsWith(NormalizeUrl);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(OriginalUrl);
+        return HashCode.Combine(NormalizeUrl, OriginalUrl, SplitUrl, IndexesOfParameters);
     }
-    
-    public HashSet<string> GetUrlParameters()
+
+    public HashSet<string> GetNameOfUrlParameters()
     {
         HashSet<string> result = [];
 
@@ -109,7 +95,7 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
 
         return result;
     }
-    
+
     private IEnumerable<int> GetIndexesOfParameters()
     {
         List<int> result = [];
@@ -125,5 +111,4 @@ internal sealed partial class Url: IEquatable<Url>, IEquatable<string>
 
         return result;
     }
-
 }

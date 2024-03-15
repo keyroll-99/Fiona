@@ -1,6 +1,4 @@
 using System.Reflection;
-using System.Text.Json;
-using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Routing;
 
@@ -13,10 +11,12 @@ internal sealed class RouteNode
     public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();
     private readonly Url _route;
     private readonly List<RouteNode> _children = [];
+    private readonly bool _isParameterized;
 
     private RouteNode(Url route)
     {
         _route = route;
+        _isParameterized = route.NormalizeUrl.EndsWith("}");
     }
 
     public static RouteNode GetHead() => new(string.Empty);
@@ -33,61 +33,17 @@ internal sealed class RouteNode
         Insert(methodType, method, url, 0);
     }
 
-    public RouteNode? FindNode(Url route)
+    public RouteNode? FindNode(Uri uri)
     {
-        if (route.Equals(_route))
+        if (_route.Equals(uri))
         {
             return this;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => route.ContainsIn(ch._route));
-        return next?.FindNode(route);
+        RouteNode? next = _children.FirstOrDefault(ch => ch._route.IsSubUrl(uri) && !ch._isParameterized);
+        next ??= _children.FirstOrDefault(ch => ch._route.IsSubUrl(uri) && ch._isParameterized);
+        return next?.FindNode(uri);
     }
-
-    // public async Task<object?[]> GetParameters(Uri uri, HttpMethodType methodType, Stream? body)
-    // {
-    //     List<object> parameters = [];
-    //     object? bodyParameter = await GetBodyParameter(methodType, body);
-    //     if (bodyParameter is not null)
-    //     {
-    //         parameters.Add(bodyParameter);
-    //     }
-    //
-    //     return parameters.ToArray();
-    // }
-
-    // TODO: Refactor
-    // private async Task<object?> GetBodyParameter(HttpMethodType methodType, Stream? body)
-    // {
-    //     MethodInfo method = Actions[methodType];
-    //     ParameterInfo[] methodParameters = method.GetParameters();
-    //     if (!methodType.HasBody())
-    //     {
-    //         return null;
-    //     }
-    //
-    //     if (methodParameters.Length == 1)
-    //     {
-    //         if (body is null)
-    //         {
-    //             return methodParameters[0].DefaultValue;
-    //         }
-    //
-    //         return await JsonSerializer.DeserializeAsync(body, methodParameters[0].ParameterType);
-    //     }
-    //
-    //     ParameterInfo? bodyParameter =
-    //         _bodyParameters.GetValueOrDefault(methodType);
-    //
-    //     if (bodyParameter is not null)
-    //     {
-    //         return body is not null
-    //             ? await JsonSerializer.DeserializeAsync(body, bodyParameter.ParameterType)
-    //             : bodyParameter.DefaultValue;
-    //     }
-    //
-    //     return null;
-    // }
 
     public override int GetHashCode()
     {
@@ -109,7 +65,7 @@ internal sealed class RouteNode
             return;
         }
 
-        RouteNode? next = _children.FirstOrDefault(ch => url.NormalizeUrl.StartsWith(ch._route.NormalizeUrl));
+        RouteNode? next = _children.FirstOrDefault(ch => url.NormalizeUrl.StartsWith(ch._route.NormalizeUrl + "/"));
         if (next is null)
         {
             next = new RouteNode(url.GetPartOfUrl(depth + 1));
