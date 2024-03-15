@@ -28,7 +28,7 @@ Must to have - I want to finish it to end of march
 	- [X] Simple Controller
 	- [X] Parsing body to object
 	- [X] Middleware
-	- [ ] Parsing parameters and args from route
+	- [X] Passing parameters and args from route
 	- [ ] Response (status codes etc)
 	- [ ] Async handle request
 	- [ ] Configuration like a baseUrl, port ETC

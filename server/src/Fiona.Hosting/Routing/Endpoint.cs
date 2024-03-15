@@ -59,6 +59,7 @@ internal sealed class Endpoint
         }
         catch (Exception e)
         {
+            // This will be replace by middleware
             return new ObjectResult(e.ToString(), HttpStatusCode.InternalServerError);
         }
     }
@@ -106,11 +107,17 @@ internal sealed class Endpoint
 
     private async Task<object?[]> GetParameters(Uri uri, Stream? body)
     {
-        List<object?> parameters = [];
         object? bodyParameter = await GetBodyParameter(body);
-        IEnumerable<(object? value, string name)> routeParameters = GetRouteParameters(uri);
-        IEnumerable<(object? value, string name)> queryParameters = GetQueryParameters(uri);
+        IReadOnlyCollection<(object? value, string name)> routeParameters = GetRouteParameters(uri);
+        IReadOnlyCollection<(object? value, string name)> queryParameters = GetQueryParameters(uri);
+        return CreateParameterArray(bodyParameter, routeParameters, queryParameters);
+    }
 
+    private object?[] CreateParameterArray(object? bodyParameter,
+        IReadOnlyCollection<(object? value, string name)> routeParameters,
+        IReadOnlyCollection<(object? value, string name)> queryParameters)
+    {
+        List<object?> parameters = new List<object?>(queryParameters.Count + routeParameters.Count + 1);
         foreach (ParameterInfo parameterInfo in _method.GetParameters())
         {
             if (parameterInfo.ParameterType == _bodyParameter?.ParameterType)
@@ -119,26 +126,38 @@ internal sealed class Endpoint
                 continue;
             }
 
-        }
+            if (routeParameters.Any(p => p.name == parameterInfo.Name))
+            {
+                var routeParameterValue = routeParameters.First(p => p.name == parameterInfo.Name).value;
+                parameters.Add(Convert.ChangeType(routeParameterValue, parameterInfo.ParameterType));
+                continue;
+            }
 
+            if (queryParameters.Any(p => p.name == parameterInfo.Name))
+            {
+                var queryParameterValue = queryParameters.First(p => p.name == parameterInfo.Name).value;
+                parameters.Add(Convert.ChangeType(queryParameterValue, parameterInfo.ParameterType));
+            }
+        }
 
         return parameters.ToArray();
     }
 
-    private IEnumerable<(object? value, string name)> GetRouteParameters(Uri uri)
+    private IReadOnlyCollection<(object? value, string name)> GetRouteParameters(Uri uri)
     {
-        List<string> routeParameterValues = uri.AbsolutePath.Split("/").ToList();
+        List<string> routeParameterValues = uri.AbsolutePath[1..].Split("/").ToList();
         List<(object? value, string name)> result = [];
         foreach (var indexesOfParameter in _url.IndexesOfParameters)
         {
-            result.Add((value: routeParameterValues[indexesOfParameter], name: _url.SplitUrl[indexesOfParameter][1..^1]));
+            result.Add(
+                (value: routeParameterValues[indexesOfParameter], name: _url.SplitUrl[indexesOfParameter][1..^1]));
         }
-        
+
 
         return result;
     }
 
-    private HashSet<(object? value, string name)> GetQueryParameters(Uri uri)
+    private IReadOnlyCollection<(object? value, string name)> GetQueryParameters(Uri uri)
     {
         HashSet<(object? value, string name)> result = [];
         NameValueCollection queries = HttpUtility.ParseQueryString(uri.Query);

@@ -2,10 +2,6 @@ using System.Reflection;
 
 namespace Fiona.Hosting.Routing;
 
-
-// TODO: Rebuild RouteNode
-// Osobne wyszukiwanie routa
-// osobne dodawanie
 internal sealed class RouteNode
 {
     public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();

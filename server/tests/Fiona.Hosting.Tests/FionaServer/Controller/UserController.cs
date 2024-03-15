@@ -43,7 +43,7 @@ public sealed class UserController
     }
 
     [Route(HttpMethodType.Post, "/param/{id}")]
-    public Task<UserModel> UserAndParams(int id, UserModel user)
+    public Task<UserModel> UserAndParams(int id, [Body]UserModel user)
     {
         return Task.FromResult(new UserModel
         {

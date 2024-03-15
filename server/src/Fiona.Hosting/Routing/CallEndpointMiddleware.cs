@@ -1,10 +1,8 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Abstractions.Middleware;
 using Fiona.Hosting.Controller;
-using Fiona.Hosting.Middleware;
 
 namespace Fiona.Hosting.Routing;
 
