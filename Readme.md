@@ -58,9 +58,7 @@ Nice to have - 30 days
 	- [ ] Inject service to controller method
 	- [ ] Auto impl register
 	- [ ] Auto inject to method
-	- [ ] Add user login option
 	- [ ] Extension for EF
-	- [ ] HttpClient - user can easy use it
 	- [ ] Security
 		- [ ] CORS
 	- [ ] Before call action, as attribute
@@ -69,6 +67,9 @@ Nice to have - 30 days
 Would to have
 - [ ] Debugger
 - [ ] Own http hand shake
+- [ ] Cache
+- [ ] HttpClient - user can easy use it
+- [ ] Add user login option
 
 
 ## How to run it?
