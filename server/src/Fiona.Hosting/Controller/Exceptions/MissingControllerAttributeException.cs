@@ -1,6 +1,4 @@
-using Fiona.Hosting.Controller;
-
-namespace Fiona.Hosting.Exceptions;
+namespace Fiona.Hosting.Controller;
 
 public sealed class MissingControllerAttributeException() : Exception("Cannot build router without controller attribute.")
 {

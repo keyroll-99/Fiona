@@ -6,4 +6,9 @@ public sealed class ObjectResult(object? result, HttpStatusCode statusCode) : IR
 {
     public object? Result { get; } = result;
     public HttpStatusCode StatusCode { get; } = statusCode;
+
+    public ObjectResult(HttpStatusCode statusCode) : this(null, statusCode)
+    {
+        
+    }
 }

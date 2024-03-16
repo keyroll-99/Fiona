@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Fiona.Hosting.Routing.Exceptions;
 
 namespace Fiona.Hosting.Routing;
 
@@ -87,7 +88,7 @@ internal sealed partial class Url : IEquatable<Uri>
             string variableName = OriginalUrl.Substring(indexOfOpen + 1, indexOfClose - indexOfOpen - 1);
             if (!result.Add(variableName))
             {
-                throw new ConflictNameOfRouteParameters(OriginalUrl);
+                throw new ConflictNameOfRouteParametersException(OriginalUrl);
             }
 
             offset = indexOfClose + 1;

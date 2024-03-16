@@ -29,7 +29,7 @@ Must to have - I want to finish it to end of march
 	- [X] Parsing body to object
 	- [X] Middleware
 	- [X] Passing parameters and args from route
-	- [ ] Response (status codes etc)
+	- [X] Response (status codes etc)
 	- [ ] Async handle request
 	- [ ] Configuration like a baseUrl, port ETC
 	- [ ] Cookies
@@ -64,6 +64,7 @@ Nice to have - 30 days
 	- [ ] Security
 		- [ ] CORS
 	- [ ] Before call action, as attribute
+	- [ ] Support for plain text in body
 
 Would to have
 - [ ] Debugger

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using Fiona.Hosting.Routing.Attributes;
+using Fiona.Hosting.Routing.Exceptions;
 
 namespace Fiona.Hosting.Routing;
 
