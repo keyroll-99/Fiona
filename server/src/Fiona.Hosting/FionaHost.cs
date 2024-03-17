@@ -12,6 +12,7 @@ internal sealed class FionaHost : IFionaHost
     private readonly List<Task> _requestThreads;
     private readonly HostConfig _config;
     private readonly IServiceProvider _serviceProvider;
+    private readonly int _maxThreads;
 
     public FionaHost(IServiceProvider serviceProvider, HostConfig config)
     {
@@ -19,6 +20,7 @@ internal sealed class FionaHost : IFionaHost
         _config = config;
 
         ThreadPool.GetMaxThreads(out int maxThreads, out _);
+        _maxThreads =  maxThreads;
         _requestThreads = new List<Task>(maxThreads);
     }
 
@@ -47,7 +49,7 @@ internal sealed class FionaHost : IFionaHost
         {
             HttpListenerContext context = await _httpListener.GetContextAsync();
 
-            ThreadPool.GetAvailableThreads(out var worker_tmp, out var io_tmp);
+            await CleanUpThreadsList();
 
             _requestThreads.Add(Task.Factory.StartNew(async () =>
             {
@@ -55,11 +57,23 @@ internal sealed class FionaHost : IFionaHost
                 MiddlewareCallStack callStack = scope.ServiceProvider.GetRequiredService<MiddlewareCallStack>();
                 await callStack.Invoke(context);
             }));
-            ThreadPool.GetAvailableThreads(out var worker, out var io);
-            _requestThreads.RemoveAll(x => x.IsCompleted);
         }
 
         _httpListener.Close();
+    }
+
+    private async Task CleanUpThreadsList()
+    {
+        if (_requestThreads.Count == _maxThreads)
+        {
+            _requestThreads.RemoveAll(x => x.IsCompleted);
+            // I all request all still executing, wait for one to finish
+            if (_requestThreads.Count == _maxThreads)
+            {
+                await Task.WhenAny(_requestThreads);
+                _requestThreads.RemoveAll(x => x.IsCompleted);
+            }
+        }
     }
 
     private void ThrowErrorIfServerAlreadyRunning()
