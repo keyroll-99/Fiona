@@ -2,7 +2,7 @@ using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing;
 using Fiona.Hosting.Routing.Attributes;
 
-namespace Fiona.Hosting.Tests.FionaServer.Controller;
+namespace Fiona.Hosting.TestServer.Controller;
 
 [Controller("about")]
 public sealed class AboutController
@@ -11,7 +11,7 @@ public sealed class AboutController
     {
         return Task.FromResult("About");
     }
-    
+
     [Route(HttpMethodType.Get | HttpMethodType.Post, "another/route")]
     public Task<string> AnotherRoute()
     {

@@ -2,9 +2,9 @@ using System.Net;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Routing;
 using Fiona.Hosting.Routing.Attributes;
-using Fiona.Hosting.Tests.FionaServer.Models;
+using Fiona.Hosting.TestServer.Models;
 
-namespace Fiona.Hosting.Tests.FionaServer.Controller;
+namespace Fiona.Hosting.TestServer.Controller;
 
 [Controller("user")]
 public sealed class UserController
@@ -43,7 +43,7 @@ public sealed class UserController
     }
 
     [Route(HttpMethodType.Post, "/param/{id}")]
-    public Task<UserModel> UserAndParams(int id, [Body]UserModel user)
+    public Task<UserModel> UserAndParams(int id, [Body] UserModel user)
     {
         return Task.FromResult(new UserModel
         {
@@ -78,7 +78,7 @@ public sealed class UserController
         });
     }
 
-    [Route(HttpMethodType.Get, "userFromArgs", queryParameters: ["userId", "name"])]
+    [Route(HttpMethodType.Get, "userFromArgs", ["userId", "name"])]
     public Task<ObjectResult> UserFromArgs(int userId, string name)
     {
         return Task.FromResult(
@@ -86,13 +86,13 @@ public sealed class UserController
                 new UserModel
                 {
                     Id = userId, Name = name
-                }, 
+                },
                 HttpStatusCode.OK
             )
         );
     }
-    
-    [Route(HttpMethodType.Get, "userFromArgs/second", queryParameters: ["userId", "name"])]
+
+    [Route(HttpMethodType.Get, "userFromArgs/second", ["userId", "name"])]
     public Task<ObjectResult> UserFromArgsSecond([QueryParam] int userId, [QueryParam] string name)
     {
         return Task.FromResult(

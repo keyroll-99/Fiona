@@ -1,5 +1,6 @@
 using Fiona.Hosting.Abstractions;
 using Fiona.Hosting.Tests.FionaServer.Mock;
+using Fiona.Hosting.TestServer;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -7,28 +8,25 @@ namespace Fiona.Hosting.Tests.FionaServer;
 
 public class FionaTestServerBuilder : IDisposable
 {
-    public IFionaHost Host { get; private set; } = null!;
-    public IFionaHostBuilder Builder { get; private set; } = null!;
+    // public IFionaHost Host { get; private set; } = null!;
+    // public IFionaHostBuilder Builder { get; private set; } = null!;
     public ICallMock CallMock { get; } = Substitute.For<ICallMock>();
 
-    public FionaTestServerBuilder() 
-    {
-        RunServer("7000");
-    }
+    public FionaTestServerStartup FionaTestServerStartup;
 
-    private void RunServer(string port)
+    public FionaTestServerBuilder()
     {
-        Builder = FionaHostBuilder.CreateHostBuilder();
-        Builder.SetPort(port);
-        Builder.Service.AddSingleton(CallMock);
-        Builder.AddMiddleware<CustomMiddleware>();
+        FionaTestServerStartup = new FionaTestServerStartup(builder =>
+        {
+            builder.Service.AddSingleton(CallMock);
+            builder.AddMiddleware<CustomMiddleware>();
+        });
         
-        Host = Builder.Build();
-        Task.Run(Host.Run);
+        FionaTestServerStartup.Run();
     }
-
+    
     public void Dispose()
     {
-        Host.Dispose();
+        FionaTestServerStartup.Dispose();
     }
 }

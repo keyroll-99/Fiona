@@ -1,6 +1,6 @@
 using Fiona.Hosting.Controller;
 
-namespace Fiona.Hosting.Tests.FionaServer.Controller;
+namespace Fiona.Hosting.TestServer.Controller;
 
 [Controller]
 public sealed class HomeController

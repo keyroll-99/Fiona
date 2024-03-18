@@ -1,5 +1,5 @@
 using Fiona.Hosting.Tests.FionaServer;
-using Fiona.Hosting.Tests.FionaServer.Controller;
+using Fiona.Hosting.TestServer.Controller;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -18,7 +18,7 @@ public class InfrastructureTest(FionaTestServerBuilder testBuilder)
     public Task Before_Host_Run_Should_Add_Automatically_Controllers()
     {
         // Arrange
-        var provider = testBuilder.Builder.Service;
+        var provider = testBuilder.FionaTestServerStartup.Builder.Service;
         
         // Assert
         provider.Any(x => x.ServiceType == typeof(HomeController)).Should().BeTrue();
