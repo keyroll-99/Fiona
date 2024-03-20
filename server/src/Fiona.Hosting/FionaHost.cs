@@ -20,7 +20,7 @@ internal sealed class FionaHost : IFionaHost
         _config = config;
 
         ThreadPool.GetMaxThreads(out int maxThreads, out _);
-        _maxThreads =  (maxThreads - 10);
+        _maxThreads =  maxThreads / 4; // 25% of max threads for requests
         _requestThreads = new List<Task>(maxThreads);
     }
 
