@@ -30,7 +30,7 @@ Must to have - I want to finish it to end of march
 	- [X] Middleware
 	- [X] Passing parameters and args from route
 	- [X] Response (status codes etc)
-	- [ ] Async handle request
+	- [X] Async handle request
 	- [ ] Configuration like a baseUrl, port ETC
 	- [ ] Cookies
 	- [ ] Logger
@@ -42,13 +42,14 @@ Must to have - I want to finish it to end of march
 Good to have - 30-60 days
 - [ ] GUI
 	- [ ] Simple view where user can drag and drop boxes
+	- [ ] Creating project
 	- [ ] User can connect boxes
 	- [ ] Adding controller 
 	- [ ] Adding service
 	- [ ] Add way to create simple CRUD
 	- [ ] Add logic statement
 	- [ ] Add loop statement
-	- [ ] Database configuration
+	- [ ] Run project
 
 Nice to have - 30 days
 - [ ] Tools
@@ -63,6 +64,8 @@ Nice to have - 30 days
 		- [ ] CORS
 	- [ ] Before call action, as attribute
 	- [ ] Support for plain text in body
+- [ ] GUI
+	- [ ] Database configuration
 
 Would to have
 - [ ] Debugger

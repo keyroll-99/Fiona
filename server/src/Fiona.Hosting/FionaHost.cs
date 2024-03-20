@@ -1,7 +1,7 @@
 using System.Net;
 using Fiona.Hosting.Abstractions;
+using Fiona.Hosting.Configuration;
 using Fiona.Hosting.Middleware;
-using Fiona.Hosting.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiona.Hosting;
@@ -38,7 +38,7 @@ internal sealed class FionaHost : IFionaHost
 
     private void ConfigureListener()
     {
-        _httpListener.Prefixes.Add($"{_config.Url}:{_config.Port}/");
+        _httpListener.Prefixes.Add($"{_config.Domain}:{_config.Port}/");
     }
 
     private async Task RunHost()

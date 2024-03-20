@@ -28,7 +28,6 @@ public class FionaTestServerStartup : IDisposable
 
     private void RunServer(string port)
     {
-        Builder.SetPort(port);
         Host = Builder.Build();
         Task.Run(Host.Run);
     }

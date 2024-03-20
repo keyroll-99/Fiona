@@ -10,4 +10,10 @@
         <ProjectReference Include="..\..\src\Fiona.Hosting\Fiona.Hosting.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="AppSettings\AppSettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
