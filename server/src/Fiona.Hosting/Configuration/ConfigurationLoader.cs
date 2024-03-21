@@ -1,5 +1,5 @@
 using System.Reflection;
-using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Fiona.Hosting.Configuration;
 
@@ -8,11 +8,12 @@ public static class ConfigurationLoader
     public static HostConfig GetConfig(Assembly assembly)
     {
         var appLocation = Path.GetDirectoryName(assembly.Location);
-        var appSettingsLocation = Directory.GetFiles(appLocation!, "AppSettings.json", SearchOption.AllDirectories).FirstOrDefault();
-        AppSettingsNotFoundException.ThrowIfNotFound(appSettingsLocation);
-        
-        HostConfig config = JsonSerializer.Deserialize<HostConfig>(File.ReadAllText(appSettingsLocation!))!;
 
-        return config;
+        IConfiguration config = new ConfigurationBuilder()
+            .SetBasePath($"{appLocation}/AppSettings")
+            .AddJsonFile("ServerSetting.json", optional: false).Build();
+        HostConfig hostConfig = new();
+        config.Bind(hostConfig);
+        return hostConfig;
     }
 }
