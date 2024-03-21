@@ -5,6 +5,7 @@ using Fiona.Hosting.Configuration;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiona.Hosting;
@@ -12,6 +13,7 @@ namespace Fiona.Hosting;
 public sealed class FionaHostBuilder : IFionaHostBuilder
 {
     public ServiceCollection Service { get; } = new();
+    public IConfigurationBuilder Configuration { get; }
     private static IFionaHost? _host = null;
     private readonly object _lock = new();
     private readonly Assembly _startupAssembly;
@@ -20,6 +22,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
     private FionaHostBuilder(Assembly assembly)
     {
         _startupAssembly = assembly;
+        Configuration = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(assembly.Location));
     }
 
     public static IFionaHostBuilder CreateHostBuilder()
@@ -33,7 +36,6 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         CreateHost();
         return _host!;
     }
-    
 
     public IFionaHostBuilder AddMiddleware<T>() where T : IMiddleware
     {
@@ -60,6 +62,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
         AddMiddleware<CallEndpointMiddleware>();
         Service.AddTransient<MiddlewareCallStack>();
+        Service.AddTransient<IConfiguration>(sp => Configuration.Build());
     }
 
     private void LoadControllers()
