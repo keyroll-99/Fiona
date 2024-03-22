@@ -13,7 +13,7 @@ namespace Fiona.Hosting;
 public sealed class FionaHostBuilder : IFionaHostBuilder
 {
     public ServiceCollection Service { get; } = new();
-    public IConfigurationBuilder Configuration { get; }
+    public IConfiguration Configuration { get; }
     private static IFionaHost? _host = null;
     private readonly object _lock = new();
     private readonly Assembly _startupAssembly;
@@ -22,7 +22,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
     private FionaHostBuilder(Assembly assembly)
     {
         _startupAssembly = assembly;
-        Configuration = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(assembly.Location));
+        Configuration = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(assembly.Location)).Build();// TODO: add json files and environment
     }
 
     public static IFionaHostBuilder CreateHostBuilder()
@@ -62,7 +62,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
         AddMiddleware<CallEndpointMiddleware>();
         Service.AddTransient<MiddlewareCallStack>();
-        Service.AddTransient<IConfiguration>(sp => Configuration.Build());
+        Service.AddTransient<IConfiguration>(sp => Configuration);
     }
 
     private void LoadControllers()
@@ -72,5 +72,13 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
             Service.AddTransient(controllerType);
             _routerBuilder.AddController(controllerType);
         }
+    }
+
+    public IFionaHostBuilder AddConfig<T>(string section) where T : class, new()
+    {
+        T config = new();
+        Configuration.GetSection(section).Bind(config);
+        Service.AddSingleton(config);
+        return this;
     }
 }
