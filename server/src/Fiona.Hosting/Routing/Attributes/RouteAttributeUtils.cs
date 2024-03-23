@@ -10,8 +10,9 @@ internal static class RouteAttributeUtils
     {
         return GetRouteFromRouteAttribute(controller) ?? GetRouteFromControllerAttribute(controller);
     }
-    
-    public static (string? route, HttpMethodType methodType) GetMetadataFromRouteAttribute (MemberInfo method)
+
+    public static (string? route, HttpMethodType methodType) GetMetadataFromRouteAttribute(MemberInfo method,
+        string baseRoute)
     {
         RouteAttribute? controllerRouteAttribute = GetRouteAttribute(method);
         string? route = controllerRouteAttribute?.Route;
@@ -21,8 +22,11 @@ internal static class RouteAttributeUtils
         {
             return (route, methodType);
         }
-        
-        return ( string.IsNullOrWhiteSpace(route) ||route.StartsWith('/') ? route : $"/{route}", methodType);
+
+        return (
+            string.IsNullOrWhiteSpace(route) || route.StartsWith('/') || string.IsNullOrWhiteSpace(baseRoute)
+                ? route
+                : $"/{route}", methodType);
     }
 
     private static RouteAttribute? GetRouteAttribute(MemberInfo memberInfo)
@@ -32,7 +36,7 @@ internal static class RouteAttributeUtils
 
         return routeAttribute!;
     }
-    
+
     private static string? GetRouteFromRouteAttribute(MemberInfo memberInfo)
     {
         RouteAttribute? routeAttribute = GetRouteAttribute(memberInfo);

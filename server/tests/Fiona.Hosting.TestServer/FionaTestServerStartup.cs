@@ -1,4 +1,5 @@
 using Fiona.Hosting.Abstractions;
+using Fiona.Hosting.TestServer.Models;
 
 namespace Fiona.Hosting.TestServer;
 
@@ -23,6 +24,7 @@ public class FionaTestServerStartup : IDisposable
     public void Run(string port = "7000")
     {
         _configure(Builder);
+        Builder.AddConfig<ConfigModel>();
         RunServer("7000");
     }
 

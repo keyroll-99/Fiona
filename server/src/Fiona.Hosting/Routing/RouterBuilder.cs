@@ -63,7 +63,7 @@ internal sealed class RouterBuilder
         foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance |
                                                      BindingFlags.DeclaredOnly))
         {
-            var (route, methodTypes) = RouteAttributeUtils.GetMetadataFromRouteAttribute(method);
+            var (route, methodTypes) = RouteAttributeUtils.GetMetadataFromRouteAttribute(method, baseRoute);
             urlBuilder.Append(baseRoute);
             urlBuilder.Append(route);
             string url = urlBuilder.ToString();

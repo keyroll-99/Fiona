@@ -5,15 +5,15 @@ namespace Fiona.Hosting.Configuration;
 
 public static class ConfigurationLoader
 {
-    public static HostConfig GetConfig(Assembly assembly)
+    public static AppConfig GetConfig(Assembly assembly)
     {
         var appLocation = Path.GetDirectoryName(assembly.Location);
 
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath($"{appLocation}/AppSettings")
             .AddJsonFile("ServerSetting.json", optional: false).Build();
-        HostConfig hostConfig = new();
-        config.Bind(hostConfig);
-        return hostConfig;
+        AppConfig appConfig = new();
+        config.Bind(appConfig);
+        return appConfig;
     }
 }

@@ -8,8 +8,6 @@ namespace Fiona.Hosting.Tests.FionaServer;
 
 public class FionaTestServerBuilder : IDisposable
 {
-    // public IFionaHost Host { get; private set; } = null!;
-    // public IFionaHostBuilder Builder { get; private set; } = null!;
     public ICallMock CallMock { get; } = Substitute.For<ICallMock>();
 
     public FionaTestServerStartup FionaTestServerStartup;

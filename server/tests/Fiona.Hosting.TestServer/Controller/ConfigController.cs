@@ -1,21 +1,20 @@
 using System.Net;
+using Fiona.Hosting.Abstractions.Configuration;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Routing;
+using Fiona.Hosting.Routing.Attributes;
 using Fiona.Hosting.TestServer.Models;
 
 namespace Fiona.Hosting.TestServer.Controller;
 
 [Controller]
-public class ConfigController
+public class ConfigController(IOption<ConfigModel> configModelOption)
 {
-    private readonly ConfigModel _configModel;
-    
-    public ConfigController(ConfigModel configModel)
-    {
-        _configModel = configModel;
-    }
+    private IOption<ConfigModel>_configModel = configModelOption;
 
+    [Route(HttpMethodType.Get, "option/get")]
     public ObjectResult GetConfig()
     {
-        return new ObjectResult(_configModel, HttpStatusCode.OK);
+        return new ObjectResult(_configModel.Value, HttpStatusCode.OK);
     }
 }

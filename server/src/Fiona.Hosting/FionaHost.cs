@@ -10,11 +10,11 @@ internal sealed class FionaHost : IFionaHost
 {
     private readonly HttpListener _httpListener = new();
     private readonly List<Task> _requestThreads;
-    private readonly HostConfig _config;
+    private readonly AppConfig _config;
     private readonly IServiceProvider _serviceProvider;
     private readonly int _maxThreads;
 
-    public FionaHost(IServiceProvider serviceProvider, HostConfig config)
+    public FionaHost(IServiceProvider serviceProvider, AppConfig config)
     {
         _serviceProvider = serviceProvider;
         _config = config;
