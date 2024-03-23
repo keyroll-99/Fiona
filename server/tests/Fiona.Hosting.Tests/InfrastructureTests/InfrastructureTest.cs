@@ -31,7 +31,10 @@ public class InfrastructureTest(FionaTestServerBuilder testBuilder)
     [Fact]
     public async Task Should_Call_Middleware_When_Request_Is_Received()
     {
+        
         // Arrange
+        testBuilder.CallMock.ClearReceivedCalls();
+
         await _httpClient.GetAsync("");
         await _httpClient.GetAsync("");
         

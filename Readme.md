@@ -31,7 +31,7 @@ Must to have - I want to finish it to end of march
 	- [X] Passing parameters and args from route
 	- [X] Response (status codes etc)
 	- [X] Async handle request
-	- [ ] Configuration like a baseUrl, port ETC
+	- [X] Configuration like a baseUrl, port ETC
 	- [ ] Cookies
 	- [ ] Logger
 	- [ ] Error handler
