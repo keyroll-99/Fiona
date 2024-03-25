@@ -1,6 +1,4 @@
-using Fiona.Hosting.Routing;
-
-namespace Fiona.Hosting.Controller;
+namespace Fiona.Hosting.Controller.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
 public sealed class ControllerAttribute : Attribute

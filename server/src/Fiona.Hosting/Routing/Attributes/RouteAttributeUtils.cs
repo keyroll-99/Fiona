@@ -1,5 +1,6 @@
 using System.Reflection;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Controller.Attributes;
 using Fiona.Hosting.Exceptions;
 
 namespace Fiona.Hosting.Routing.Attributes;

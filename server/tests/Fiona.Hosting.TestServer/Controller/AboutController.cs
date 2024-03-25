@@ -1,4 +1,5 @@
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Controller.Attributes;
 using Fiona.Hosting.Routing;
 using Fiona.Hosting.Routing.Attributes;
 

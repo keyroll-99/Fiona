@@ -3,7 +3,6 @@ using Fiona.Hosting.Controller;
 
 namespace Fiona.Hosting.Routing;
 
-
 internal sealed class Router
 {
     private readonly RouteNode _head;
@@ -15,7 +14,7 @@ internal sealed class Router
         _serviceProvider = serviceProvider;
     }
 
-    public Task<ObjectResult> CallEndpoint(Uri uri, HttpMethodType methodType, Stream? body)
+    public Task<ObjectResult> CallEndpoint(Uri uri, HttpMethodType methodType, Stream? body, CookieCollection cookies)
     {
         RouteNode? routeNode = GetNode(uri);
 
@@ -23,14 +22,15 @@ internal sealed class Router
         {
             return Task.FromResult(new ObjectResult(null, HttpStatusCode.NotFound));
         }
-        
+
         Endpoint? endpoint = routeNode.Actions.GetValueOrDefault(methodType);
-        return endpoint is null ? Task.FromResult(new ObjectResult(null, HttpStatusCode.MethodNotAllowed)) : endpoint.Invoke(uri, body, _serviceProvider);
+        return endpoint is null
+            ? Task.FromResult(new ObjectResult(null, HttpStatusCode.MethodNotAllowed))
+            : endpoint.Invoke(uri, body, cookies, _serviceProvider);
     }
 
     private RouteNode? GetNode(Uri uri)
     {
         return _head.FindNode(uri);
     }
-
 }

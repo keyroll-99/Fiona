@@ -20,7 +20,7 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
 
     private async Task<ObjectResult> CallEndpoint(HttpListenerRequest request)
     {
-        return await router.CallEndpoint(request.Url!, GetHttpMethodType(request), GetBody(request));
+        return await router.CallEndpoint(request.Url!, GetHttpMethodType(request), GetBody(request), request.Cookies);
     }
 
     private static HttpMethodType GetHttpMethodType(HttpListenerRequest request)
@@ -74,7 +74,7 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
     {
         foreach (var (key, value) in result.Cookies)
         {
-            var cookie = new Cookie(key, value, "/");
+            var cookie = new System.Net.Cookie(key, value, "/");
             context.Response.Cookies.Add(cookie);
         }
     }

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Web;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.Cookie;
 using Fiona.Hosting.Routing.Attributes;
 
 namespace Fiona.Hosting.Routing;
@@ -13,6 +14,10 @@ internal sealed class Endpoint
     private readonly MethodInfo _method;
     private readonly HashSet<string> _routeParameterNames; // string, Guid, primitive types
     private readonly HashSet<string> _queryParameterNames; // string, Guid, primitive types
+
+    private readonly HashSet<(string parameterName, string cookieName)>
+        _cookieParameters; // string, Guid, primitive types
+
     private readonly ParameterInfo? _bodyParameter;
     private readonly RouteAttribute? _routeAttribute;
     private readonly Url _url;
@@ -23,14 +28,16 @@ internal sealed class Endpoint
         _routeAttribute = method.GetCustomAttribute<RouteAttribute>();
         _routeParameterNames = url.GetNameOfUrlParameters();
         _bodyParameter = GetBodyParameter();
+        _cookieParameters = GetCookieParameterNames();
         _queryParameterNames = _routeAttribute?.QueryParameters ?? [];
         _url = url;
     }
 
-    public async Task<ObjectResult> Invoke(Uri url, Stream? body, IServiceProvider serviceProvider)
+    public async Task<ObjectResult> Invoke(Uri url, Stream? body, CookieCollection cookies,
+        IServiceProvider serviceProvider)
     {
         object? controller = serviceProvider.GetService(_method.DeclaringType!);
-        object?[] parameters = await GetParameters(url, body);
+        object?[] parameters = await GetParameters(url, body, cookies);
         Type returnType = _method.ReturnType;
 
         return await InvokeAndCastResultToObjectResult(returnType, controller, parameters);
@@ -105,17 +112,29 @@ internal sealed class Endpoint
         return bodyArgument;
     }
 
-    private async Task<object?[]> GetParameters(Uri uri, Stream? body)
+    private HashSet<(string parameterName, string cookieName)> GetCookieParameterNames()
+    {
+        var cookieParameter = _method.GetParameters()
+            .Where(x => x.GetCustomAttribute<CookieAttribute>() is not null && x.Name is not null)
+            .Select(x => (parameterName: x.Name!,
+                cookieName: x.GetCustomAttribute<CookieAttribute>()!.Name ?? x.Name!));
+
+        return cookieParameter.ToHashSet();
+    }
+
+    private async Task<object?[]> GetParameters(Uri uri, Stream? body, CookieCollection cookies)
     {
         object? bodyParameter = await GetBodyParameter(body);
         IReadOnlyCollection<(object? value, string name)> routeParameters = GetRouteParameters(uri);
         IReadOnlyCollection<(object? value, string name)> queryParameters = GetQueryParameters(uri);
-        return CreateParameterArray(bodyParameter, routeParameters, queryParameters);
+        IReadOnlyCollection<(object? value, string name)> cookieParameters = GetCookies(cookies);
+        return CreateParameterArray(bodyParameter, routeParameters, queryParameters, cookieParameters);
     }
 
     private object?[] CreateParameterArray(object? bodyParameter,
         IReadOnlyCollection<(object? value, string name)> routeParameters,
-        IReadOnlyCollection<(object? value, string name)> queryParameters)
+        IReadOnlyCollection<(object? value, string name)> queryParameters,
+        IReadOnlyCollection<(object? value, string name)> cookies)
     {
         List<object?> parameters = new List<object?>(queryParameters.Count + routeParameters.Count + 1);
         foreach (ParameterInfo parameterInfo in _method.GetParameters())
@@ -141,6 +160,18 @@ internal sealed class Endpoint
         }
 
         return parameters.ToArray();
+    }
+
+    private IReadOnlyCollection<(object? value, string name)> GetCookies(CookieCollection cookies)
+    {
+        HashSet<(object? value, string name)> result = [];
+        foreach (var (parameterName, cookieName) in _cookieParameters)
+        {
+            var cookie = cookies.FirstOrDefault(x => x.Name == cookieName);
+            result.Add((value: cookie?.Value ?? null, name: parameterName));
+        }
+
+        return result;
     }
 
     private IReadOnlyCollection<(object? value, string name)> GetRouteParameters(Uri uri)
