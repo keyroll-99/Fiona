@@ -12,23 +12,17 @@ public class CookieTests
     [Fact]
     public async Task Should_Return_Cookie_When_Call_Cookie_Set()
     {
-        // Arrange
-        CookieContainer cookies = new();
-        HttpClientHandler handler = new();
-        
         // Act
-        HttpClient httpClient = new(handler)
+        HttpClient httpClient = new()
         {
             BaseAddress = new Uri("http://localhost:7000/"),
         };
         
         HttpResponseMessage response = await httpClient.GetAsync("/cookie/set");
-        Uri uri = new("http://localhost:7000");
-        IEnumerable<System.Net.Cookie> responseCookies = cookies.GetCookies(uri);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        responseCookies.Where(x => x.Name == "Fiona").Should().NotBeEmpty();
-        responseCookies.Where(x => x.Name == "Fiona").First().Value.Should().Be("Fiona");
+        response.Headers.Where(x => x.Key.ToLowerInvariant() == "set-cookie").Should().NotBeEmpty();
+        response.Headers.Where(x => x.Key.ToLowerInvariant() == "set-cookie").First().Value.First().Should().StartWith("Fiona=Fiona;");
     }
 }

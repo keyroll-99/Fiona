@@ -13,8 +13,9 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
         HttpListenerRequest request = context.Request;
         var result = await CallEndpoint(request);
         var responseString = GetResponseString(result);
-        await SetResponse(context, responseString, result);
         SetCookie(result, context);
+        await SetResponse(context, responseString, result);
+        CloseConnection(context);
     }
 
     private async Task<ObjectResult> CallEndpoint(HttpListenerRequest request)
@@ -61,7 +62,12 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
         response.StatusCode = (int)result.StatusCode;
         var output = response.OutputStream;
         await output.WriteAsync(buffer);
-        output.Close();
+    }
+
+    private static void CloseConnection(HttpListenerContext context)
+    {
+        context.Response.OutputStream.Close();
+        context.Response.Close();
     }
 
     private static void SetCookie(ObjectResult result, HttpListenerContext context)
