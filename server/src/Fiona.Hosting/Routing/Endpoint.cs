@@ -139,6 +139,13 @@ internal sealed class Endpoint
         List<object?> parameters = new List<object?>(queryParameters.Count + routeParameters.Count + 1);
         foreach (ParameterInfo parameterInfo in _method.GetParameters())
         {
+            if(cookies.Any(c => c.name == parameterInfo.Name))
+            {
+                var cookieValue = cookies.First(c => c.name == parameterInfo.Name).value;
+                parameters.Add(Convert.ChangeType(cookieValue, parameterInfo.ParameterType));
+                continue;
+            }
+            
             if (parameterInfo.ParameterType == _bodyParameter?.ParameterType)
             {
                 parameters.Add(bodyParameter);
