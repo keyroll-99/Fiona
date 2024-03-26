@@ -9,7 +9,9 @@ internal static class ControllerUtils
     {
         var types = assembly.GetTypes();
         foreach (Type type in types)
+        {
             if (type.GetCustomAttributes(typeof(ControllerAttribute), true).Length > 0)
                 yield return type;
+        }
     }
 }
