@@ -11,15 +11,15 @@ namespace Fiona.Hosting.Routing;
 
 internal sealed class Endpoint
 {
-    private readonly MethodInfo _method;
-    private readonly HashSet<string> _routeParameterNames; // string, Guid, primitive types
-    private readonly HashSet<string> _queryParameterNames; // string, Guid, primitive types
+    private readonly ParameterInfo? _bodyParameter;
 
     private readonly HashSet<(string parameterName, string cookieName)>
         _cookieParameters; // string, Guid, primitive types
 
-    private readonly ParameterInfo? _bodyParameter;
+    private readonly MethodInfo _method;
+    private readonly HashSet<string> _queryParameterNames; // string, Guid, primitive types
     private readonly RouteAttribute? _routeAttribute;
+    private readonly HashSet<string> _routeParameterNames; // string, Guid, primitive types
     private readonly Url _url;
 
     public Endpoint(MethodInfo method, Url url)
@@ -76,25 +76,19 @@ internal sealed class Endpoint
         if (result is not null && returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
         {
             dynamic resultTask = result;
-            if (returnType.GetGenericArguments().First().IsAssignableTo(typeof(IResult)))
-            {
-                return await resultTask;
-            }
+            if (returnType.GetGenericArguments().First().IsAssignableTo(typeof(IResult))) return await resultTask;
 
             return new ObjectResult(await resultTask, HttpStatusCode.OK);
         }
 
-        if (returnType.IsAssignableTo(typeof(IResult)))
-        {
-            return (ObjectResult)result!;
-        }
+        if (returnType.IsAssignableTo(typeof(IResult))) return (ObjectResult)result!;
 
         return new ObjectResult(result, HttpStatusCode.OK);
     }
 
     private ParameterInfo? GetBodyParameter()
     {
-        ParameterInfo[] parameters = _method.GetParameters();
+        var parameters = _method.GetParameters();
 
         ParameterInfo? bodyArgument = parameters
             .FirstOrDefault(p => p.GetCustomAttribute<BodyAttribute>() is not null);
@@ -104,10 +98,7 @@ internal sealed class Endpoint
                                                   _routeAttribute.QueryParameters.Count == 0) &&
                                                  _routeParameterNames.Count == 0;
 
-        if (shouldMatchArgumentAsBodyArgument)
-        {
-            bodyArgument = parameters[0];
-        }
+        if (shouldMatchArgumentAsBodyArgument) bodyArgument = parameters[0];
 
         return bodyArgument;
     }
@@ -125,9 +116,9 @@ internal sealed class Endpoint
     private async Task<object?[]> GetParameters(Uri uri, Stream? body, CookieCollection cookies)
     {
         object? bodyParameter = await GetBodyParameter(body);
-        IReadOnlyCollection<(object? value, string name)> routeParameters = GetRouteParameters(uri);
-        IReadOnlyCollection<(object? value, string name)> queryParameters = GetQueryParameters(uri);
-        IReadOnlyCollection<(object? value, string name)> cookieParameters = GetCookies(cookies);
+        var routeParameters = GetRouteParameters(uri);
+        var queryParameters = GetQueryParameters(uri);
+        var cookieParameters = GetCookies(cookies);
         return CreateParameterArray(bodyParameter, routeParameters, queryParameters, cookieParameters);
     }
 
@@ -136,16 +127,16 @@ internal sealed class Endpoint
         IReadOnlyCollection<(object? value, string name)> queryParameters,
         IReadOnlyCollection<(object? value, string name)> cookies)
     {
-        List<object?> parameters = new List<object?>(queryParameters.Count + routeParameters.Count + 1);
+        var parameters = new List<object?>(queryParameters.Count + routeParameters.Count + 1);
         foreach (ParameterInfo parameterInfo in _method.GetParameters())
         {
-            if(cookies.Any(c => c.name == parameterInfo.Name))
+            if (cookies.Any(c => c.name == parameterInfo.Name))
             {
-                var cookieValue = cookies.First(c => c.name == parameterInfo.Name).value;
+                object? cookieValue = cookies.First(c => c.name == parameterInfo.Name).value;
                 parameters.Add(Convert.ChangeType(cookieValue, parameterInfo.ParameterType));
                 continue;
             }
-            
+
             if (parameterInfo.ParameterType == _bodyParameter?.ParameterType)
             {
                 parameters.Add(bodyParameter);
@@ -154,14 +145,14 @@ internal sealed class Endpoint
 
             if (routeParameters.Any(p => p.name == parameterInfo.Name))
             {
-                var routeParameterValue = routeParameters.First(p => p.name == parameterInfo.Name).value;
+                object? routeParameterValue = routeParameters.First(p => p.name == parameterInfo.Name).value;
                 parameters.Add(Convert.ChangeType(routeParameterValue, parameterInfo.ParameterType));
                 continue;
             }
 
             if (queryParameters.Any(p => p.name == parameterInfo.Name))
             {
-                var queryParameterValue = queryParameters.First(p => p.name == parameterInfo.Name).value;
+                object? queryParameterValue = queryParameters.First(p => p.name == parameterInfo.Name).value;
                 parameters.Add(Convert.ChangeType(queryParameterValue, parameterInfo.ParameterType));
             }
         }
@@ -172,9 +163,9 @@ internal sealed class Endpoint
     private IReadOnlyCollection<(object? value, string name)> GetCookies(CookieCollection cookies)
     {
         HashSet<(object? value, string name)> result = [];
-        foreach (var (parameterName, cookieName) in _cookieParameters)
+        foreach ((string parameterName, string cookieName) in _cookieParameters)
         {
-            var cookie = cookies.FirstOrDefault(x => x.Name == cookieName);
+            System.Net.Cookie? cookie = cookies.FirstOrDefault(x => x.Name == cookieName);
             result.Add((value: cookie?.Value ?? null, name: parameterName));
         }
 
@@ -183,13 +174,11 @@ internal sealed class Endpoint
 
     private IReadOnlyCollection<(object? value, string name)> GetRouteParameters(Uri uri)
     {
-        List<string> routeParameterValues = uri.AbsolutePath[1..].Split("/").ToList();
+        var routeParameterValues = uri.AbsolutePath[1..].Split("/").ToList();
         List<(object? value, string name)> result = [];
-        foreach (var indexesOfParameter in _url.IndexesOfParameters)
-        {
+        foreach (int indexesOfParameter in _url.IndexesOfParameters)
             result.Add(
                 (value: routeParameterValues[indexesOfParameter], name: _url.SplitUrl[indexesOfParameter][1..^1]));
-        }
 
 
         return result;
@@ -199,20 +188,15 @@ internal sealed class Endpoint
     {
         HashSet<(object? value, string name)> result = [];
         NameValueCollection queries = HttpUtility.ParseQueryString(uri.Query);
-        foreach (var queryParameter in _queryParameterNames)
-        {
+        foreach (string queryParameter in _queryParameterNames)
             result.Add((value: queries.Get(queryParameter) ?? string.Empty, name: queryParameter));
-        }
 
         return result;
     }
 
     private async Task<object?> GetBodyParameter(Stream? body)
     {
-        if (_bodyParameter is null)
-        {
-            return null;
-        }
+        if (_bodyParameter is null) return null;
 
         return body is not null
             ? await JsonSerializer.DeserializeAsync(body, _bodyParameter.ParameterType)

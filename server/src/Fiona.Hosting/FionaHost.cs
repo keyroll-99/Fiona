@@ -8,11 +8,11 @@ namespace Fiona.Hosting;
 
 internal sealed class FionaHost : IFionaHost
 {
-    private readonly HttpListener _httpListener = new();
-    private readonly List<Task> _requestThreads;
     private readonly AppConfig _config;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly HttpListener _httpListener = new();
     private readonly int _maxThreads;
+    private readonly List<Task> _requestThreads;
+    private readonly IServiceProvider _serviceProvider;
 
     public FionaHost(IServiceProvider serviceProvider, AppConfig config)
     {
@@ -20,7 +20,7 @@ internal sealed class FionaHost : IFionaHost
         _config = config;
 
         ThreadPool.GetMaxThreads(out int maxThreads, out _);
-        _maxThreads =  maxThreads / 4; // 25% of max threads for requests
+        _maxThreads = maxThreads / 4; // 25% of max threads for requests
         _requestThreads = new List<Task>(maxThreads / 4);
     }
 
@@ -53,7 +53,7 @@ internal sealed class FionaHost : IFionaHost
 
             _requestThreads.Add(Task.Factory.StartNew(async () =>
             {
-                using var scope = _serviceProvider.CreateScope();
+                using IServiceScope scope = _serviceProvider.CreateScope();
                 MiddlewareCallStack callStack = scope.ServiceProvider.GetRequiredService<MiddlewareCallStack>();
                 await callStack.Invoke(context);
             }));
@@ -78,9 +78,6 @@ internal sealed class FionaHost : IFionaHost
 
     private void ThrowErrorIfServerAlreadyRunning()
     {
-        if (_httpListener.IsListening)
-        {
-            throw new InvalidOperationException("Server is already running");
-        }
+        if (_httpListener.IsListening) throw new InvalidOperationException("Server is already running");
     }
 }

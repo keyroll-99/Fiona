@@ -11,7 +11,7 @@ namespace Fiona.Hosting.TestServer.Controller;
 [Controller]
 public class ConfigController(IOption<ConfigModel> configModelOption)
 {
-    private IOption<ConfigModel>_configModel = configModelOption;
+    private readonly IOption<ConfigModel> _configModel = configModelOption;
 
     [Route(HttpMethodType.Get, "option/get")]
     public ObjectResult GetConfig()

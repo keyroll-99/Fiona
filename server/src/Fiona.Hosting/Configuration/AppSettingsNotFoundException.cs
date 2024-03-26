@@ -4,9 +4,6 @@ public class AppSettingsNotFoundException() : Exception("AppSettings/AppSettings
 {
     public static void ThrowIfNotFound(string? appSettingsLocation)
     {
-        if (appSettingsLocation is null)
-        {
-            throw new AppSettingsNotFoundException();
-        }
+        if (appSettingsLocation is null) throw new AppSettingsNotFoundException();
     }
 }

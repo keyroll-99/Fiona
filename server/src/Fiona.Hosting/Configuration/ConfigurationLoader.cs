@@ -7,11 +7,11 @@ public static class ConfigurationLoader
 {
     public static AppConfig GetConfig(Assembly assembly)
     {
-        var appLocation = Path.GetDirectoryName(assembly.Location);
+        string? appLocation = Path.GetDirectoryName(assembly.Location);
 
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath($"{appLocation}/AppSettings")
-            .AddJsonFile("ServerSetting.json", optional: false).Build();
+            .AddJsonFile("ServerSetting.json", false).Build();
         AppConfig appConfig = new();
         config.Bind(appConfig);
         return appConfig;

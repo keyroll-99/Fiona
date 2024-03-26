@@ -1,6 +1,6 @@
 namespace Fiona.Hosting.Cookie;
 
-[AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Parameter)]
 public class CookieAttribute : Attribute
 {
     public string? Name { get; }
@@ -9,7 +9,7 @@ public class CookieAttribute : Attribute
     {
         Name = name;
     }
-    
+
     public CookieAttribute()
     {
         Name = null;

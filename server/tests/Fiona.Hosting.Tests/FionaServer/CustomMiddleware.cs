@@ -9,7 +9,7 @@ public sealed class CustomMiddleware(ICallMock callMock) : IMiddleware
     public async Task Invoke(HttpListenerContext request, NextMiddlewareDelegate next)
     {
         await callMock.Call();
-        
+
         await next(request);
 
         await callMock.Call();

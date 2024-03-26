@@ -18,10 +18,7 @@ internal sealed class Router
     {
         RouteNode? routeNode = GetNode(uri);
 
-        if (routeNode is null)
-        {
-            return Task.FromResult(new ObjectResult(null, HttpStatusCode.NotFound));
-        }
+        if (routeNode is null) return Task.FromResult(new ObjectResult(null, HttpStatusCode.NotFound));
 
         Endpoint? endpoint = routeNode.Actions.GetValueOrDefault(methodType);
         return endpoint is null

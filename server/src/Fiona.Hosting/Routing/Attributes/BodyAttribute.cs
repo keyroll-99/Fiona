@@ -1,7 +1,6 @@
 namespace Fiona.Hosting.Routing.Attributes;
 
-[AttributeUsage(AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Parameter)]
 public class BodyAttribute : Attribute
 {
-    
 }

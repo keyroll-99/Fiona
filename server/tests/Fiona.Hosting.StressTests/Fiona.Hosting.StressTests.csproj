@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Fiona.Hosting.TestServer\Fiona.Hosting.TestServer.csproj" />
+        <ProjectReference Include="..\Fiona.Hosting.TestServer\Fiona.Hosting.TestServer.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="NBomber" Version="5.5.0" />
+        <PackageReference Include="NBomber" Version="5.5.0"/>
     </ItemGroup>
 
 </Project>

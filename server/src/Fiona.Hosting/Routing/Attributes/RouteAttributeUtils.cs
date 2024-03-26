@@ -1,7 +1,6 @@
 using System.Reflection;
 using Fiona.Hosting.Controller;
 using Fiona.Hosting.Controller.Attributes;
-using Fiona.Hosting.Exceptions;
 
 namespace Fiona.Hosting.Routing.Attributes;
 
@@ -19,10 +18,7 @@ internal static class RouteAttributeUtils
         string? route = controllerRouteAttribute?.Route;
         HttpMethodType methodType = controllerRouteAttribute?.HttpMethodType ?? HttpMethodType.Get;
 
-        if (route is null)
-        {
-            return (route, methodType);
-        }
+        if (route is null) return (route, methodType);
 
         return (
             string.IsNullOrWhiteSpace(route) || route.StartsWith('/') || string.IsNullOrWhiteSpace(baseRoute)

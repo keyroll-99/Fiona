@@ -1,10 +1,8 @@
 namespace Fiona.Hosting.Controller.Attributes;
 
-[AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class)]
 public sealed class ControllerAttribute : Attribute
 {
-    public string Route { get; } = string.Empty;
-
     public ControllerAttribute()
     {
     }
@@ -13,4 +11,6 @@ public sealed class ControllerAttribute : Attribute
     {
         Route = route;
     }
+
+    public string Route { get; } = string.Empty;
 }

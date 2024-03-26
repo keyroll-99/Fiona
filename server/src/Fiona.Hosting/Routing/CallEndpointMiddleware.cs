@@ -11,8 +11,8 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
     public async Task Invoke(HttpListenerContext context, NextMiddlewareDelegate next)
     {
         HttpListenerRequest request = context.Request;
-        var result = await CallEndpoint(request);
-        var responseString = GetResponseString(result);
+        ObjectResult result = await CallEndpoint(request);
+        string? responseString = GetResponseString(result);
         SetCookie(result, context);
         await SetResponse(context, responseString, result);
         CloseConnection(context);
@@ -42,13 +42,9 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
         if (resultType is not null)
         {
             if (resultType.IsPrimitive || resultType == typeof(string))
-            {
                 responseString = result.Result?.ToString();
-            }
             else
-            {
                 responseString = JsonSerializer.Serialize(result.Result);
-            }
         }
 
         return responseString;
@@ -56,11 +52,11 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
 
     private static async Task SetResponse(HttpListenerContext context, string? responseString, IResult result)
     {
-        var response = context.Response;
-        var buffer = Encoding.UTF8.GetBytes(responseString);
+        HttpListenerResponse response = context.Response;
+        byte[] buffer = Encoding.UTF8.GetBytes(responseString);
         response.ContentLength64 = buffer.Length;
         response.StatusCode = (int)result.StatusCode;
-        var output = response.OutputStream;
+        Stream output = response.OutputStream;
         await output.WriteAsync(buffer);
     }
 
@@ -72,9 +68,9 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
 
     private static void SetCookie(ObjectResult result, HttpListenerContext context)
     {
-        foreach (var (key, value) in result.Cookies)
+        foreach ((string key, string value) in result.Cookies)
         {
-            var cookie = new System.Net.Cookie(key, value, "/");
+            System.Net.Cookie cookie = new System.Net.Cookie(key, value, "/");
             context.Response.Cookies.Add(cookie);
         }
     }

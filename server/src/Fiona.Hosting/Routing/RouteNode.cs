@@ -4,10 +4,9 @@ namespace Fiona.Hosting.Routing;
 
 internal sealed class RouteNode
 {
-    public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();
-    private readonly Url _route;
     private readonly List<RouteNode> _children = [];
     private readonly bool _isParameterized;
+    private readonly Url _route;
 
     private RouteNode(Url route)
     {
@@ -15,7 +14,12 @@ internal sealed class RouteNode
         _isParameterized = route.NormalizeUrl.EndsWith("}");
     }
 
-    public static RouteNode GetHead() => new(string.Empty);
+    public Dictionary<HttpMethodType, Endpoint> Actions { get; } = new();
+
+    public static RouteNode GetHead()
+    {
+        return new RouteNode(string.Empty);
+    }
 
     public void Insert(HttpMethodType methodType, MethodInfo method, Url url)
     {
@@ -31,10 +35,7 @@ internal sealed class RouteNode
 
     public RouteNode? FindNode(Uri uri)
     {
-        if (_route.Equals(uri))
-        {
-            return this;
-        }
+        if (_route.Equals(uri)) return this;
 
         RouteNode? next = _children.FirstOrDefault(ch => ch._route.IsSubUrl(uri) && !ch._isParameterized);
         next ??= _children.FirstOrDefault(ch => ch._route.IsSubUrl(uri) && ch._isParameterized);
@@ -48,7 +49,7 @@ internal sealed class RouteNode
 
     private void Insert(HttpMethodType methodType, MethodInfo method, Url url, int depth)
     {
-        if (url.SplitUrl.Length == (depth + 1))
+        if (url.SplitUrl.Length == depth + 1)
         {
             RouteNode? child = _children.FirstOrDefault(ch => ch._route.NormalizeUrl == url.NormalizeUrl);
             if (child is null)

@@ -13,13 +13,11 @@ namespace Fiona.Hosting;
 
 public sealed class FionaHostBuilder : IFionaHostBuilder
 {
-    public ServiceCollection Service { get; } = new();
-    public IConfiguration Configuration { get; }
-    private static IFionaHost? _host = null;
-    private readonly object _lock = new();
-    private readonly Assembly _startupAssembly;
-    private readonly RouterBuilder _routerBuilder = new();
+    private static IFionaHost? _host;
     private readonly AppConfig _appConfig;
+    private readonly object _lock = new();
+    private readonly RouterBuilder _routerBuilder = new();
+    private readonly Assembly _startupAssembly;
 
     private FionaHostBuilder(Assembly assembly)
     {
@@ -28,17 +26,14 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
 
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Path.GetDirectoryName(assembly.Location))
-            .AddJsonFile("AppSettings/AppSettings.json", optional: false)
-            .AddJsonFile($"AppSettings/AppSettings.{_appConfig.Environment}.json", optional: true)
+            .AddJsonFile("AppSettings/AppSettings.json", false)
+            .AddJsonFile($"AppSettings/AppSettings.{_appConfig.Environment}.json", true)
             .AddEnvironmentVariables()
             .Build();
     }
 
-    public static IFionaHostBuilder CreateHostBuilder()
-    {
-        var y = Assembly.GetCallingAssembly();
-        return new FionaHostBuilder(Assembly.GetCallingAssembly());
-    }
+    public IConfiguration Configuration { get; }
+    public ServiceCollection Service { get; } = new();
 
     public IFionaHost Build()
     {
@@ -53,12 +48,29 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         return this;
     }
 
+    public IFionaHostBuilder AddConfig<T>(string section) where T : class, new()
+    {
+        Service.AddSingleton<IOption<T>>(sp => sp.GetRequiredService<OptionFactory>().CreateOption<T>(section));
+        return this;
+    }
+
+    public IFionaHostBuilder AddConfig<T>() where T : class, new()
+    {
+        Service.AddSingleton<IOption<T>>(sp => sp.GetRequiredService<OptionFactory>().CreateOption<T>());
+        T config = new();
+        Configuration.GetSection(nameof(T)).Bind(config);
+        return this;
+    }
+
+    public static IFionaHostBuilder CreateHostBuilder()
+    {
+        Assembly y = Assembly.GetCallingAssembly();
+        return new FionaHostBuilder(Assembly.GetCallingAssembly());
+    }
+
     private void CreateHost()
     {
-        if (_host is not null)
-        {
-            return;
-        }
+        if (_host is not null) return;
 
         lock (_lock)
         {
@@ -78,24 +90,10 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
 
     private void LoadControllers()
     {
-        foreach (var controllerType in ControllerUtils.GetControllers(_startupAssembly))
+        foreach (Type controllerType in ControllerUtils.GetControllers(_startupAssembly))
         {
             Service.AddTransient(controllerType);
             _routerBuilder.AddController(controllerType);
         }
-    }
-
-    public IFionaHostBuilder AddConfig<T>(string section) where T : class, new()
-    {
-        Service.AddSingleton<IOption<T>>(sp => sp.GetRequiredService<OptionFactory>().CreateOption<T>(section));
-        return this;
-    }
-
-    public IFionaHostBuilder AddConfig<T>() where T : class, new()
-    {
-        Service.AddSingleton<IOption<T>>(sp => sp.GetRequiredService<OptionFactory>().CreateOption<T>());
-        T config = new();
-        Configuration.GetSection(nameof(T)).Bind(config);
-        return this;
     }
 }

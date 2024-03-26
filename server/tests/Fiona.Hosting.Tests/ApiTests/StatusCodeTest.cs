@@ -7,14 +7,14 @@ namespace Fiona.Hosting.Tests.ApiTests;
 [Collection("FionaTests")]
 public sealed class StatusCodeTest(FionaTestServerBuilder testBuilder)
 {
+    private readonly HttpClient _httpClient = new()
+    {
+        BaseAddress = new Uri("http://localhost:7000/")
+    };
+
     private FionaTestServerBuilder _testServerBuilder = testBuilder;
 
-    private readonly HttpClient _httpClient = new HttpClient()
-    {
-        BaseAddress = new Uri("http://localhost:7000/"),
-    };
-    
-    
+
     [Theory]
     [InlineData(200)]
     [InlineData(201)]
@@ -26,8 +26,8 @@ public sealed class StatusCodeTest(FionaTestServerBuilder testBuilder)
     public async Task Should_Got_Correct_Status_Code_From_Api(int statusCode)
     {
         // Act
-        var response = await _httpClient.GetAsync($"status-code/{statusCode}");
-        
+        HttpResponseMessage response = await _httpClient.GetAsync($"status-code/{statusCode}");
+
         // Assert
         response.StatusCode.Should().Be((HttpStatusCode)statusCode);
     }

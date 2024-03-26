@@ -1,8 +1,8 @@
-﻿
-using Fiona.Hosting;
+﻿using Fiona.Hosting;
+using Fiona.Hosting.Abstractions;
 
-var serviceBuilder = FionaHostBuilder.CreateHostBuilder();
+IFionaHostBuilder serviceBuilder = FionaHostBuilder.CreateHostBuilder();
 
-using var host = serviceBuilder.Build();
+using IFionaHost host = serviceBuilder.Build();
 
 Console.WriteLine();

@@ -7,19 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Fiona.Hosting.Abstractions\Fiona.Hosting.Abstractions.csproj" />
+        <ProjectReference Include="..\Fiona.Hosting.Abstractions\Fiona.Hosting.Abstractions.csproj"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-        <InternalsVisibleTo  Include="Fiona.Hosting.Tests" />
+        <InternalsVisibleTo Include="Fiona.Hosting.Tests"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
     </ItemGroup>
-    
+
 </Project>

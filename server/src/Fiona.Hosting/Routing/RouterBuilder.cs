@@ -22,9 +22,9 @@ internal sealed class RouterBuilder
 
     private RouteNode BuildRouteTree()
     {
-        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = GenerateRoutesDictionary();
+        var routes = GenerateRoutesDictionary();
 
-        var head = GenerateRouteTree(routes);
+        RouteNode head = GenerateRouteTree(routes);
 
         return head;
     }
@@ -34,36 +34,34 @@ internal sealed class RouterBuilder
         RouteNode head = RouteNode.GetHead();
         var sortedKeys = routes.Keys.OrderBy(key => key.Length).ToList();
 
-        foreach (var key in sortedKeys)
-        {
-            foreach (var (httpMethodType, method) in routes[key])
-            {
-                head.Insert(httpMethodType, method, key);
-            }
-        }
+        foreach (string key in sortedKeys)
+        foreach ((HttpMethodType httpMethodType, MethodInfo method) in routes[key])
+            head.Insert(httpMethodType, method, key);
 
         return head;
     }
 
     private Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> GenerateRoutesDictionary()
     {
-        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = new() { };
-        foreach (var controller in _controllers)
+        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes = new();
+        foreach (Type controller in _controllers)
         {
-            var baseRoute = RouteAttributeUtils.GetBaseRoute(controller);
+            string baseRoute = RouteAttributeUtils.GetBaseRoute(controller);
             InsertRoutesForMethodsInController(controller, baseRoute, routes);
         }
 
         return routes;
     }
 
-    private static void InsertRoutesForMethodsInController(Type controller, string baseRoute, Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes)
+    private static void InsertRoutesForMethodsInController(Type controller, string baseRoute,
+        Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes)
     {
         StringBuilder urlBuilder = new(50);
-        foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance |
-                                                     BindingFlags.DeclaredOnly))
+        foreach (MethodInfo method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance |
+                                                            BindingFlags.DeclaredOnly))
         {
-            var (route, methodTypes) = RouteAttributeUtils.GetMetadataFromRouteAttribute(method, baseRoute);
+            (string? route, HttpMethodType methodTypes) =
+                RouteAttributeUtils.GetMetadataFromRouteAttribute(method, baseRoute);
             urlBuilder.Append(baseRoute);
             urlBuilder.Append(route);
             string url = urlBuilder.ToString();
@@ -72,42 +70,34 @@ internal sealed class RouterBuilder
         }
     }
 
-    private static void InsertRoute(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes, string url, HttpMethodType methodTypes, MethodInfo method)
+    private static void InsertRoute(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes, string url,
+        HttpMethodType methodTypes, MethodInfo method)
     {
-        bool routeExists = routes.TryGetValue(url, out Dictionary<HttpMethodType, MethodInfo>? value);
+        bool routeExists = routes.TryGetValue(url, out var value);
 
         if (routeExists)
-        {
             UpdateRoute(methodTypes, method, value!);
-        }
         else
-        {
             AddNewRoute(routes, url, methodTypes, method);
-        }
     }
 
-    private static void UpdateRoute(HttpMethodType methodTypes, MethodInfo method, Dictionary<HttpMethodType, MethodInfo> value)
+    private static void UpdateRoute(HttpMethodType methodTypes, MethodInfo method,
+        Dictionary<HttpMethodType, MethodInfo> value)
     {
-        foreach (var methodType in methodTypes.GetMethodTypes())
+        foreach (HttpMethodType methodType in methodTypes.GetMethodTypes())
         {
-            if (value.TryGetValue(methodType, out var conflictingMethod))
-            {
+            if (value.TryGetValue(methodType, out MethodInfo? conflictingMethod))
                 throw new RouteConflictException(method.DeclaringType!.FullName!,
                     conflictingMethod.DeclaringType!.FullName!);
-            }
 
             value.Add(methodType, method);
         }
     }
-    
-    private static void AddNewRoute(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes, string url, HttpMethodType methodTypes, MethodInfo method)
+
+    private static void AddNewRoute(Dictionary<string, Dictionary<HttpMethodType, MethodInfo>> routes, string url,
+        HttpMethodType methodTypes, MethodInfo method)
     {
         routes.Add(url, new Dictionary<HttpMethodType, MethodInfo>());
-        foreach (var methodType in methodTypes.GetMethodTypes())
-        {
-            routes[url].Add(methodType, method);
-        }
+        foreach (HttpMethodType methodType in methodTypes.GetMethodTypes()) routes[url].Add(methodType, method);
     }
-
-
 }

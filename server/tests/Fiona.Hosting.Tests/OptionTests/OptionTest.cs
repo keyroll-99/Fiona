@@ -11,22 +11,22 @@ public class OptionTest
 {
     private readonly HttpClient _httpClient = new()
     {
-        BaseAddress = new Uri("http://localhost:7000/"),
+        BaseAddress = new Uri("http://localhost:7000/")
     };
-    
+
     [Fact]
     public async Task Should_Return_Correct_Config_When_Call_Option_Get()
     {
         // Act
-        var response = await _httpClient.GetAsync("option/get");
-        
+        HttpResponseMessage response = await _httpClient.GetAsync("option/get");
+
         // Assert
-        var content = await response.Content.ReadAsStringAsync();
-        var appConfig = JsonSerializer.Deserialize<ConfigModel>(content, new JsonSerializerOptions()
+        string content = await response.Content.ReadAsStringAsync();
+        ConfigModel? appConfig = JsonSerializer.Deserialize<ConfigModel>(content, new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true,
+            PropertyNameCaseInsensitive = true
         });
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         appConfig.Should().NotBeNull();
         appConfig.Name.Should().Be("Config");

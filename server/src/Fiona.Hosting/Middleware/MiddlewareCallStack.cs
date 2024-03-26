@@ -9,20 +9,14 @@ internal sealed class MiddlewareCallStack
 
     public MiddlewareCallStack(IEnumerable<IMiddleware> middlewares)
     {
-        foreach (var middleware in middlewares)
-        {
-            _middlewaresStack.Enqueue(middleware);
-        }
+        foreach (IMiddleware middleware in middlewares) _middlewaresStack.Enqueue(middleware);
     }
 
     public async Task Invoke(HttpListenerContext context)
     {
-        if (_middlewaresStack.Count == 0)
-        {
-            return;
-        }
+        if (_middlewaresStack.Count == 0) return;
 
-        var middleware = _middlewaresStack.Dequeue();
+        IMiddleware middleware = _middlewaresStack.Dequeue();
         await middleware.Invoke(context, Invoke);
     }
 }
