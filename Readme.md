@@ -32,7 +32,7 @@ Must to have - I want to finish it to end of march
 	- [X] Response (status codes etc)
 	- [X] Async handle request
 	- [X] Configuration like a baseUrl, port ETC
-	- [ ] Cookies
+	- [X] Cookies
 	- [ ] Logger
 	- [ ] Error handler
 	- [ ] Documentation :)
