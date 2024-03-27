@@ -8,6 +8,7 @@ using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Fiona.Hosting;
 
@@ -18,12 +19,12 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
     private readonly object _lock = new();
     private readonly RouterBuilder _routerBuilder = new();
     private readonly Assembly _startupAssembly;
-
+    private Action<ILoggingBuilder> _loggerConfiguration = (b) => b.AddConsole();
+        
     private FionaHostBuilder(Assembly assembly)
     {
         _startupAssembly = assembly;
         _appConfig = ConfigurationLoader.GetConfig(assembly);
-
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Path.GetDirectoryName(assembly.Location))
             .AddJsonFile("AppSettings/AppSettings.json", false)
@@ -81,6 +82,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
 
     private void PrepareHostToRun()
     {
+        Service.AddLogging(_loggerConfiguration);
         Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
         AddMiddleware<CallEndpointMiddleware>();
         Service.AddTransient<MiddlewareCallStack>();
@@ -95,5 +97,10 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
             Service.AddTransient(controllerType);
             _routerBuilder.AddController(controllerType);
         }
+    }
+    
+    public void ConfigureLogging(Action<ILoggingBuilder> loggerConfiguration)
+    {
+        _loggerConfiguration = loggerConfiguration;
     }
 }
