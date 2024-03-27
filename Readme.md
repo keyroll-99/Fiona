@@ -33,7 +33,7 @@ Must to have - I want to finish it to end of march
 	- [X] Async handle request
 	- [X] Configuration like a baseUrl, port ETC
 	- [X] Cookies
-	- [ ] Logger
+	- [X] Logger
 	- [ ] Error handler
 	- [ ] Documentation :)
 - [ ] Tools
