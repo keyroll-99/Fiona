@@ -5,7 +5,7 @@ using FluentAssertions;
 namespace Fiona.Hosting.Tests.ApiTests;
 
 [Collection("FionaTests")]
-public sealed class StatusCodeTest(FionaTestServerBuilder testBuilder)
+public sealed class StatusCodeTests(FionaTestServerBuilder testBuilder)
 {
     private readonly HttpClient _httpClient = new()
     {

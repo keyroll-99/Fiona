@@ -4,6 +4,7 @@ using Fiona.Hosting.Abstractions.Configuration;
 using Fiona.Hosting.Abstractions.Middleware;
 using Fiona.Hosting.Configuration;
 using Fiona.Hosting.Controller;
+using Fiona.Hosting.ErrorHandler;
 using Fiona.Hosting.Middleware;
 using Fiona.Hosting.Routing;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,7 @@ namespace Fiona.Hosting;
 public sealed class FionaHostBuilder : IFionaHostBuilder
 {
     private static IFionaHost? _host;
-    private readonly AppConfig _appConfig;
+    private readonly ServerConfig _serverConfig;
     private readonly object _lock = new();
     private readonly RouterBuilder _routerBuilder = new();
     private readonly Assembly _startupAssembly;
@@ -24,11 +25,11 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
     private FionaHostBuilder(Assembly assembly)
     {
         _startupAssembly = assembly;
-        _appConfig = ConfigurationLoader.GetConfig(assembly);
+        _serverConfig = ConfigurationLoader.GetConfig(assembly);
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Path.GetDirectoryName(assembly.Location))
             .AddJsonFile("AppSettings/AppSettings.json", false)
-            .AddJsonFile($"AppSettings/AppSettings.{_appConfig.Environment}.json", true)
+            .AddJsonFile($"AppSettings/AppSettings.{_serverConfig.Environment}.json", true)
             .AddEnvironmentVariables()
             .Build();
     }
@@ -65,7 +66,6 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
 
     public static IFionaHostBuilder CreateHostBuilder()
     {
-        Assembly y = Assembly.GetCallingAssembly();
         return new FionaHostBuilder(Assembly.GetCallingAssembly());
     }
 
@@ -76,14 +76,16 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         lock (_lock)
         {
             PrepareHostToRun();
-            _host ??= new FionaHost(Service.BuildServiceProvider(), _appConfig);
+            _host ??= new FionaHost(Service.BuildServiceProvider(), _serverConfig);
         }
     }
 
     private void PrepareHostToRun()
     {
+        Service.AddSingleton<IOption<ServerConfig>>( sp => sp.GetRequiredService<OptionFactory>().CreateOption<ServerConfig>());
         Service.AddLogging(_loggerConfiguration);
         Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
+        AddMiddleware<ErrorHandlerMiddleware>();
         AddMiddleware<CallEndpointMiddleware>();
         Service.AddTransient<MiddlewareCallStack>();
         Service.AddTransient<IConfiguration>(sp => Configuration);

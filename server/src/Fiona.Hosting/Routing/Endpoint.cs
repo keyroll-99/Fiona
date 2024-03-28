@@ -58,17 +58,9 @@ internal sealed class Endpoint
             return new ObjectResult(null, HttpStatusCode.OK);
         }
 
-        try
-        {
-            object? result = _method.Invoke(controller, parameters);
+        object? result = _method.Invoke(controller, parameters);
 
-            return await CastResultToObjectResult(result, returnType);
-        }
-        catch (Exception e)
-        {
-            // This will be replace by middleware
-            return new ObjectResult(e.ToString(), HttpStatusCode.InternalServerError);
-        }
+        return await CastResultToObjectResult(result, returnType);
     }
 
     private static async Task<ObjectResult> CastResultToObjectResult(object? result, Type returnType)

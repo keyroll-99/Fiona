@@ -8,13 +8,13 @@ namespace Fiona.Hosting;
 
 internal sealed class FionaHost : IFionaHost
 {
-    private readonly AppConfig _config;
+    private readonly ServerConfig _config;
     private readonly HttpListener _httpListener = new();
     private readonly int _maxThreads;
     private readonly List<Task> _requestThreads;
     private readonly IServiceProvider _serviceProvider;
 
-    public FionaHost(IServiceProvider serviceProvider, AppConfig config)
+    public FionaHost(IServiceProvider serviceProvider, ServerConfig config)
     {
         _serviceProvider = serviceProvider;
         _config = config;
