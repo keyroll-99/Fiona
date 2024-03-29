@@ -36,8 +36,8 @@ Must to have - I want to finish it to end of march
 	- [X] Logger
 	- [X] Error handler
 	- [ ] Documentation :)
-- [ ] Tools
-    - [ ] Github actions to build it
+- [X] Tools
+    - [X] Github actions to build it
 
 Good to have - 30-60 days
 - [ ] GUI
