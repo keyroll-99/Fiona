@@ -75,5 +75,40 @@ Would to have
 - [ ] Add user login option
 
 
-## How to run it?
-To do
+## How to run simple server
+in `Program.cs`
+```c# 
+using Fiona.Hosting;
+using Fiona.Hosting.Abstractions;
+
+IFionaHostBuilder serviceBuilder = FionaHostBuilder.CreateHostBuilder();
+
+using IFionaHost host = serviceBuilder.Build();
+
+host.Run();
+```
+
+sample controller
+
+```c#
+using Fiona.Hosting.Controller.Attributes;
+using Fiona.Hosting.Routing;
+using Fiona.Hosting.Routing.Attributes;
+using Microsoft.Extensions.Logging;
+
+namespace SampleFionaServer.Controller;
+
+public class HomeController(ILogger<HomeController> logger)
+{
+    private readonly ILogger<HomeController> _logger = logger;
+    
+    [Route(HttpMethodType.Get)]
+    public Task<string> Index()
+    {
+        _logger.Log(LogLevel.Critical, "Home Controller Index");
+        return Task.FromResult("Home");
+    }
+}
+```
+
+if you want to read more click [here](./docs/Readme.md)
