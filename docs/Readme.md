@@ -4,7 +4,6 @@ Welcome to Fiona's documentation, the framework is currently under active develo
 1. About
     1. [About](About.md)
     1. [Getting started](Getting-started.md)
-    1. [Samples](Sample.md)
 1. [Configuration](Configuration.md)
 1. [Controller](Controller.md)
 1. [Routing](Routing.md)
