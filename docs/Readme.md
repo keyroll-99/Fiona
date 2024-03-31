@@ -1,6 +1,5 @@
 # Fiona documentation
-
-Welcome to Fiona documentation, framework is currently under active development.
+Welcome to Fiona's documentation, the framework is currently under active development.
 
 1. About
     1. [About](About.md)
@@ -12,3 +11,5 @@ Welcome to Fiona documentation, framework is currently under active development.
 1. [Middleware](Middleware.md)
 1. [Cookie](Cookie.md)
 1. [Logger](Logger.md)
+1. [Dependency injection](Dependency-injection.md)
+

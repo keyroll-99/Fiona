@@ -32,6 +32,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
             .AddJsonFile($"AppSettings/AppSettings.{_serverConfig.Environment}.json", true)
             .AddEnvironmentVariables()
             .Build();
+        InitMiddleware();
     }
 
     public IConfiguration Configuration { get; }
@@ -69,6 +70,11 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         return new FionaHostBuilder(Assembly.GetCallingAssembly());
     }
 
+    public void ConfigureLogging(Action<ILoggingBuilder> loggerConfiguration)
+    {
+        _loggerConfiguration = loggerConfiguration;
+    }
+    
     private void CreateHost()
     {
         if (_host is not null) return;
@@ -85,11 +91,11 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         Service.AddSingleton<IOption<ServerConfig>>( sp => sp.GetRequiredService<OptionFactory>().CreateOption<ServerConfig>());
         Service.AddLogging(_loggerConfiguration);
         Service.AddSingleton<Router>(sp => _routerBuilder.Build(sp));
-        AddMiddleware<ErrorHandlerMiddleware>();
-        AddMiddleware<CallEndpointMiddleware>();
         Service.AddTransient<MiddlewareCallStack>();
         Service.AddTransient<IConfiguration>(sp => Configuration);
         Service.AddSingleton<OptionFactory>();
+        
+        AddMiddleware<CallEndpointMiddleware>();
     }
 
     private void LoadControllers()
@@ -100,9 +106,12 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
             _routerBuilder.AddController(controllerType);
         }
     }
-    
-    public void ConfigureLogging(Action<ILoggingBuilder> loggerConfiguration)
+
+    /// <summary>
+    /// Here you should add middleware that should be executed at the beginning of the request.
+    /// </summary>
+    private void InitMiddleware()
     {
-        _loggerConfiguration = loggerConfiguration;
+        AddMiddleware<ErrorHandlerMiddleware>();
     }
 }
