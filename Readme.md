@@ -4,31 +4,31 @@
 ![logo](assets/logo.jpg)
 
 ---
-Fiona is a web api framework written in .Net. As developer you will be able to create API in easily and quick way.
-The planned key feature is a GUI where developer will be able create API using blocks like blueprint in UE.
+Fiona is a web api framework written in .Net. As a developer, you will be able to create API easily and quickly.
+The planned key feature is a GUI where a developer will be able to create API using blocks like a blueprint in UE.
 
-At the begin I use HttpListener, but in the distant future I want to write own http hand shake.
+In the beginning, I used HttpListener, but in the distant future, I want to write my HTTP handshake.
 
 The project was initiated as part of the "100 commits" competition
 
-Repo will be rename after 100 commits competition, because I came up with the idea for the name after registering the repo.
+The Repo will be renamed after 100 commits competition because I came up with the idea for the name after registering the repo.
 
 ## Is it ready on production
 Nope, maybe in the future
 
 ## Road map
 
-Must to have - I want to finish it to end of march
+Must to have - I want to finish it by to end of march
 - [ ] Server
 	- [X] Folder structure 
     - [X] First Tests
-	- [X] Simple http server with host
+	- [X] Simple HTTP server with host
 	- [X] Startup builder
 	- [X] Routing
 	- [X] Simple Controller
 	- [X] Parsing body to object
 	- [X] Middleware
-	- [X] Passing parameters and args from route
+	- [X] Passing parameters and args from the route
 	- [X] Response (status codes etc)
 	- [X] Async handle request
 	- [X] Configuration like a baseUrl, port ETC
@@ -41,12 +41,12 @@ Must to have - I want to finish it to end of march
 
 Good to have - 30-60 days
 - [ ] GUI
-	- [ ] Simple view where user can drag and drop boxes
+	- [ ] Simple view where the user can drag and drop boxes
 	- [ ] Creating project
-	- [ ] User can connect boxes
+	- [ ] Users can connect boxes
 	- [ ] Adding controller 
 	- [ ] Adding service
-	- [ ] Add way to create simple CRUD
+	- [ ] Add a way to create simple CRUD
 	- [ ] Add logic statement
 	- [ ] Add loop statement
 	- [ ] Run project
@@ -56,26 +56,26 @@ Nice to have - 30 days
 	- [ ] Docker image
 - [ ] Server
     - [ ] File upload
-	- [ ] Inject service to controller method
+	- [ ] Inject service to a controller method
 	- [ ] Auto impl register
 	- [ ] Auto inject to method
 	- [ ] Extension for EF
 	- [ ] Security
 		- [ ] CORS
-	- [ ] Before call action, as attribute
+	- [ ] Before call action, as an attribute
 	- [ ] Support for plain text in body
 - [ ] GUI
 	- [ ] Database configuration
 
 Would to have
 - [ ] Debugger
-- [ ] Own http hand shake
+- [ ] Own http handshake
 - [ ] Cache
-- [ ] HttpClient - user can easy use it
+- [ ] HttpClient - user can easily use it
 - [ ] Add user login option
 
 
-## How to run simple server
+## How to run a simple server
 in `Program.cs`
 ```c# 
 using Fiona.Hosting;
