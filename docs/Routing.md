@@ -87,4 +87,24 @@ public class HomeController(ILogger<HomeController> logger)
 
 ```
 
-If you will have to route ``[Route(HttpMethodType.Get, "/home/{index}")]`` and ``[Route(HttpMethodType.Get, "/home/index")]`` doesn't matter which one is first defined. ``Get /home/index`` always will be called`/home/index`.
+If you will have to route ``[Route(HttpMethodType.Get, "/home/{index}")]`` and ``[Route(HttpMethodType.Get, "/home/index")]`` doesn't matter which one is first defined. ``GET /home/index`` always will be called`/home/index`.
+
+
+## Query params
+
+To pass a query param to a method. First, you have to declare it in the route attribute. Then you can pass is as a method argument.
+```c#
+    [Route(HttpMethodType.Get, "userFromArgs", ["userId", "name"])]
+    public Task<ObjectResult> UserFromArgs(int userId, string name)
+    {
+        return Task.FromResult(
+            new ObjectResult(
+                new UserModel
+                {
+                    Id = userId, Name = name
+                },
+                HttpStatusCode.OK
+            )
+        );
+    }
+```

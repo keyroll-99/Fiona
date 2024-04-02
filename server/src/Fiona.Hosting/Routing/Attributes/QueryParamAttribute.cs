@@ -7,7 +7,8 @@ public class QueryParamAttribute : Attribute
     {
     }
 
-    public QueryParamAttribute(string name)
+    // In the future this will be used to specify the name of the query parameter
+    private QueryParamAttribute(string name)
     {
         Name = name;
     }
