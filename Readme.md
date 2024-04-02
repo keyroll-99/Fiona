@@ -35,7 +35,7 @@ Must to have - I want to finish it by to end of march
 	- [X] Cookies
 	- [X] Logger
 	- [X] Error handler
-	- [ ] Documentation :)
+	- [X] Documentation :)
 - [X] Tools
     - [X] Github actions to build it
 
