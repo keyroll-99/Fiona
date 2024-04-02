@@ -3,10 +3,11 @@ using System.Text;
 using Fiona.Hosting.Abstractions.Configuration;
 using Fiona.Hosting.Abstractions.Middleware;
 using Fiona.Hosting.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Fiona.Hosting.ErrorHandler;
 
-internal sealed class ErrorHandlerMiddleware(IOption<ServerConfig> serverConfig) : IMiddleware
+internal sealed class ErrorHandlerMiddleware(IOption<ServerConfig> serverConfig, ILogger<ErrorHandlerMiddleware> logger) : IMiddleware
 {
     private readonly ServerConfig _serverConfig = serverConfig.Value;
 
@@ -18,6 +19,7 @@ internal sealed class ErrorHandlerMiddleware(IOption<ServerConfig> serverConfig)
         }
         catch (Exception ex)
         {
+            logger.LogError(ex.ToString());
             await HandleError(request, ex);
         }
     }

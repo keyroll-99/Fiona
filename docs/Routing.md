@@ -71,6 +71,7 @@ public class HomeController(ILogger<HomeController> logger)
 To pass a param from route you just have to define it in the Route attribute by wrapping part of the argument by `{}`.
 ``[Route(HttpMethodType.Post, "{controller}"`)]`
 The part between`{}`will be also the name of your argument. If you want to pass it to the method you just have to add an argument which the same name like the name between`{}`
+
 ```c#
 [Controller("home")]
 public class HomeController(ILogger<HomeController> logger)
@@ -87,12 +88,13 @@ public class HomeController(ILogger<HomeController> logger)
 
 ```
 
-If you will have to route ``[Route(HttpMethodType.Get, "/home/{index}")]`` and ``[Route(HttpMethodType.Get, "/home/index")]`` doesn't matter which one is first defined. ``GET /home/index`` always will be called`/home/index`.
-
+If you will have to route `[Route(HttpMethodType.Get, "/home/{index}")]` and `[Route(HttpMethodType.Get, "/home/index")]` doesn't matter which one is first defined. `GET /home/index` always will be called`/home/index`.
 
 ## Query params
 
-To pass a query param to a method. First, you have to declare it in the route attribute. Then you can pass is as a method argument.
+To pass a query param to a method. First, you have to declare it in the route attribute. Then you can pass it as a method argument. The name of the argument has to be the same as the name in the route attribute.
+In the future is planned to add a QueryParamAttribute as an alternative way.
+
 ```c#
     [Route(HttpMethodType.Get, "userFromArgs", ["userId", "name"])]
     public Task<ObjectResult> UserFromArgs(int userId, string name)

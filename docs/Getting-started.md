@@ -122,4 +122,10 @@ public sealed class CustomMiddleware() : IMiddleware
     }
 }
 ```
+Then add it to the `Program.cs`
+
+```c#
+builder.AddMiddleware<CustomMiddleware>();
+```
+
 [Read more about middleware](Middleware.md)
