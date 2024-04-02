@@ -70,9 +70,10 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         return new FionaHostBuilder(Assembly.GetCallingAssembly());
     }
 
-    public void ConfigureLogging(Action<ILoggingBuilder> loggerConfiguration)
+    public IFionaHostBuilder ConfigureLogging(Action<ILoggingBuilder> loggerConfiguration)
     {
         _loggerConfiguration = loggerConfiguration;
+        return this;
     }
     
     private void CreateHost()

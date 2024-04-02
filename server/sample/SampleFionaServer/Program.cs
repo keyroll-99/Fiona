@@ -2,7 +2,6 @@
 using Fiona.Hosting.Abstractions;
 
 IFionaHostBuilder serviceBuilder = FionaHostBuilder.CreateHostBuilder();
-
 using IFionaHost host = serviceBuilder.Build();
 
 host.Run();
