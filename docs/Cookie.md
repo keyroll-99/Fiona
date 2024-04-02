@@ -9,6 +9,7 @@ Cookie attribute have two constructors.
 1. With one argument which is the name of cookie. In this scenario name of argument don't have to be same as name of cookie
 
 Example of use
+
 ```c#
 [Route(HttpMethodType.Get, "get")]
 public Task<ObjectResult> GetCookie([Cookie("fiona")] string? notFiona, [Cookie] string? secondCookie)
@@ -21,6 +22,7 @@ public Task<ObjectResult> GetCookie([Cookie("fiona")] string? notFiona, [Cookie]
 ## How to set cookie
 
 To set a cookie you have use method SetCookie on your instance of ObjectResult.
+
 ```c#
 
 [Route(HttpMethodType.Get, "set")]

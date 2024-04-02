@@ -42,20 +42,20 @@ For example
 
 ```json
 {
-  "settings":{
+  "settings": {
     "howManyConnection": 2
   }
 }
-
 ```
-that means the default value of howManyConnection is 1 but on the `Prod` env will be overridden to 2
 
+that means the default value of howManyConnection is 1 but on the `Prod` env will be overridden to 2
 
 ## How to use AppSettings
 
 If you want to use your settings in a controller or other service at the beginning you have to register your settings.
 
 To do it you have to use `Builder.AddConfig<ConfigModel>();` in `Programs.cs`.
-There are two overloaded methods. 
-1. `AddConfig<T>();` - this will automatically load the object from  ``AppSettings`` where the key is the name of the class.
-2. `AddConfig<T>(string key);` - this will load the object from ``AppSettings`` where the key is passing by argument. If an object is nested just use `:`
+There are two overloaded methods.
+
+1. `AddConfig<T>();` - this will automatically load the object from `AppSettings` where the key is the name of the class.
+2. `AddConfig<T>(string key);` - this will load the object from `AppSettings` where the key is passing by argument. If an object is nested just use `:`

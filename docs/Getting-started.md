@@ -6,8 +6,8 @@
 
 1. In the beginning, you have to create the folder `AppSettings` and in the folder, you have to create two files
 
-    1. `AppSettings.json`
-    1. `ServerSetting.json`
+   1. `AppSettings.json`
+   1. `ServerSetting.json`
 
 1. in `Program.cs`
 
@@ -68,7 +68,7 @@ public class HomeController(ILogger<HomeController> logger)
         return Task.FromResult("Home");
     }
 
-    
+
     [Route(HttpMethodType.Delete, "{userId}")]
     public Task<string> DeleteUser(int userId)
     {
@@ -77,6 +77,7 @@ public class HomeController(ILogger<HomeController> logger)
     }
 }
 ```
+
 [Read more about routing](Routing.md)
 
 ## How to inject own service
@@ -97,7 +98,6 @@ host.Run();
 ```
 
 [Read more about dependency injection](Dependency-injection.md)
-
 
 ## How to add custom middleware
 
@@ -122,6 +122,7 @@ public sealed class CustomMiddleware() : IMiddleware
     }
 }
 ```
+
 Then add it to the `Program.cs`
 
 ```c#
