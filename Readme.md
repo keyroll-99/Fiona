@@ -19,7 +19,7 @@ Nope, maybe in the future
 ## Road map
 
 Must to have - I want to finish it by to end of march
-- [ ] Server
+- [X] Server
 	- [X] Folder structure 
     - [X] First Tests
 	- [X] Simple HTTP server with host
