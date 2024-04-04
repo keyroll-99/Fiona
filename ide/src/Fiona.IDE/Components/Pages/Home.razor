@@ -1,10 +1,6 @@
 ﻿@page "/"
-@using Blazor.Diagrams
-@using Blazor.Diagrams.Core.Anchors
-@using Blazor.Diagrams.Core.Models
-@using Blazor.Diagrams.Core.PathGenerators
-@using Blazor.Diagrams.Core.Routers
-@using Blazor.Diagrams.Options
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Components
 
 <div class="diagram-container">
     <CascadingValue Value="Diagram" IsFixed="true">
@@ -16,7 +12,7 @@
 @code
 {
     private BlazorDiagram Diagram { get; set; } = null!;
-    
+
     protected override void OnInitialized()
     {
         var options = new BlazorDiagramOptions
@@ -35,11 +31,11 @@
 
         Diagram = new BlazorDiagram(options);
 
-        var firstNode = Diagram.Nodes.Add(new NodeModel(position: new Blazor.Diagrams.Core.Geometry.Point(50, 50))
+        var firstNode = Diagram.Nodes.Add(new NodeModel(position: new Point(50, 50))
         {
             Title = "Node 1"
         });
-        var secondNode = Diagram.Nodes.Add(new NodeModel(position: new Blazor.Diagrams.Core.Geometry.Point(200, 100))
+        var secondNode = Diagram.Nodes.Add(new NodeModel(position: new Point(200, 100))
         {
             Title = "Node 2"
         });
