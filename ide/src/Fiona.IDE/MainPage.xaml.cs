@@ -1,9 +1,10 @@
-﻿namespace Fiona.IDE;
-
-public partial class MainPage : ContentPage
+﻿namespace Fiona.IDE
 {
-    public MainPage()
+    public partial class MainPage : ContentPage
     {
-        InitializeComponent();
+        public MainPage()
+        {
+            InitializeComponent();
+        }
     }
 }

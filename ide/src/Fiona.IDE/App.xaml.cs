@@ -1,11 +1,12 @@
-﻿namespace Fiona.IDE;
-
-public partial class App : Application
+﻿namespace Fiona.IDE
 {
-    public App()
+    public partial class App : Application
     {
-        InitializeComponent();
+        public App()
+        {
+            InitializeComponent();
 
-        MainPage = new MainPage();
+            MainPage = new MainPage();
+        }
     }
 }

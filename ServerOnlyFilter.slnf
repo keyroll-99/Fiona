@@ -1,0 +1,13 @@
+﻿{
+  "solution": {
+    "path": "Fiona.sln",
+    "projects": [
+      "server\\sample\\SampleFionaServer\\SampleFionaServer.csproj",
+      "server\\src\\Fiona.Hosting.Abstractions\\Fiona.Hosting.Abstractions.csproj",
+      "server\\src\\Fiona.Hosting\\Fiona.Hosting.csproj",
+      "server\\tests\\Fiona.Hosting.StressTests\\Fiona.Hosting.StressTests.csproj",
+      "server\\tests\\Fiona.Hosting.TestServer\\Fiona.Hosting.TestServer.csproj",
+      "server\\tests\\Fiona.Hosting.Tests\\Fiona.Hosting.Tests.csproj"
+    ]
+  }
+}

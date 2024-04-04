@@ -1,30 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{324FCF06-E4DE-40B2-AEC1-E626284FFDB1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D4120FAC-D150-4006-82BE-4E9D36C7AC1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{73A28A5B-B3A1-4EDC-BFCE-EFADC44E580A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.Hosting.Tests", "server\tests\Fiona.Hosting.Tests\Fiona.Hosting.Tests.csproj", "{227CDD79-5873-461C-BD9E-F4322109BC95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiona.Hosting.Tests", "server\tests\Fiona.Hosting.Tests\Fiona.Hosting.Tests.csproj", "{227CDD79-5873-461C-BD9E-F4322109BC95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{290B1B16-4896-4DF9-875D-1FBB1B21410D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleFionaServer", "server\sample\SampleFionaServer\SampleFionaServer.csproj", "{25E76CBF-7113-496D-AB56-DAA0DE8F2AC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleFionaServer", "server\sample\SampleFionaServer\SampleFionaServer.csproj", "{25E76CBF-7113-496D-AB56-DAA0DE8F2AC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.Hosting.Abstractions", "server\src\Fiona.Hosting.Abstractions\Fiona.Hosting.Abstractions.csproj", "{54DFAC0F-91CF-4991-B52B-C3DEACF05838}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiona.Hosting.Abstractions", "server\src\Fiona.Hosting.Abstractions\Fiona.Hosting.Abstractions.csproj", "{54DFAC0F-91CF-4991-B52B-C3DEACF05838}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.Hosting", "server\src\Fiona.Hosting\Fiona.Hosting.csproj", "{CC406124-43B9-42CD-87DE-F17DF3D14CE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiona.Hosting", "server\src\Fiona.Hosting\Fiona.Hosting.csproj", "{CC406124-43B9-42CD-87DE-F17DF3D14CE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.Hosting.TestServer", "server\tests\Fiona.Hosting.TestServer\Fiona.Hosting.TestServer.csproj", "{F5D3F965-B5CA-415F-BD26-FC0608617EBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiona.Hosting.TestServer", "server\tests\Fiona.Hosting.TestServer\Fiona.Hosting.TestServer.csproj", "{F5D3F965-B5CA-415F-BD26-FC0608617EBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.Hosting.StressTests", "server\tests\Fiona.Hosting.StressTests\Fiona.Hosting.StressTests.csproj", "{F80AFFE1-E4B6-4956-967F-09A34269AC6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiona.Hosting.StressTests", "server\tests\Fiona.Hosting.StressTests\Fiona.Hosting.StressTests.csproj", "{F80AFFE1-E4B6-4956-967F-09A34269AC6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ide", "ide", "{D59629DE-5F27-45CE-900A-B57751CF077C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9386A258-6F1D-4785-BD1B-0468D65DC3A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.IDE", "ide\src\Fiona.IDE\Fiona.IDE.csproj", "{6B459C4D-3DDC-4AB1-9228-0A485B641E04}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.IDE", "ide\src\Fiona.IDE\Fiona.IDE.csproj", "{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,10 +59,15 @@ Global
 		{F80AFFE1-E4B6-4956-967F-09A34269AC6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F80AFFE1-E4B6-4956-967F-09A34269AC6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F80AFFE1-E4B6-4956-967F-09A34269AC6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B459C4D-3DDC-4AB1-9228-0A485B641E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B459C4D-3DDC-4AB1-9228-0A485B641E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B459C4D-3DDC-4AB1-9228-0A485B641E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B459C4D-3DDC-4AB1-9228-0A485B641E04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D4120FAC-D150-4006-82BE-4E9D36C7AC1D} = {324FCF06-E4DE-40B2-AEC1-E626284FFDB1}
@@ -72,6 +80,6 @@ Global
 		{F5D3F965-B5CA-415F-BD26-FC0608617EBE} = {73A28A5B-B3A1-4EDC-BFCE-EFADC44E580A}
 		{F80AFFE1-E4B6-4956-967F-09A34269AC6C} = {73A28A5B-B3A1-4EDC-BFCE-EFADC44E580A}
 		{9386A258-6F1D-4785-BD1B-0468D65DC3A6} = {D59629DE-5F27-45CE-900A-B57751CF077C}
-		{6B459C4D-3DDC-4AB1-9228-0A485B641E04} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
+		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
 	EndGlobalSection
 EndGlobal
