@@ -41,7 +41,7 @@ Must to have - I want to finish it by to end of march
 
 Good to have - 30-60 days
 - [ ] GUI
-	- [ ] Simple view where the user can drag and drop boxes
+	- [X] Simple view where the user can drag and drop boxes
 	- [ ] Creating project
 	- [ ] Users can connect boxes
 	- [ ] Adding controller 
