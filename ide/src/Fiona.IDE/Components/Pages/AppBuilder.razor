@@ -1,0 +1,52 @@
+﻿@page "/app-builder"
+@using Blazor.Diagrams.Core.Behaviors
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Components
+@using Fiona.IDE.Components.Behavior
+
+<div>
+    <button @onclick="AddEndpoint">add endpoint</button>
+</div>
+
+<div class="diagram-container">
+    <CascadingValue Value="Diagram" IsFixed="true">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>
+
+@code {
+    private BlazorDiagram Diagram { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var options = new BlazorDiagramOptions
+        {
+            AllowMultiSelection = true,
+            Zoom =
+            {
+                Enabled = false,
+            },
+            Links =
+            {
+                DefaultRouter = new NormalRouter(),
+                DefaultPathGenerator = new SmoothPathGenerator()
+            },
+        };
+
+        Diagram = new BlazorDiagram(options);
+
+        Diagram.UnregisterBehavior<SelectionBehavior>();
+        Diagram.RegisterBehavior(new MyBehavior(Diagram));
+    }
+
+    private void AddEndpoint()
+    {
+        var node = new NodeModel(new Point(20, 20));
+        node.AddPort(PortAlignment.Right);
+        node.Title = "Controller";
+
+
+        Diagram.Nodes.Add(node);
+    }
+
+}
