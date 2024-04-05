@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Core.Behaviors
+@using Fiona.IDE.Components.Behavior
 
 <div class="diagram-container">
     <CascadingValue Value="Diagram" IsFixed="true">
@@ -48,6 +50,10 @@
 // The connection point will be the port's position
         var targetAnchor = new SinglePortAnchor(leftPort);
         var link = Diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+
+        var oldSelectionBehavior = Diagram.GetBehavior<SelectionBehavior>()!;
+        Diagram.UnregisterBehavior<SelectionBehavior>();
+        Diagram.RegisterBehavior(new MyBehavior(Diagram));
     }
 
 
