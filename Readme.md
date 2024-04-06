@@ -42,14 +42,15 @@ Must to have - I want to finish it by to end of march
 Good to have - 30-60 days
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
+	- [ ] Nav menu
 	- [ ] Creating project
 	- [ ] Users can connect boxes
+	- [ ] Run project
 	- [ ] Adding controller 
 	- [ ] Adding service
 	- [ ] Add a way to create simple CRUD
 	- [ ] Add logic statement
 	- [ ] Add loop statement
-	- [ ] Run project
 
 Nice to have - 30 days
 - [ ] Tools

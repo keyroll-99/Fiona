@@ -1,4 +1,6 @@
-﻿namespace Fiona.IDE
+﻿using Microsoft.Maui.Controls;
+
+namespace Fiona.IDE
 {
     public partial class MainPage : ContentPage
     {
@@ -6,5 +8,6 @@
         {
             InitializeComponent();
         }
+        
     }
 }

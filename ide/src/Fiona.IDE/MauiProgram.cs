@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 
 namespace Fiona.IDE
 {
@@ -15,6 +18,7 @@ namespace Fiona.IDE
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddBlazorBootstrap();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
