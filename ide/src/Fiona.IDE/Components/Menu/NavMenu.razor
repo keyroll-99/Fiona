@@ -22,7 +22,7 @@
                         Project
                     </BarDropdownToggle>
                     <BarDropdownMenu>
-                        <BarDropdownItem>New project </BarDropdownItem>
+                        <BarDropdownItem @onclick="() => _showNewProjectModal = !_showNewProjectModal">New project</BarDropdownItem>
                     </BarDropdownMenu>
                 </BarDropdown>
 
@@ -34,9 +34,12 @@
     </BarMenu>
 </Bar>
 
+<NewProjectModal ShowModal="@_showNewProjectModal" />
+
 @code
 {
-    [Inject]
-    private MenuService MenuService { get; init; } = default!;
+
+
+    private bool _showNewProjectModal = false;
 
 }
