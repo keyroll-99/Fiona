@@ -13,7 +13,7 @@ The planned key feature is a GUI where a developer will be able to create API us
 
 In the beginning, I used HttpListener, but in the distant future, I want to write my HTTP handshake.
 
-The project was initiated as part of the "100 commits" competition
+The project was initiated as part of the "100 commitów" competition
 
 The Repo will be renamed after 100 commits competition because I came up with the idea for the name after registering the repo.
 
@@ -44,9 +44,11 @@ Must to have - I want to finish it by to end of march
     - [X] Github actions to build it
 
 Good to have - 30-60 days
+- [ ] Tools
+	- [ ] Publish nuget package
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
-	- [ ] Nav menu
+	- [X] Nav menu
 	- [ ] Creating project
 	- [ ] Users can connect boxes
 	- [ ] Run project

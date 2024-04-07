@@ -1,6 +1,7 @@
 ﻿using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using Fiona.IDE.Components.Menu;
 using Microsoft.Extensions.Logging;
 
 namespace Fiona.IDE
@@ -25,6 +26,8 @@ namespace Fiona.IDE
                 })
                 .AddBootstrap5Providers()
                 .AddFontAwesomeIcons();
+
+            builder.Services.AddSingleton<MenuService>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
