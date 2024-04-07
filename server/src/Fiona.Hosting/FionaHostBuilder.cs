@@ -27,7 +27,7 @@ public sealed class FionaHostBuilder : IFionaHostBuilder
         _startupAssembly = assembly;
         _serverConfig = ConfigurationLoader.GetConfig(assembly);
         Configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.GetDirectoryName(assembly.Location))
+            .SetBasePath(Path.GetDirectoryName(assembly.Location)!)
             .AddJsonFile("AppSettings/AppSettings.json", false)
             .AddJsonFile($"AppSettings/AppSettings.{_serverConfig.Environment}.json", true)
             .AddEnvironmentVariables()

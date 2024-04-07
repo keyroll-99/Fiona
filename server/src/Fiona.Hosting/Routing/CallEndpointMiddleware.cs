@@ -37,6 +37,7 @@ internal class CallEndpointMiddleware(Router router) : IMiddleware
 
     private static string? GetResponseString(ObjectResult result)
     {
+        // TODO work on stream not on string
         Type? resultType = result.Result?.GetType();
         string? responseString = string.Empty;
         if (resultType is not null)

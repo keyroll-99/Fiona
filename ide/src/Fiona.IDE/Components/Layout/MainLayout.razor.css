@@ -1,0 +1,8 @@
+.page{
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-menu{
+    min-height: 100vh
+}

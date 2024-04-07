@@ -4,6 +4,10 @@
 ![logo](assets/logo.jpg)
 
 ---
+[![🚧 - Under Development](https://img.shields.io/badge/🚧-Under_Development-orange)](https://)
+![Licence - MIT](https://img.shields.io/badge/Licence-MIT-2ea44f)
+
+
 Fiona is a web api framework written in .Net. As a developer, you will be able to create API easily and quickly.
 The planned key feature is a GUI where a developer will be able to create API using blocks like a blueprint in UE.
 

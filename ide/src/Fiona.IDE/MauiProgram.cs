@@ -1,10 +1,7 @@
 ﻿using Blazorise;
-using Blazorise.Bootstrap;
+using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls.Hosting;
-using Microsoft.Maui.Hosting;
 
 namespace Fiona.IDE
 {
@@ -26,7 +23,7 @@ namespace Fiona.IDE
                 {
                     options.Immediate = true;
                 })
-                .AddBootstrapProviders()
+                .AddBootstrap5Providers()
                 .AddFontAwesomeIcons();
 
 #if DEBUG

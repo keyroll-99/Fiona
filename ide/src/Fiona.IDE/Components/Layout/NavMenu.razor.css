@@ -1,0 +1,11 @@
+.logo-wrapper{
+    width: 40px;
+    height: 40px;
+}
+
+.bar-brand-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 2rem;
+}

@@ -1,21 +1,24 @@
-﻿<Bar Mode="BarMode.VerticalInline"
-     CollapseMode="BarCollapseMode.Small"
-     Breakpoint="Breakpoint.Desktop"
-     NavigationBreakpoint="Breakpoint.Tablet"
-     ThemeContrast="ThemeContrast.Dark">
+﻿<Bar
+    Mode="BarMode.VerticalInline"
+    CollapseMode="BarCollapseMode.Small"
+    Breakpoint="Breakpoint.Desktop"
+    NavigationBreakpoint="Breakpoint.Tablet"
+    ThemeContrast="ThemeContrast.Dark">
     <BarBrand>
         <BarItem>
-            <BarLink To="#">
-                <BarIcon IconName="IconName.Dashboard" />
-                Blazorise Demo
-            </BarLink>
+            <div class="bar-brand-wrapper">
+                <div class="logo-wrapper">
+                    <Image Source="images/logo.jpg" Text="logo" Fluid/>
+                </div>
+                Fiona
+            </div>
         </BarItem>
     </BarBrand>
     <BarMenu>
         <BarStart>
             <BarItem>
                 <BarLink To="/">
-                    <BarIcon IconName="IconName.Dashboard" />
+                    <BarIcon IconName="IconName.Dashboard"/>
                     Home
                 </BarLink>
             </BarItem>
@@ -25,7 +28,7 @@
             <BarItem>
                 <BarDropdown>
                     <BarDropdownToggle>
-                        <BarIcon IconName="IconName.Edit" />
+                        <BarIcon IconName="IconName.Edit"/>
                         Dropdown
                     </BarDropdownToggle>
                     <BarDropdownMenu>

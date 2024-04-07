@@ -61,10 +61,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Resources\Raw\AboutAssets.txt" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Blazorise.Bootstrap5" Version="1.5.1" />
         <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.5.1" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
@@ -75,10 +71,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Resources\Images\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <MauiImage Include="wwwroot\images\logo.jpg" />
+      <Folder Include="wwwroot\NewFolder\" />
     </ItemGroup>
 </Project>
