@@ -1,11 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <Version>0.0.1</Version>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Fiona.Hosting</RootNamespace>
+        <PackageId>Fiona.Hosting</PackageId>
+        <PackageVersion>0.0.1</PackageVersion>
+        <Title>Fiona</Title>
+        <Authors>Karol Kaźmierczak</Authors>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/keyroll-99/EasyApi</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/keyroll-99/EasyApi</RepositoryUrl>
+        <PackageTags>Api RestApi EasyApi Fiona </PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
+    <ItemGroup>
+        <None Include="..\..\..\README.md" pack="true" PackagePath="\"/>
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Fiona.Hosting.Abstractions\Fiona.Hosting.Abstractions.csproj"/>
     </ItemGroup>

@@ -1,5 +1,9 @@
 ﻿using Fiona.IDE.Components.Layout.Menu;
 using Foundation;
+using Microsoft.Maui.ApplicationModel;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UIKit;
 
 namespace Fiona.IDE.Platforms.MacCatalyst
@@ -11,7 +15,7 @@ namespace Fiona.IDE.Platforms.MacCatalyst
             public required Action<NSUrl[]> PickHandler { get; init; }
 
             public override void WasCancelled(UIDocumentPickerViewController controller)
-                => PickHandler?.Invoke(null);
+                => PickHandler?.Invoke(null!);
 
             public override void DidPickDocument(UIDocumentPickerViewController controller, NSUrl[] urls)
                 => PickHandler?.Invoke(urls);
@@ -49,7 +53,7 @@ namespace Fiona.IDE.Platforms.MacCatalyst
 
             UIViewController? parentController = Platform.GetCurrentUIViewController();
 
-            parentController.PresentViewController(picker, true, null);
+            parentController?.PresentViewController(picker, true, null);
 
             return await tcs.Task;
         }
@@ -64,7 +68,7 @@ namespace Fiona.IDE.Platforms.MacCatalyst
             public override void DidDismiss(UIPresentationController presentationController)
             {
                 _dismissHandler?.Invoke();
-                _dismissHandler = null;
+                _dismissHandler = null!;
             }
 
             protected override void Dispose(bool disposing)
