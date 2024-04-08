@@ -8,7 +8,7 @@ namespace Fiona.IDE.Platforms.MacCatalyst
     {
         private class PickerDelegate : UIDocumentPickerDelegate
         {
-            public Action<NSUrl[]> PickHandler { get; init; }
+            public required Action<NSUrl[]> PickHandler { get; init; }
 
             public override void WasCancelled(UIDocumentPickerViewController controller)
                 => PickHandler?.Invoke(null);
