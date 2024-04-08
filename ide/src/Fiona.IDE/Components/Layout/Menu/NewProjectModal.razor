@@ -1,0 +1,41 @@
+﻿@using Fiona.IDE.Components.Layout.Menu
+
+<Modal @ref="_modalRef" @bind-Visible="@ShowModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>New Project</ModalTitle>
+            <CloseButton/>
+        </ModalHeader>
+        <ModalBody>
+            <Button @onclick="SetFolder">Choose folder</Button>
+            <p>@_folderPath</p>
+        </ModalBody>
+    </ModalContent>
+</Modal>
+
+
+@code
+{
+    [Parameter]
+    public bool ShowModal { get; set; }
+    [Inject]
+    private MenuService MenuService { get; init; } = default!;
+    [Inject]
+    private IFolderPicker FolderPicker { get; init; } = default!;
+
+    private Modal _modalRef = default!;
+    private string _folderPath = string.Empty;
+
+    private async Task SetFolder()
+    {
+        try
+        {
+            _folderPath = await FolderPicker.PickFolder();
+        }
+        catch (Exception _)
+        {
+            // ignored
+        }
+    }
+
+}
