@@ -1,15 +1,35 @@
-﻿@using Fiona.IDE.Components.Layout.Menu
-
-<Modal @ref="_modalRef" @bind-Visible="@ShowModal">
+﻿<Modal @ref="_modalRef" @bind-Visible="@ShowModal" Closed="() => _shouldClearValidation = true">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>New Project</ModalTitle>
             <CloseButton/>
         </ModalHeader>
         <ModalBody>
-            <Button @onclick="SetFolder">Choose folder</Button>
-            <p>@_folderPath</p>
+            <Validations @ref="_validations" Mode="ValidationMode.Manual">
+                <Field>
+                    <FieldLabel>Project name</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <TextEdit @bind-Text="_projectName" Placeholder="Project name"/>
+                        <ValidationError>Project name is required</ValidationError>
+                    </Validation>
+                </Field>
+
+                <Field>
+                    <FieldLabel>Project path</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <div class="project-path-input">
+                            <TextEdit ReadOnly @bind-Text="@_folderPath" Placeholder="Project path"/>
+                            <Button @onclick="SetFolder" Color="Color.Light">Choose folder</Button>
+                            <ValidationError>Path is required</ValidationError>
+                        </div>
+                    </Validation>
+                </Field>
+            </Validations>
         </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="CreateProject">Create</Button>
+            <Button Color="Color.Danger" Clicked="() => ShowModal = false">Cancel</Button>
+        </ModalFooter>
     </ModalContent>
 </Modal>
 
@@ -18,13 +38,29 @@
 {
     [Parameter]
     public bool ShowModal { get; set; }
+
     [Inject]
     private MenuService MenuService { get; init; } = default!;
+
     [Inject]
     private IFolderPicker FolderPicker { get; init; } = default!;
 
     private Modal _modalRef = default!;
+    private Validations? _validations;
+
     private string _folderPath = string.Empty;
+    private string _projectName = string.Empty;
+    private bool _shouldClearValidation = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (_validations is not null && _shouldClearValidation)
+        {
+            await _validations.ClearAll();
+        }
+    }
+    
 
     private async Task SetFolder()
     {
@@ -38,4 +74,25 @@
         }
     }
 
+    private async Task CreateProject()
+    {
+        if (!await _validations.ValidateAll())
+        {
+            return;
+        }
+        await MenuService.CreateProjectFile(_folderPath, _projectName);
+        ShowModal = false;
+    }
+
 }
+
+<style>
+    .project-path-input{
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .project-path-input .form-control{
+        width: 73%;
+    }
+</style>

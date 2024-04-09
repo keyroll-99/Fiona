@@ -48,7 +48,7 @@ namespace Fiona.IDE.Platforms.MacCatalyst
             if (picker.PresentationController != null)
             {
                 picker.PresentationController.Delegate =
-                    new UiPresentationControllerDelegate(() => GetFileResults(null, tcs));
+                    new UiPresentationControllerDelegate(() => GetFileResults(null!, tcs));
             }
 
             UIViewController? parentController = Platform.GetCurrentUIViewController();
