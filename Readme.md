@@ -17,7 +17,7 @@ The project was initiated as part of the "100 commitów" competition
 
 The Repo will be renamed after 100 commits competition because I came up with the idea for the name after registering the repo.
 
-## Is it ready on production
+## Is it ready for production
 Nope, maybe in the future
 
 ## Road map
@@ -62,7 +62,7 @@ Nice to have - 30 days
 - [ ] Tools
 	- [ ] Docker image
 - [ ] Server
-    - [ ] File upload
+    - [ ] File Upload
 	- [ ] Inject service to a controller method
 	- [ ] Auto impl register
 	- [ ] Auto inject to method
@@ -76,7 +76,7 @@ Nice to have - 30 days
 
 Would to have
 - [ ] Debugger
-- [ ] Own http handshake
+- [ ] Own HTTP handshake
 - [ ] Cache
 - [ ] HttpClient - user can easily use it
 - [ ] Add user login option
