@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Fiona.Hosting</RootNamespace>
         <PackageId>Fiona.Hosting</PackageId>
-        <PackageVersion>0.0.1</PackageVersion>
+        <PackageVersion>0.0.2</PackageVersion>
         <Title>Fiona</Title>
         <Authors>Karol Kaźmierczak</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

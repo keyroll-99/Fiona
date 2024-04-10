@@ -1,0 +1,27 @@
+name: publish fiona
+
+on: [workflow_dispatch]
+
+
+jobs:
+    build:
+        runs-on: windows-latest
+    steps:
+        - uses: actions/checkout@v3
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v2
+          with:
+              dotnet-version: 7.0.x
+        - name: Setup NuGet
+          uses: NuGet/setup-nuget@v1.0.5
+        - name: Restore dependencies
+          run: dotnet restore
+        - name: Build
+          run: dotnet build --no-restore
+        - name: Package-Fiona-Abstractions
+          run: dotnet pack -c Release -o . ./server/src/Fiona.Hosting.Abstractions/Fiona.Hosting.Abstractions.csproj
+        - name: Package-Fiona
+          run: dotnet pack -c Release -o . ./server/src/Fiona.Hosting/Fiona.Hosting.csproj
+        - name: Publish
+          run: dotnet nuget push *.nupkg -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_API_KEY }}  --skip-duplicate
+        
