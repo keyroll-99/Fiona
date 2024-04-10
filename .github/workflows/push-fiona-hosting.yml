@@ -1,4 +1,4 @@
-name: publish fiona
+name: publish-fiona
 
 on: [workflow_dispatch]
 
