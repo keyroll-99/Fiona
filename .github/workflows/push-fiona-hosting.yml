@@ -4,7 +4,7 @@ on: [workflow_dispatch]
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: windows-latest
 
         steps:
             - uses: actions/checkout@v4
@@ -24,4 +24,3 @@ jobs:
               run: dotnet pack -c Release -o . ./server/src/Fiona.Hosting/Fiona.Hosting.csproj
             - name: Publish
               run: dotnet nuget push *.nupkg -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_API_KEY }}  --skip-duplicate
-        
