@@ -2,6 +2,7 @@
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Fiona.IDE.Components.Layout.Menu;
+using Fiona.IDE.Project;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Hosting;
@@ -31,6 +32,7 @@ namespace Fiona.IDE
                 .AddFontAwesomeIcons();
 
             builder.Services.AddSingleton<MenuService>();
+            builder.Services.AddSingleton<IProjectManager, ProjectManager>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
