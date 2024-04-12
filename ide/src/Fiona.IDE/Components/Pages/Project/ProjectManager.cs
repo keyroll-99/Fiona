@@ -1,9 +1,9 @@
-﻿using Fiona.IDE.Project.Models;
+﻿using Fiona.IDE.Components.Pages.Project.Models;
 using System.Text.Json;
 
-namespace Fiona.IDE.Project
+namespace Fiona.IDE.Components.Pages.Project
 {
-    public class ProjectManager : IProjectManager
+    internal class ProjectManager : IProjectManager
     {
 
         private FslnFile? Project { get; set; }
@@ -33,5 +33,8 @@ namespace Fiona.IDE.Project
 
             Project = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
         }
+
+        public bool IsLoaded()
+            => Project is not null;
     }
 }

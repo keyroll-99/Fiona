@@ -1,4 +1,6 @@
-﻿@using Fiona.IDE.Project
+﻿@using Fiona.IDE.Components.Pages.Project
+@inject NavigationManager NavManager
+
 <Modal @ref="_modalRef" @bind-Visible="@ShowModal" Closed="() => _shouldClearValidation = true">
     <ModalContent Centered>
         <ModalHeader>
@@ -92,7 +94,9 @@
 
         try
         {
-            await ProjectManager.CreateProject(_folderPath, _projectName);
+            string pathToProject = await ProjectManager.CreateProject(_folderPath, _projectName);
+            await ProjectManager.LoadProject(pathToProject);
+            NavManager.NavigateTo("/project-editor");
         }
         catch (ProjectAlreadyExistsException ex)
         {

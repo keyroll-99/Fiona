@@ -18,7 +18,6 @@ namespace Fiona.IDE.Platforms.Windows
             folderPicker.FileTypeFilter.Add("*");
             // Get the current window's HWND by passing in the Window object
             IntPtr hwnd = (((MauiWinUIWindow)Application.Current?.Windows[0].Handler?.PlatformView!)!).WindowHandle;
-
             // Associate the HWND with the file picker
             WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, hwnd);
 
@@ -26,5 +25,7 @@ namespace Fiona.IDE.Platforms.Windows
 
             return result.Path;
         }
+
+
     }
 }

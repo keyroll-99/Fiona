@@ -1,8 +1,9 @@
-﻿@page "/app-builder"
+﻿@page "/project-editor"
 @using Blazor.Diagrams.Core.Behaviors
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Components
-@using Fiona.IDE.Components.Behavior
+@inject NavigationManager NavManager
+
 
 <div>
     <button @onclick="AddEndpoint">add endpoint</button>
@@ -15,10 +16,19 @@
 </div>
 
 @code {
+
+    [Inject]
+    public IProjectManager ProjectManager { get; init; } = default!;
     private BlazorDiagram Diagram { get; set; } = null!;
+
 
     protected override void OnInitialized()
     {
+        if (!ProjectManager.IsLoaded())
+        {
+            NavManager.NavigateTo("/");
+        }
+        
         var options = new BlazorDiagramOptions
         {
             AllowMultiSelection = true,
@@ -33,10 +43,10 @@
             },
         };
 
-        Diagram = new BlazorDiagram(options);
 
+        Diagram = new BlazorDiagram(options);
         Diagram.UnregisterBehavior<SelectionBehavior>();
-        Diagram.RegisterBehavior(new MyBehavior(Diagram));
+        Diagram.RegisterBehavior(new DiagramBehavior(Diagram));
     }
 
     private void AddEndpoint()
@@ -44,8 +54,6 @@
         var node = new NodeModel(new Point(20, 20));
         node.AddPort(PortAlignment.Right);
         node.Title = "Controller";
-
-
         Diagram.Nodes.Add(node);
     }
 
