@@ -44,8 +44,8 @@ Must to have - I want to finish it by to end of march
     - [X] Github actions to build it
 
 Good to have - 30-60 days
-- [ ] Tools
-	- [ ] Publish nuget package
+- [X] Tools
+	- [X] Publish nuget package
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
