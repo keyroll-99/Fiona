@@ -20,6 +20,14 @@ The Repo will be renamed after 100 commits competition because I came up with th
 ## Is it ready for production
 Nope, maybe in the future
 
+## OS Support
+| OS     | Fiona.Hosting     | Fiona.Ui           |
+|--------|-------------------|--------------------|
+| Windows| :white_check_mark:| :white_check_mark: |
+| Linux  | :white_check_mark:| :x:                |
+| MacOs  | :x:               | :x:                |
+
+
 ## Road map
 
 Must to have - I want to finish it by to end of march
