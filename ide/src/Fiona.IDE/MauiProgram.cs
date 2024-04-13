@@ -3,6 +3,7 @@ using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Fiona.IDE.Components.Layout.Menu;
 using Fiona.IDE.Components.Pages.Project;
+using Fiona.IDE.Platforms.Windows;
 using Microsoft.Extensions.Logging;
 
 namespace Fiona.IDE
@@ -36,7 +37,8 @@ namespace Fiona.IDE
     		builder.Logging.AddDebug();
 #endif
 #if WINDOWS
-        builder.Services.AddTransient<IFolderPicker, Platforms.Windows.FolderPicker>();
+        builder.Services.AddTransient<IFolderPicker, FolderPicker>();
+        builder.Services.AddSingleton<ICommandRunner, CommandRunner>();
 #elif MACCATALYST
         builder.Services.AddTransient<IFolderPicker, Platforms.MacCatalyst.FolderPicker>();
 #endif

@@ -3,9 +3,9 @@ using System.Text.Json;
 
 namespace Fiona.IDE.Components.Pages.Project
 {
-    internal class ProjectManager : IProjectManager
+    internal class ProjectManager(ICommandRunner commandRunner) : IProjectManager
     {
-
+        private readonly ICommandRunner _commandRunner = commandRunner;
         private FslnFile? Project { get; set; }
 
         public async Task<string> CreateProject(string path, string name)
@@ -23,6 +23,12 @@ namespace Fiona.IDE.Components.Pages.Project
 
             fslnFileStream.Seek(0, SeekOrigin.Begin);
             await fslnFileStream.CopyToAsync(fileStream);
+
+            await _commandRunner.RunCommandAsync("dotnet new console", path);
+            await _commandRunner.RunCommandAsync($"dotnet new sln --name {name}", path);
+            await _commandRunner.RunCommandAsync("dotnet add package Fiona.Hosting", path);
+            await _commandRunner.RunCommandAsync($"dotnet sln add {path}", path);
+
             return fullPath;
         }
 
