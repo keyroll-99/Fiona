@@ -1,0 +1,8 @@
+.project-path-input {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.project-path-input .form-control {
+    width: 73%;
+}

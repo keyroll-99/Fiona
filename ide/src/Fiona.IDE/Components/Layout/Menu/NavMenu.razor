@@ -1,4 +1,6 @@
-﻿<Bar
+﻿@using Fiona.IDE.Components.Pages.Project
+@using Fiona.IDE.Components.Pages.Project.Models
+<Bar
     Mode="BarMode.VerticalInline"
     CollapseMode="BarCollapseMode.Small"
     Breakpoint="Breakpoint.Desktop"
@@ -23,10 +25,22 @@
                     </BarDropdownToggle>
                     <BarDropdownMenu>
                         <BarDropdownItem @onclick="() => _showNewProjectModal = !_showNewProjectModal">New project</BarDropdownItem>
+                        <BarDropdownItem @onclick="() => _showLoadProjectModal = !_showLoadProjectModal">Load project</BarDropdownItem>
                     </BarDropdownMenu>
                 </BarDropdown>
-
             </BarItem>
+            @if (ProjectManager.IsLoaded())
+            {
+                <BarItem>
+                    <BarDropdown>
+                        <BarDropdownToggle>Files</BarDropdownToggle>
+                        @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
+                        {
+                            <BarDropdownMenu>@projectFile.Name</BarDropdownMenu>
+                        }
+                    </BarDropdown>
+                </BarItem>
+            }
             <BarItem>
                 <BarLink To="/project-editor">app builder</BarLink>
             </BarItem>
@@ -35,8 +49,13 @@
 </Bar>
 
 <NewProjectModal ShowModal="@_showNewProjectModal" />
+<LoadProjectModal ShowModal="@_showLoadProjectModal"/>
 
 @code
 {
+    [Inject]
+    public IProjectManager ProjectManager { get; init; } = default!;
+
     private bool _showNewProjectModal = false;
+    private bool _showLoadProjectModal = false;
 }

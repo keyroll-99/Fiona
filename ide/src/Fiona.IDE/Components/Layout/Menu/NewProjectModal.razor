@@ -1,4 +1,5 @@
 ﻿@using Fiona.IDE.Components.Pages.Project
+@using Fiona.IDE.Components.Pages.Project.Exceptions
 @inject NavigationManager NavManager
 
 <Modal @ref="_modalRef" @bind-Visible="@ShowModal" Closed="() => _shouldClearValidation = true">
@@ -94,8 +95,8 @@
 
         try
         {
-            string pathToProject = await ProjectManager.CreateProject(_folderPath, _projectName);
-            await ProjectManager.LoadProject(pathToProject);
+            await ProjectManager.CreateProject(_folderPath, _projectName);
+            await ProjectManager.LoadProject(_folderPath);
             NavManager.NavigateTo("/project-editor");
         }
         catch (ProjectAlreadyExistsException ex)
@@ -109,14 +110,3 @@
     }
 
 }
-
-<style>
-    .project-path-input{
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .project-path-input .form-control{
-        width: 73%;
-    }
-</style>

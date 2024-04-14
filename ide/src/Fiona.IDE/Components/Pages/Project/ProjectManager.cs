@@ -1,4 +1,5 @@
-﻿using Fiona.IDE.Components.Pages.Project.Models;
+﻿using Fiona.IDE.Components.Pages.Project.Exceptions;
+using Fiona.IDE.Components.Pages.Project.Models;
 using System.Text.Json;
 
 namespace Fiona.IDE.Components.Pages.Project
@@ -16,31 +17,47 @@ namespace Fiona.IDE.Components.Pages.Project
                 throw new ProjectAlreadyExistsException(fullPath);
             }
 
-            FslnFile fslnFile = new(name, Enumerable.Empty<string>());
-            await using Stream fslnFileStream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(fslnFileStream, fslnFile);
-            await using FileStream fileStream = File.Create(fullPath);
-
-            fslnFileStream.Seek(0, SeekOrigin.Begin);
-            await fslnFileStream.CopyToAsync(fileStream);
-
-            await _commandRunner.RunCommandAsync("dotnet new console", path);
-            await _commandRunner.RunCommandAsync($"dotnet new sln --name {name}", path);
-            await _commandRunner.RunCommandAsync("dotnet add package Fiona.Hosting", path);
-            await _commandRunner.RunCommandAsync($"dotnet sln add {path}", path);
+            await CreateSln(path, name);
+            await CreateFsln(name, fullPath);
 
             return fullPath;
         }
 
         public async Task LoadProject(string path)
         {
-
-            await using FileStream fs = new(path, FileMode.Open, FileAccess.Read);
+            string? filePath = Directory.GetFiles(path, "*.fsln").FirstOrDefault();
+            if (filePath is null)
+            {
+                throw new ProjectNotFoundException(path);
+            }
+            await using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read);
 
             Project = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
         }
 
+        public IEnumerable<ProjectFile>? GetFiles()
+            => Project?.ProjectFileUrl;
+
         public bool IsLoaded()
             => Project is not null;
+
+        private static async Task CreateFsln(string name, string fullPath)
+        {
+            FslnFile fslnFile = new(name, Enumerable.Empty<ProjectFile>());
+            await using Stream fslnFileStream = new MemoryStream();
+            await JsonSerializer.SerializeAsync(fslnFileStream, fslnFile);
+            await using FileStream fileStream = File.Create(fullPath);
+
+            fslnFileStream.Seek(0, SeekOrigin.Begin);
+            await fslnFileStream.CopyToAsync(fileStream);
+        }
+
+        private async Task CreateSln(string path, string name)
+        {
+            await _commandRunner.RunCommandAsync("dotnet new console", path);
+            await _commandRunner.RunCommandAsync($"dotnet new sln --name {name}", path);
+            await _commandRunner.RunCommandAsync("dotnet add package Fiona.Hosting", path);
+            await _commandRunner.RunCommandAsync($"dotnet sln add {path}", path);
+        }
     }
 }

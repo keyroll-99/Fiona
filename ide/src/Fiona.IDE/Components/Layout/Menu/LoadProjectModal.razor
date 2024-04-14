@@ -1,0 +1,80 @@
+﻿@using Fiona.IDE.Components.Pages.Project
+@using Fiona.IDE.Components.Pages.Project.Exceptions
+@inject NavigationManager NavManager
+
+<Modal @ref="_modalRef" @bind-Visible="@ShowModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Load project</ModalTitle>
+            <CloseButton/>
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Project path</FieldLabel>
+                <Validation Validator="ValidationRule.IsNotEmpty">
+                    <div class="project-path-input">
+                        <TextEdit ReadOnly @bind-Text="@_folderPath" Placeholder="Project path"/>
+                        <Button @onclick="SetFolder" Color="Color.Light">Choose folder</Button>
+                        <ValidationError>Path is required</ValidationError>
+                    </div>
+                </Validation>
+            </Field>
+            @if (_exceptionMessage is not null)
+            {
+                <Field>
+                    <Text TextColor="TextColor.Danger">@_exceptionMessage</Text>
+                </Field>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="LoadProject">Load</Button>
+            <Button Color="Color.Danger" Clicked="() => ShowModal = false">Cancel</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+@code
+{
+    [Parameter]
+    public bool ShowModal { get; set; }
+
+    [Inject]
+    private IProjectManager ProjectManager { get; init; } = default!;
+
+    [Inject]
+    private IFolderPicker FolderPicker { get; init; } = default!;
+
+    private Modal _modalRef = default!;
+
+    private string _folderPath = string.Empty;
+    private string? _exceptionMessage = null;
+
+
+    private async Task SetFolder()
+    {
+        try
+        {
+            _folderPath = await FolderPicker.PickFolder();
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+
+    private async Task LoadProject()
+    {
+        try
+        {
+            await ProjectManager.LoadProject(_folderPath);
+        }
+        catch (ProjectNotFoundException ex)
+        {
+            _exceptionMessage = ex.Message;
+        }
+
+        ShowModal = false;
+    }
+
+}
