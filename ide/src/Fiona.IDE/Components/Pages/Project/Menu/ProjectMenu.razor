@@ -1,0 +1,17 @@
+﻿@using Fiona.IDE.Components.Pages.Project.Models
+<BarItem>
+    <BarDropdown>
+        <BarDropdownToggle>Files</BarDropdownToggle>
+        @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
+        {
+            <BarDropdownMenu>@projectFile.Name</BarDropdownMenu>
+        }
+    </BarDropdown>
+</BarItem>
+
+
+@code
+{
+    [Inject]
+    public IProjectManager ProjectManager { get; init; } = default!;
+}

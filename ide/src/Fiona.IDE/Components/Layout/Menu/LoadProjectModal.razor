@@ -25,6 +25,7 @@
                     <Text TextColor="TextColor.Danger">@_exceptionMessage</Text>
                 </Field>
             }
+            <Progress Indeterminate Visibility="@_showLoader" />
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="LoadProject">Load</Button>
@@ -49,6 +50,7 @@
 
     private string _folderPath = string.Empty;
     private string? _exceptionMessage = null;
+    private Visibility _showLoader = Visibility.Invisible;
 
 
     private async Task SetFolder()
@@ -67,14 +69,18 @@
     {
         try
         {
+            _showLoader = Visibility.Visible;
             await ProjectManager.LoadProject(_folderPath);
+            ShowModal = false;
         }
         catch (ProjectNotFoundException ex)
         {
             _exceptionMessage = ex.Message;
         }
-
-        ShowModal = false;
+        finally
+        {
+            _showLoader = Visibility.Invisible;
+        }
     }
 
 }
