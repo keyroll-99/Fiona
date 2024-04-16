@@ -54,15 +54,6 @@
     public bool ShowNewProjectModal = false;
     public bool ShowLoadProjectModal = false;
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        Console.WriteLine(ShowLoadProjectModal);
-        Console.WriteLine(ShowNewProjectModal);
-
-
-        return base.OnAfterRenderAsync(firstRender);
-    }
-
     public void CloseNewProjectModal()
     {
         ShowNewProjectModal = false;
