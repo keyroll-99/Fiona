@@ -2,7 +2,7 @@
 @using Fiona.IDE.Components.Pages.Project.Exceptions
 @inject NavigationManager NavManager
 
-<Modal @ref="_modalRef" @bind-Visible="@ShowModal" Closed="() => _shouldClearValidation = true">
+<Modal @ref="_modalRef" @bind-Visible="@Parent.ShowNewProjectModal" Closed="() => _shouldClearValidation = true">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>New Project</ModalTitle>
@@ -38,7 +38,7 @@
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="CreateProject">Create</Button>
-            <Button Color="Color.Danger" Clicked="() => ShowModal = false">Cancel</Button>
+            <Button Color="Color.Danger" Clicked="Parent.CloseNewProjectModal">Cancel</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -46,8 +46,8 @@
 
 @code
 {
-    [Parameter]
-    public bool ShowModal { get; set; }
+    [CascadingParameter]
+    public NavMenu Parent { get; set; }
 
     [Inject]
     private IProjectManager ProjectManager { get; init; } = default!;
@@ -57,6 +57,7 @@
 
     private Modal _modalRef = default!;
     private Validations? _validations;
+
 
     private string _folderPath = string.Empty;
     private string _projectName = string.Empty;
@@ -97,16 +98,16 @@
         {
             await ProjectManager.CreateProject(_folderPath, _projectName);
             await ProjectManager.LoadProject(_folderPath);
+            Parent.CloseNewProjectModal();
             NavManager.NavigateTo("/project-editor");
+
         }
         catch (ProjectAlreadyExistsException ex)
         {
             _exceptionMessage = ex.Message;
             await _validations.ClearAll();
-            return;
         }
 
-        ShowModal = false;
     }
 
 }

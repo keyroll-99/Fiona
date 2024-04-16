@@ -25,8 +25,8 @@
                         Project
                     </BarDropdownToggle>
                     <BarDropdownMenu>
-                        <BarDropdownItem @onclick="() => _showNewProjectModal = !_showNewProjectModal">New project</BarDropdownItem>
-                        <BarDropdownItem @onclick="() => _showLoadProjectModal = !_showLoadProjectModal">Load project</BarDropdownItem>
+                        <BarDropdownItem @onclick="() => ShowNewProjectModal = !ShowNewProjectModal">New project</BarDropdownItem>
+                        <BarDropdownItem @onclick="() => ShowLoadProjectModal = !ShowLoadProjectModal">Load project</BarDropdownItem>
                     </BarDropdownMenu>
                 </BarDropdown>
             </BarItem>
@@ -41,14 +41,37 @@
     </BarMenu>
 </Bar>
 
-<NewProjectModal ShowModal="@_showNewProjectModal" />
-<LoadProjectModal ShowModal="@_showLoadProjectModal"/>
+<CascadingValue Value="this">
+    <NewProjectModal/>
+    <LoadProjectModal/>
+</CascadingValue>
 
 @code
 {
     [Inject]
     public IProjectManager ProjectManager { get; init; } = default!;
 
-    private bool _showNewProjectModal = false;
-    private bool _showLoadProjectModal = false;
+    public bool ShowNewProjectModal = false;
+    public bool ShowLoadProjectModal = false;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine(ShowLoadProjectModal);
+        Console.WriteLine(ShowNewProjectModal);
+
+
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    public void CloseNewProjectModal()
+    {
+        ShowNewProjectModal = false;
+        StateHasChanged();
+    }
+
+    public void CloseLoadProjectModal()
+    {
+        ShowLoadProjectModal = false;
+        StateHasChanged();
+    }
 }

@@ -2,7 +2,7 @@
 @using Fiona.IDE.Components.Pages.Project.Exceptions
 @inject NavigationManager NavManager
 
-<Modal @ref="_modalRef" @bind-Visible="@ShowModal">
+<Modal @ref="_modalRef" @bind-Visible="@Parent.ShowLoadProjectModal">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Load project</ModalTitle>
@@ -25,11 +25,10 @@
                     <Text TextColor="TextColor.Danger">@_exceptionMessage</Text>
                 </Field>
             }
-            <Progress Indeterminate Visibility="@_showLoader" />
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="LoadProject">Load</Button>
-            <Button Color="Color.Danger" Clicked="() => ShowModal = false">Cancel</Button>
+            <Button Color="Color.Danger" Clicked="Parent.CloseLoadProjectModal">Cancel</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -37,8 +36,8 @@
 
 @code
 {
-    [Parameter]
-    public bool ShowModal { get; set; }
+    [CascadingParameter]
+    public NavMenu Parent { get; set; }
 
     [Inject]
     private IProjectManager ProjectManager { get; init; } = default!;
@@ -50,7 +49,6 @@
 
     private string _folderPath = string.Empty;
     private string? _exceptionMessage = null;
-    private Visibility _showLoader = Visibility.Invisible;
 
 
     private async Task SetFolder()
@@ -69,17 +67,12 @@
     {
         try
         {
-            _showLoader = Visibility.Visible;
             await ProjectManager.LoadProject(_folderPath);
-            ShowModal = false;
+            Parent.CloseLoadProjectModal();
         }
         catch (ProjectNotFoundException ex)
         {
             _exceptionMessage = ex.Message;
-        }
-        finally
-        {
-            _showLoader = Visibility.Invisible;
         }
     }
 
