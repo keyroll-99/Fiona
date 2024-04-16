@@ -2,10 +2,13 @@
 <BarItem>
     <BarDropdown>
         <BarDropdownToggle>Files</BarDropdownToggle>
-        @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
-        {
-            <BarDropdownMenu>@projectFile.Name</BarDropdownMenu>
-        }
+        <BarDropdownMenu>
+            <BarDropdownItem>Create file</BarDropdownItem>
+            @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
+            {
+                <BarDropdownItem>@projectFile.Name</BarDropdownItem>
+            }
+        </BarDropdownMenu>
     </BarDropdown>
 </BarItem>
 
