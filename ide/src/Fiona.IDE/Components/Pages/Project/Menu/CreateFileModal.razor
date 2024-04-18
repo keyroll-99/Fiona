@@ -1,0 +1,31 @@
+﻿
+<Modal @bind-Visible="@Parent.ShowCreateNewFileModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Create File</ModalTitle>
+            <CloseButton/>
+        </ModalHeader>
+        <ModalBody>
+            <Validations @ref='_validations' Mode="ValidationMode.Manual">
+                <Field>
+                    <FieldLabel>File name</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <TextEdit Placeholder="File name"></TextEdit>
+                    </Validation>
+                </Field>
+            </Validations>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary">Create</Button>
+            <Button Color="Color.Danger" Clicked="Parent.CloseCreateNewFileModal">Cancel</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [CascadingParameter]
+    public ProjectMenu Parent { get; set; }
+
+    private Modal _modalRef = default!;
+    private Validations? _validations;
+}

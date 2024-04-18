@@ -9,22 +9,24 @@
             <CloseButton/>
         </ModalHeader>
         <ModalBody>
-            <Field>
-                <FieldLabel>Project path</FieldLabel>
-                <Validation Validator="ValidationRule.IsNotEmpty">
-                    <div class="project-path-input">
-                        <TextEdit ReadOnly @bind-Text="@_folderPath" Placeholder="Project path"/>
-                        <Button @onclick="SetFolder" Color="Color.Light">Choose folder</Button>
-                        <ValidationError>Path is required</ValidationError>
-                    </div>
-                </Validation>
-            </Field>
-            @if (_exceptionMessage is not null)
-            {
+            <Validations Mode="ValidationMode.Manual" @ref="_validations">
                 <Field>
-                    <Text TextColor="TextColor.Danger">@_exceptionMessage</Text>
+                    <FieldLabel>Project path</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <div class="project-path-input">
+                            <TextEdit ReadOnly @bind-Text="@_folderPath" Placeholder="Project path"/>
+                            <Button @onclick="SetFolder" Color="Color.Light">Choose folder</Button>
+                            <ValidationError>Path is required</ValidationError>
+                        </div>
+                    </Validation>
                 </Field>
-            }
+                @if (_exceptionMessage is not null)
+                {
+                    <Field>
+                        <Text TextColor="TextColor.Danger">@_exceptionMessage</Text>
+                    </Field>
+                }
+            </Validations>
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Primary" Clicked="LoadProject">Load</Button>
@@ -46,6 +48,7 @@
     private IFolderPicker FolderPicker { get; init; } = default!;
 
     private Modal _modalRef = default!;
+    private Validations _validations;
 
     private string _folderPath = string.Empty;
     private string? _exceptionMessage = null;
@@ -65,6 +68,11 @@
 
     private async Task LoadProject()
     {
+        if (!(await _validations.ValidateAll()))
+        {
+            return;
+        }
+
         try
         {
             await ProjectManager.LoadProject(_folderPath);

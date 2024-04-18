@@ -3,7 +3,7 @@
     <BarDropdown>
         <BarDropdownToggle>Files</BarDropdownToggle>
         <BarDropdownMenu>
-            <BarDropdownItem>Create file</BarDropdownItem>
+            <BarDropdownItem Clicked="OpenCreateNewFileModal">Create file</BarDropdownItem>
             @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
             {
                 <BarDropdownItem>@projectFile.Name</BarDropdownItem>
@@ -12,9 +12,24 @@
     </BarDropdown>
 </BarItem>
 
+<CascadingValue Value="this">
+    <CreateFileModal/>
+</CascadingValue>
 
 @code
 {
     [Inject]
     public IProjectManager ProjectManager { get; init; } = default!;
+
+    public bool ShowCreateNewFileModal { get; set; }
+
+    public void CloseCreateNewFileModal()
+    {
+        ShowCreateNewFileModal = false;
+    }
+
+    public void OpenCreateNewFileModal()
+    {
+        ShowCreateNewFileModal = true;
+    }
 }

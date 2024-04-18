@@ -1,4 +1,4 @@
-﻿@page "/project-editor"
+﻿@page "/project-editor/{namespace}"
 @using Blazor.Diagrams.Core.Behaviors
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Components
@@ -19,6 +19,10 @@
 
     [Inject]
     public IProjectManager ProjectManager { get; init; } = default!;
+
+    [Parameter]
+    public string? @namespace { get; init; } = default;
+
     private BlazorDiagram Diagram { get; set; } = null!;
 
 
