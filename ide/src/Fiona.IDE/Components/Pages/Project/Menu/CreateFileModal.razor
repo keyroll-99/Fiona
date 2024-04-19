@@ -1,9 +1,11 @@
 ﻿
-<Modal @bind-Visible="@Parent.ShowCreateNewFileModal">
+<Modal @ref="_modalRef" @bind-Visible="@Parent.ShowCreateNewFileModal">
     <ModalContent Centered>
         <ModalHeader>
-            <ModalTitle>Create File</ModalTitle>
-            <CloseButton/>
+            <ModalTitle TextColor="TextColor.Dark">
+                Create file
+            </ModalTitle>
+            <CloseButton />
         </ModalHeader>
         <ModalBody>
             <Validations @ref='_validations' Mode="ValidationMode.Manual">
