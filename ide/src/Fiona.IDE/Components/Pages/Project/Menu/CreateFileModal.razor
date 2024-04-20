@@ -1,4 +1,6 @@
 ﻿
+@using Fiona.IDE.Components.Layout.Menu
+
 <Modal @ref="_modalRef" @bind-Visible="@Parent.ShowCreateNewFileModal">
     <ModalContent Centered>
         <ModalHeader>
@@ -10,15 +12,25 @@
         <ModalBody>
             <Validations @ref='_validations' Mode="ValidationMode.Manual">
                 <Field>
-                    <FieldLabel>File name</FieldLabel>
+                    <FieldLabel TextColor="TextColor.Dark">File name</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit Placeholder="File name"></TextEdit>
+                        <TextEdit Placeholder="File name" @bind-Text="_fileName"/>
+                        <ValidationError>File name is required</ValidationError>
+                    </Validation>
+
+                </Field>
+                <Field>
+                    <FieldLabel TextColor="TextColor.Dark">File path</FieldLabel>
+                    <Validation Validator="ValidateFolderPath">
+                        <TextEdit Role="TextRole.Url" Placeholder="Path" @bind-Text="_folderPath" ReadOnly />
+                        <Button Clicked="SetFolder" Color="Color.Light">Choose folder </Button>
+                        <ValidationError />
                     </Validation>
                 </Field>
             </Validations>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary">Create</Button>
+            <Button Color="Color.Primary" Clicked="CreateFile">Create</Button>
             <Button Color="Color.Danger" Clicked="Parent.CloseCreateNewFileModal">Cancel</Button>
         </ModalFooter>
     </ModalContent>
@@ -28,6 +40,72 @@
     [CascadingParameter]
     public ProjectMenu Parent { get; set; }
 
+    [Inject]
+    public IProjectManager ProjectManager { get; init; } = default!;
+
+    [Inject]
+    public IFolderPicker FolderPicker { get; init; } = default!;
+
     private Modal _modalRef = default!;
-    private Validations? _validations;
+    private Validations _validations = default!;
+
+    private string? _fileName = string.Empty;
+    private string _folderPath = string.Empty;
+
+
+    protected override void OnInitialized()
+    {
+    }
+
+    private async Task CreateFile()
+    {
+        if (!await _validations!.ValidateAll())
+        {
+            return;
+        }
+
+        try
+        {
+            await ProjectManager.CreateFileAsync(_fileName!, _folderPath);
+            Parent.AfterCreateNewFile();
+        }
+        catch (Exception ex)
+        {
+            // TODO: Handle error message
+        }
+    }
+
+    private async Task SetFolder()
+    {
+        try
+        {
+            _folderPath = await FolderPicker.PickFolder();
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+
+    private void ValidateFolderPath(ValidatorEventArgs e)
+    {
+        var value = e.Value as string;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            e.ErrorText = "Path is require";
+            e.Status = ValidationStatus.Error;
+            return;
+        }
+
+        var path = ProjectManager.GetPath();
+        if (!value.StartsWith(path))
+        {
+            e.ErrorText = "Path has to be under the project path";
+            e.Status = ValidationStatus.Error;
+            return;
+        }
+
+        e.Status = ValidationStatus.Success;
+    }
+
 }

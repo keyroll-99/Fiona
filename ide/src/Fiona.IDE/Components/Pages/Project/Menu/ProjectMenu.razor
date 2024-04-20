@@ -32,4 +32,10 @@
     {
         ShowCreateNewFileModal = true;
     }
+
+    public void AfterCreateNewFile()
+    {
+        StateHasChanged();
+        CloseCreateNewFileModal();
+    }
 }

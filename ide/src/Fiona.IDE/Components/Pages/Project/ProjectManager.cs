@@ -9,17 +9,27 @@ namespace Fiona.IDE.Components.Pages.Project
         private readonly ICommandRunner _commandRunner = commandRunner;
         private FslnFile? Project { get; set; }
 
+        public string GetPath()
+        {
+            if (Project is null)
+            {
+                throw new Exception("Project not loaded");
+            }
+
+            return Project.Path;
+        }
+
         public async Task<string> CreateProject(string path, string name)
         {
-            string fullPath = $"{path}/{name}.fsln";
+            string fullPath = $"{path}{Path.DirectorySeparatorChar}{name}.fsln";
             if (File.Exists(fullPath))
             {
                 throw new ProjectAlreadyExistsException(fullPath);
             }
 
             await CreateSln(path, name);
-            await CreateFsln(name, fullPath);
-
+            await CreateFsln(name, fullPath, path);
+            await LoadProject(path);
             return fullPath;
         }
 
@@ -38,12 +48,20 @@ namespace Fiona.IDE.Components.Pages.Project
         public IEnumerable<ProjectFile>? GetFiles()
             => Project?.ProjectFileUrl;
 
+        public Task CreateFileAsync(string name, string folderPath)
+        {
+            return Task.CompletedTask;
+        }
+
         public bool IsLoaded()
             => Project is not null;
 
-        private static async Task CreateFsln(string name, string fullPath)
+        public string? GetName()
+            => Project?.Name;
+
+        private static async Task CreateFsln(string name, string fullPath, string pathToFolder)
         {
-            FslnFile fslnFile = new(name, Enumerable.Empty<ProjectFile>());
+            FslnFile fslnFile = new(name, Enumerable.Empty<ProjectFile>().ToList(), pathToFolder);
             await using Stream fslnFileStream = new MemoryStream();
             await JsonSerializer.SerializeAsync(fslnFileStream, fslnFile);
             await using FileStream fileStream = File.Create(fullPath);

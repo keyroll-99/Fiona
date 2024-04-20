@@ -58,7 +58,7 @@ Good to have - 30-60 days
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
 	- [ ] Creating project
-	- [ ] compiler fiona's file to c#
+	- [ ] Compiler fiona's file to c#
 	- [ ] Users can connect boxes
 	- [ ] Run project
 	- [ ] Adding controller 
