@@ -47,7 +47,7 @@
 @code
 {
     [CascadingParameter]
-    public NavMenu Parent { get; set; }
+    public NavMenu Parent { get; init; } = default!;
 
     [Inject]
     private IProjectManager ProjectManager { get; init; } = default!;
@@ -97,10 +97,7 @@
         try
         {
             await ProjectManager.CreateProject(_folderPath, _projectName);
-            await ProjectManager.LoadProject(_folderPath);
             Parent.CloseNewProjectModal();
-            NavManager.NavigateTo("/project-editor");
-
         }
         catch (ProjectAlreadyExistsException ex)
         {

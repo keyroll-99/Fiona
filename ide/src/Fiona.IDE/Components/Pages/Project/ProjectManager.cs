@@ -6,7 +6,6 @@ namespace Fiona.IDE.Components.Pages.Project
 {
     internal class ProjectManager(ICommandRunner commandRunner) : IProjectManager
     {
-        private readonly ICommandRunner _commandRunner = commandRunner;
         private FslnFile? Project { get; set; }
 
         public string GetPath()
@@ -28,21 +27,14 @@ namespace Fiona.IDE.Components.Pages.Project
             }
 
             await CreateSln(path, name);
-            await CreateFsln(name, fullPath, path);
-            await LoadProject(path);
+            await CreateFsln(name, path);
             return fullPath;
         }
 
         public async Task LoadProject(string path)
         {
-            string? filePath = Directory.GetFiles(path, "*.fsln").FirstOrDefault();
-            if (filePath is null)
-            {
-                throw new ProjectNotFoundException(path);
-            }
-            await using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read);
 
-            Project = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
+            Project = await FslnFile.LoadAsync(path);
         }
 
         public IEnumerable<ProjectFile>? GetFiles()
@@ -50,7 +42,7 @@ namespace Fiona.IDE.Components.Pages.Project
 
         public Task CreateFileAsync(string name, string folderPath)
         {
-            return Task.CompletedTask;
+            return Project!.AddFile(name, folderPath);
         }
 
         public bool IsLoaded()
@@ -59,23 +51,17 @@ namespace Fiona.IDE.Components.Pages.Project
         public string? GetName()
             => Project?.Name;
 
-        private static async Task CreateFsln(string name, string fullPath, string pathToFolder)
+        private async Task CreateFsln(string name, string pathToFolder)
         {
-            FslnFile fslnFile = new(name, Enumerable.Empty<ProjectFile>().ToList(), pathToFolder);
-            await using Stream fslnFileStream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(fslnFileStream, fslnFile);
-            await using FileStream fileStream = File.Create(fullPath);
-
-            fslnFileStream.Seek(0, SeekOrigin.Begin);
-            await fslnFileStream.CopyToAsync(fileStream);
+            Project = await FslnFile.CreateAsync(name, pathToFolder);
         }
 
         private async Task CreateSln(string path, string name)
         {
-            await _commandRunner.RunCommandAsync("dotnet new console", path);
-            await _commandRunner.RunCommandAsync($"dotnet new sln --name {name}", path);
-            await _commandRunner.RunCommandAsync("dotnet add package Fiona.Hosting", path);
-            await _commandRunner.RunCommandAsync($"dotnet sln add {path}", path);
+            await commandRunner.RunCommandAsync("dotnet new console", path);
+            await commandRunner.RunCommandAsync($"dotnet new sln --name {name}", path);
+            await commandRunner.RunCommandAsync("dotnet add package Fiona.Hosting", path);
+            await commandRunner.RunCommandAsync($"dotnet sln add {path}", path);
         }
     }
 }

@@ -4,6 +4,7 @@
         <BarDropdownToggle>Files</BarDropdownToggle>
         <BarDropdownMenu>
             <BarDropdownItem Clicked="OpenCreateNewFileModal">Create file</BarDropdownItem>
+            <DropdownDivider Class="divider" />
             @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
             {
                 <BarDropdownItem>@projectFile.Name</BarDropdownItem>
@@ -39,3 +40,10 @@
         CloseCreateNewFileModal();
     }
 }
+
+<style>
+    .divider{
+        background: grey !important; // override basic style
+        height: 1px;
+    }
+</style>

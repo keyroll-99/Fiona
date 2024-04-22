@@ -5,12 +5,12 @@
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle TextColor="TextColor.Dark">
-                Create file
+                Create a file
             </ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
-            <Validations @ref='_validations' Mode="ValidationMode.Manual">
+            <Validations @ref="_validations" Mode="ValidationMode.Manual">
                 <Field>
                     <FieldLabel TextColor="TextColor.Dark">File name</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
@@ -37,8 +37,9 @@
 </Modal>
 
 @code {
+
     [CascadingParameter]
-    public ProjectMenu Parent { get; set; }
+    public ProjectMenu Parent { get; set; } = default!;
 
     [Inject]
     public IProjectManager ProjectManager { get; init; } = default!;

@@ -39,7 +39,7 @@
 @code
 {
     [CascadingParameter]
-    public NavMenu Parent { get; set; }
+    public NavMenu Parent { get; set; } = default!;
 
     [Inject]
     private IProjectManager ProjectManager { get; init; } = default!;
@@ -48,7 +48,7 @@
     private IFolderPicker FolderPicker { get; init; } = default!;
 
     private Modal _modalRef = default!;
-    private Validations _validations;
+    private Validations _validations = default!;
 
     private string _folderPath = string.Empty;
     private string? _exceptionMessage = null;
