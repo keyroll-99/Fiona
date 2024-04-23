@@ -1,5 +1,6 @@
 ﻿using Fiona.IDE.Components.Pages.Project;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Fiona.IDE.Platforms.Windows
 {

@@ -1,4 +1,7 @@
-﻿namespace Fiona.IDE.Components.Layout.Menu;
+﻿using System.IO;
+using System.Threading.Tasks;
+
+namespace Fiona.IDE.Components.Layout.Menu;
 
 internal class MenuService
 {

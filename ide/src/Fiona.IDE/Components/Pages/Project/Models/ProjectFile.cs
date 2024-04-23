@@ -1,4 +1,6 @@
 ﻿using Fiona.IDE.Components.Pages.Project.Exceptions;
+using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Fiona.IDE.Components.Pages.Project.Models

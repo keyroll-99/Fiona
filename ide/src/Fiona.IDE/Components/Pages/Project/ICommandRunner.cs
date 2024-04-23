@@ -1,4 +1,6 @@
-﻿namespace Fiona.IDE.Components.Pages.Project
+﻿using System.Threading.Tasks;
+
+namespace Fiona.IDE.Components.Pages.Project
 {
     public interface ICommandRunner
     {

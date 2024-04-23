@@ -3,7 +3,10 @@ using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Fiona.IDE.Components.Layout.Menu;
 using Fiona.IDE.Components.Pages.Project;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 
 namespace Fiona.IDE
 {

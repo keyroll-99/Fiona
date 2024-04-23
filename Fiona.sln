@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9386A258-6F1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiona.IDE", "ide\src\Fiona.IDE\Fiona.IDE.csproj", "{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.IDE.Compiler", "ide\src\Fiona.IDE.Compiler\Fiona.IDE.Compiler\Fiona.IDE.Compiler.csproj", "{78FC1E41-45C2-4813-9F97-6780A9D629F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{78FC1E41-45C2-4813-9F97-6780A9D629F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FC1E41-45C2-4813-9F97-6780A9D629F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FC1E41-45C2-4813-9F97-6780A9D629F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FC1E41-45C2-4813-9F97-6780A9D629F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{F80AFFE1-E4B6-4956-967F-09A34269AC6C} = {73A28A5B-B3A1-4EDC-BFCE-EFADC44E580A}
 		{9386A258-6F1D-4785-BD1B-0468D65DC3A6} = {D59629DE-5F27-45CE-900A-B57751CF077C}
 		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
+		{78FC1E41-45C2-4813-9F97-6780A9D629F1} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5E1ADD6E-3523-4A6C-87B1-B8FB8A03ED19}
