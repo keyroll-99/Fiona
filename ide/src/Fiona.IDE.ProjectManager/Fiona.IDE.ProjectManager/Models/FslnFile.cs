@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Fiona.IDE.ProjectManager.Models
 {
-    public class FslnFile(string name, List<ProjectFile> projectFileUrl, string path)
+    public sealed class FslnFile(string name, List<ProjectFile> projectFileUrl, string path)
     {
         public string Name { get; private init; } = name;
         public string Path { get; private init; } = path;

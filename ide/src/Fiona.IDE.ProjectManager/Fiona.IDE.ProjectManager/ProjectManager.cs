@@ -3,7 +3,7 @@ using Fiona.IDE.ProjectManager.Models;
 
 namespace Fiona.IDE.ProjectManager
 {
-    internal class ProjectManager(ICommandRunner commandRunner) : IProjectManager
+    internal sealed class ProjectManager(ICommandRunner commandRunner) : IProjectManager
     {
         private FslnFile? Project { get; set; }
 

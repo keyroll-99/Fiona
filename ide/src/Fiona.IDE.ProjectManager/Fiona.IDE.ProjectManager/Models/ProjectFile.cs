@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Fiona.IDE.ProjectManager.Models
 {
-    public class ProjectFile
+    public sealed class ProjectFile
     {
         public string Path { get; }
         public string Name { get; }

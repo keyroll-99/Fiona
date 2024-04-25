@@ -1,5 +1,5 @@
 ﻿namespace Fiona.IDE.ProjectManager.Exceptions
 {
-    public class ProjectAlreadyExistsException(string? name) : Exception($"Project {name} already exists");
+    public sealed class ProjectAlreadyExistsException(string? name) : Exception($"Project {name} already exists");
 
 }

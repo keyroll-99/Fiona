@@ -1,6 +1,7 @@
 ﻿using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using Fiona.IDE.Compiler;
 using Fiona.IDE.Components.Layout.Menu;
 using Fiona.IDE.Components.Pages.Project;
 using Fiona.IDE.ProjectManager;
@@ -34,6 +35,7 @@ namespace Fiona.IDE
 
             builder.Services.AddSingleton<MenuService>();
             builder.Services.AddProjectManager();
+            builder.Services.AddCompiler();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
