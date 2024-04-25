@@ -54,11 +54,15 @@ Must to have - I want to finish it by to end of march
 Good to have - 30-60 days
 - [X] Tools
 	- [X] Publish nuget package
+- [ ] Compiler
+	- [ ] Parsing class
+ 	- [ ] Parsing Method
+	- [ ] Parsing logic statment
+ 	- [ ] Parsing loop statment
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
 	- [ ] Creating project
-	- [ ] Compiler Fiona's file to c#
 	- [ ] Users can connect boxes
 	- [ ] Run project
 	- [ ] Adding controller 
