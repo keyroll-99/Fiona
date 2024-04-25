@@ -1,9 +1,7 @@
-﻿using Fiona.IDE.Components.Pages.Project.Exceptions;
-using System.IO;
-using System.Linq;
+﻿using Fiona.IDE.ProjectManager.Exceptions;
 using System.Text.Json.Serialization;
 
-namespace Fiona.IDE.Components.Pages.Project.Models
+namespace Fiona.IDE.ProjectManager.Models
 {
     public class ProjectFile
     {
@@ -20,7 +18,7 @@ namespace Fiona.IDE.Components.Pages.Project.Models
 
         }
 
-        public static ProjectFile Create(string path)
+        internal static ProjectFile Create(string path)
         {
             if (File.Exists(path))
             {
@@ -31,7 +29,7 @@ namespace Fiona.IDE.Components.Pages.Project.Models
             return new ProjectFile(path);
         }
 
-        public string GetContent()
+        internal string GetContent()
         {
             return File.ReadAllText(Path);
         }

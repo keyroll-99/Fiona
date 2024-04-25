@@ -1,5 +1,6 @@
 ﻿@using Fiona.IDE.Components.Pages.Project
-@using Fiona.IDE.Components.Pages.Project.Exceptions
+@using Fiona.IDE.ProjectManager
+@using Fiona.IDE.ProjectManager.Exceptions
 @inject NavigationManager NavManager
 
 <Modal @ref="_modalRef" @bind-Visible="@Parent.ShowNewProjectModal" Closed="() => _shouldClearValidation = true">

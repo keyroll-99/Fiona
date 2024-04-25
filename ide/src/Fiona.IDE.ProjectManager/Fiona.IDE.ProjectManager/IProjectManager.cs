@@ -1,8 +1,6 @@
-﻿using Fiona.IDE.Components.Pages.Project.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Fiona.IDE.ProjectManager.Models;
 
-namespace Fiona.IDE.Components.Pages.Project
+namespace Fiona.IDE.ProjectManager
 {
     public interface IProjectManager
     {

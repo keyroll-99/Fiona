@@ -1,11 +1,7 @@
-﻿using Fiona.IDE.Components.Pages.Project.Exceptions;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Fiona.IDE.ProjectManager.Exceptions;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Fiona.IDE.Components.Pages.Project.Models
+namespace Fiona.IDE.ProjectManager.Models
 {
     public class FslnFile(string name, List<ProjectFile> projectFileUrl, string path)
     {
@@ -14,14 +10,14 @@ namespace Fiona.IDE.Components.Pages.Project.Models
         public List<ProjectFile>? ProjectFileUrl { get; private init; } = projectFileUrl;
         public static string Extension = ".fsln";
 
-        public static async Task<FslnFile> CreateAsync(string name, string pathToFolder)
+        internal static async Task<FslnFile> CreateAsync(string name, string pathToFolder)
         {
             FslnFile fslnFile = new(name, Enumerable.Empty<ProjectFile>().ToList(), pathToFolder);
             await fslnFile.SaveAsync();
             return fslnFile;
         }
 
-        public static async Task<FslnFile?> LoadAsync(string path)
+        internal static async Task<FslnFile?> LoadAsync(string path)
         {
             string? filePath = Directory.GetFiles(path, $"*{Extension}").FirstOrDefault();
             if (filePath is null)
@@ -33,8 +29,7 @@ namespace Fiona.IDE.Components.Pages.Project.Models
             return await JsonSerializer.DeserializeAsync<FslnFile>(fs);
         }
 
-
-        public Task AddFile(string name, string path)
+        internal Task AddFile(string name, string path)
         {
             ProjectFileUrl!.Add(
                 ProjectFile.Create($"{path}{System.IO.Path.DirectorySeparatorChar}{name}.{ProjectFile.Extension}"));

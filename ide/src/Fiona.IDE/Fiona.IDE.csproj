@@ -81,4 +81,8 @@
     <ItemGroup>
       <MauiImage Include="wwwroot\images\logo.jpg" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Fiona.IDE.ProjectManager\Fiona.IDE.ProjectManager\Fiona.IDE.ProjectManager.csproj" />
+    </ItemGroup>
 </Project>

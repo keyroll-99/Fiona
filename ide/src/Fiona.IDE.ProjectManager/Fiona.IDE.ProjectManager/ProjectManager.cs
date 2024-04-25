@@ -1,12 +1,7 @@
-﻿using Fiona.IDE.Components.Pages.Project.Exceptions;
-using Fiona.IDE.Components.Pages.Project.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using Fiona.IDE.ProjectManager.Exceptions;
+using Fiona.IDE.ProjectManager.Models;
 
-namespace Fiona.IDE.Components.Pages.Project
+namespace Fiona.IDE.ProjectManager
 {
     internal class ProjectManager(ICommandRunner commandRunner) : IProjectManager
     {
