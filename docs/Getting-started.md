@@ -2,7 +2,7 @@
 
 ## Download Fiona
 
-## How to build a simple server from code.
+## How to build a simple server from code
 
 1. In the beginning, you have to create the folder `AppSettings` and in the folder, you have to create two files
 
