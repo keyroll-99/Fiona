@@ -84,7 +84,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Fiona.IDE.Compiler\Fiona.IDE.Compiler.csproj" />
-      <ProjectReference Include="..\Fiona.IDE.Compiler\Fiona.IDE.Compiler\Fiona.IDE.Compiler.csproj" />
       <ProjectReference Include="..\Fiona.IDE.ProjectManager\Fiona.IDE.ProjectManager.csproj" />
     </ItemGroup>
 </Project>
