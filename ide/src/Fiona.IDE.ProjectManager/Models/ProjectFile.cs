@@ -28,10 +28,5 @@ namespace Fiona.IDE.ProjectManager.Models
             
             return new ProjectFile(path);
         }
-
-        internal string GetContent()
-        {
-            return File.ReadAllText(Path);
-        }
     }
 }
