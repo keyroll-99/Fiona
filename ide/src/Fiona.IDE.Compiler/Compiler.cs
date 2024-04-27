@@ -1,4 +1,5 @@
 using Fiona.IDE.ProjectManager;
+using Fiona.IDE.ProjectManager.Models;
 
 namespace Fiona.IDE.Compiler
 {
@@ -8,7 +9,13 @@ namespace Fiona.IDE.Compiler
 
         public Task RunAsync()
         {
-            
+            IEnumerable<ProjectFile> projectFiles = _projectManager.GetFiles();
+            foreach (ProjectFile projectFile in projectFiles)
+            {
+                // Compile projectFile
+            }
+            return Task.CompletedTask;
         }
+        
     }
 }

@@ -36,8 +36,8 @@ namespace Fiona.IDE.ProjectManager
             Project = await FslnFile.LoadAsync(path);
         }
 
-        public IEnumerable<ProjectFile>? GetFiles()
-            => Project?.ProjectFileUrl;
+        public IEnumerable<ProjectFile> GetFiles()
+            => Project?.ProjectFileUrl ?? Enumerable.Empty<ProjectFile>() ;
 
         public Task CreateFileAsync(string name, string folderPath)
         {

@@ -9,7 +9,7 @@ namespace Fiona.IDE.ProjectManager
         string GetPath();
         Task<string> CreateProject(string path, string name);
         Task LoadProject(string path);
-        IEnumerable<ProjectFile>? GetFiles();
+        IEnumerable<ProjectFile> GetFiles();
         Task CreateFileAsync(string name, string folderPath);
 
     }
