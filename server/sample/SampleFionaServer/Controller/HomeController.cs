@@ -1,6 +1,4 @@
 using Fiona.Hosting.Controller.Attributes;
-using Fiona.Hosting.Routing;
-using Fiona.Hosting.Routing.Attributes;
 using Microsoft.Extensions.Logging;
 
 namespace SampleFionaServer.Controller;
