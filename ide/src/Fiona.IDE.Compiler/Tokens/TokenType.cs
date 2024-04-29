@@ -1,16 +1,33 @@
 namespace Fiona.IDE.Compiler.Tokens;
 
-public enum TokenType
+internal enum TokenType
 {
     UsingBegin,
     UsingEnd,
-    DefBegin,
-    DefEnd,
+    Using,
     Route,
-    Method,
+    Endpoint,
+    EndpointEnd,
     BodyBegin,
     BodyEnd,
-    Commend,
-    Controller,
-    Endpoint,
+    Comment,
+    Class,
+    ClassEnd,
+    Method,
+}
+
+
+internal static  class TokenTypeExtension {
+
+    public static string GetTokenKeyword(this TokenType tokenType)
+    {
+        return tokenType switch
+        {
+            TokenType.UsingBegin => "usingBegin",
+            TokenType.UsingEnd => "usingEnd",
+            TokenType.Using => string.Empty,
+            TokenType.Class => "def class",
+            _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
+        };
+    }
 }

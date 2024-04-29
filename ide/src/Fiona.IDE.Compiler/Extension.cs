@@ -16,7 +16,7 @@ namespace Fiona.IDE.Compiler
         {
             foreach (string tokenType in Enum.GetNames<TokenType>())
             {
-                services.Add(new ServiceDescriptor(typeof(IToken), new Token(tokenType, Enum.Parse<TokenType>(tokenType)), ServiceLifetime.Singleton));
+                services.Add(new ServiceDescriptor(typeof(IToken), new Token(Enum.Parse<TokenType>(tokenType), tokenType), ServiceLifetime.Singleton));
             }
         }
     }
