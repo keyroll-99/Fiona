@@ -15,7 +15,7 @@ namespace Fiona.IDE.Compiler
             foreach (ProjectFile projectFile in projectFiles)
             {
                 await using FileStream file = File.Open(projectFile.Path, FileMode.Open);
-                await using FileCompiler fileCompiler = new FileCompiler(file, _tokens);
+                await using FileCompiler fileCompiler = new(file, _tokens);
                 await fileCompiler.CompileAsync();
             }
         }

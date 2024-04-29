@@ -33,6 +33,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.IDE.Compiler", "ide\s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.IDE.ProjectManager", "ide\src\Fiona.IDE.ProjectManager\Fiona.IDE.ProjectManager.csproj", "{7521761E-B0D2-4A52-BF3A-C719971680D0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2C5448CC-C600-46F1-978C-0972771275DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiona.IDE.Compiler.Tests", "ide\tests\Fiona.IDE.Compiler.Tests\Fiona.IDE.Compiler.Tests.csproj", "{0BCA4496-00BA-4F91-B725-79680AD4AF17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,10 @@ Global
 		{7521761E-B0D2-4A52-BF3A-C719971680D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7521761E-B0D2-4A52-BF3A-C719971680D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7521761E-B0D2-4A52-BF3A-C719971680D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BCA4496-00BA-4F91-B725-79680AD4AF17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BCA4496-00BA-4F91-B725-79680AD4AF17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BCA4496-00BA-4F91-B725-79680AD4AF17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BCA4496-00BA-4F91-B725-79680AD4AF17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +103,8 @@ Global
 		{DBA8A61E-1AF3-45EF-9C02-32D6B740D20B} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
 		{36C8B8DC-C076-46CA-83CC-A8347095572B} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
 		{7521761E-B0D2-4A52-BF3A-C719971680D0} = {9386A258-6F1D-4785-BD1B-0468D65DC3A6}
+		{2C5448CC-C600-46F1-978C-0972771275DC} = {D59629DE-5F27-45CE-900A-B57751CF077C}
+		{0BCA4496-00BA-4F91-B725-79680AD4AF17} = {2C5448CC-C600-46F1-978C-0972771275DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5E1ADD6E-3523-4A6C-87B1-B8FB8A03ED19}
