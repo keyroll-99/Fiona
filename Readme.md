@@ -18,15 +18,16 @@ The project was initiated as part of the "100 commitów" competition
 The Repo will be renamed after 100 commits competition because I came up with the idea for the name after registering the repo.
 
 ## Is it ready for production
+
 Nope, maybe in the future
 
 ## OS Support
+
 | OS     | Fiona.Hosting     | Fiona.Ui           |
 |--------|-------------------|--------------------|
 | Windows| :white_check_mark:| :white_check_mark: |
 | Linux  | :white_check_mark:| :x:                |
 | MacOs  | :x:               | :x:                |
-
 
 ## Road map
 
@@ -63,7 +64,7 @@ Good to have - 30-60 days
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
 	- [ ] Creating project
-	- [ ] Users can connect boxes
+  - [ ] Users can connect boxes
 	- [ ] Run project
 	- [ ] Adding controller 
 	- [ ] Adding service
@@ -96,8 +97,10 @@ Would to have
 
 
 ## How to run a simple server
+
 in `Program.cs`
-```c# 
+
+```c#
 using Fiona.Hosting;
 using Fiona.Hosting.Abstractions;
 
@@ -131,4 +134,4 @@ public class HomeController(ILogger<HomeController> logger)
 }
 ```
 
-if you want to read more click [here](./docs/Readme.md) 
+if you want to read more click [here](./docs/Readme.md).
