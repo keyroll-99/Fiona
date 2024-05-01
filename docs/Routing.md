@@ -48,7 +48,7 @@ One method can handle two or more types of HTTP types. If you want to do this, y
 ## Route
 
 By default method got the route from the Controller attribute, if you want to add a new part you can just pass a route argument.
-For example method index will be available under the`/home/controller` route, because the route from Route attribute always is added to route from Controller
+For example method index will be available under the`/home/controller` route, because the route from Route attribute always is added to the route from the Controller
 
 ```c#
 [Controller("home")]
