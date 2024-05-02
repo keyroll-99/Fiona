@@ -26,7 +26,7 @@ internal static  class TokenTypeExtension {
             TokenType.UsingBegin => "usingBegin",
             TokenType.UsingEnd => "usingEnd",
             TokenType.Using => string.Empty,
-            TokenType.Class => "def class",
+            TokenType.Class => "class",
             _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
         };
     }
