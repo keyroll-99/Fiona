@@ -23,7 +23,5 @@ public static class TokenizerTestsData
                                             // comment todo: body
                                            bodyEnd;
                                            endpointEnd;
-
-                                           classEnd;
                                            """;
 }

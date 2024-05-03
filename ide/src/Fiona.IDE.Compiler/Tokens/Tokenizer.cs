@@ -9,8 +9,8 @@ internal static class Tokenizer
         {
             throw new Exception("TODO: custom exception");// Todo custom exception
         }
-        tokens.AddRange(GetUsingTokens(input));
-        
+        tokens.AddRange(await GetUsingTokens(input));
+        tokens.AddRange(await GetClassTokens(input));
         
         // while (!input.EndOfStream)
         // {
@@ -78,14 +78,14 @@ internal static class Tokenizer
         return tokens;
     }
 
-    private static IEnumerable<Token> GetUsingTokens(StreamReader input)
+    private static async Task<IEnumerable<Token>> GetUsingTokens(StreamReader input)
     {
         List<Token> tokens = [];
         bool isUsing = false;
         // TODO: throw error if find other token before using
         while (!input.EndOfStream)
         {
-            string? line = input.ReadLine();
+            string? line = await input.ReadLineAsync();
             if (line is null)
             {
                 throw new Exception("TODO: custom exception");// Todo custom exception
@@ -110,27 +110,33 @@ internal static class Tokenizer
         return tokens;
     }
 
-    private static IEnumerable<Token> GetClassTokens(StreamReader input)
+    private static async Task<IEnumerable<Token>> GetClassTokens(StreamReader input)
     {
         List<Token> tokens = [];
 
         while (!input.EndOfStream)
         {
-            string? line =input.ReadLine();
+            string? line = await input.ReadLineAsync();
             if (line is null)
             {
                 throw new Exception("TODO: custom exception");// Todo custom exception
             }
+            // todo: throw exception when find other token before class
             
-            if (line.Trim().StartsWith(TokenType.Class.GetTokenKeyword()))
+            if (line.Trim().StartsWith(TokenType.Class.GetTokenKeyword(),StringComparison.CurrentCultureIgnoreCase))
             {
                 tokens.Add(new Token(TokenType.Class, line[..TokenType.Class.GetTokenKeyword().Length].Trim()));
                 continue;
             }
             
-            if(line.Trim().StartsWith(TokenType.Route.GetTokenKeyword()))
+            if(line.Trim().StartsWith(TokenType.Route.GetTokenKeyword(), StringComparison.CurrentCultureIgnoreCase))
             {
                 tokens.Add(new Token(TokenType.Route, line[..TokenType.Route.GetTokenKeyword().Length].Trim()));
+            }
+
+            if (line.Trim().StartsWith(TokenType.Endpoint.GetTokenKeyword(), StringComparison.CurrentCultureIgnoreCase))
+            {
+                input.BaseStream.Seek(-line.Length, SeekOrigin.Current);
             }
         }
 

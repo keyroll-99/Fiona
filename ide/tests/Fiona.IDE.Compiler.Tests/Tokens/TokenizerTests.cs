@@ -37,7 +37,7 @@ public class TokenizerTests
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         // Assert
-        tokens.Count.Should().Be(10);
+        tokens.Count.Should().Be(9);
         tokens.First().Value.Should().Be("class TestController");
         tokens.First().Type.Should().Be(TokenType.Class);
         tokens.ToList()[1].Value.Should().Be("route: /home;");
@@ -56,7 +56,5 @@ public class TokenizerTests
         tokens.ToList()[7].Type.Should().Be(TokenType.BodyEnd);
         tokens.ToList()[8].Value.Should().Be("endpointEnd");
         tokens.ToList()[8].Type.Should().Be(TokenType.EndpointEnd);
-        tokens.ToList()[9].Value.Should().Be("classEnd");
-        tokens.ToList()[9].Type.Should().Be(TokenType.ClassEnd);
     }
 }

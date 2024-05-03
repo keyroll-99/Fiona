@@ -12,7 +12,6 @@ internal enum TokenType
     BodyEnd,
     Comment,
     Class,
-    ClassEnd,
     Method,
 }
 
