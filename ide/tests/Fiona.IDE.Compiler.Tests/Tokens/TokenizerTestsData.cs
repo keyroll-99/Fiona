@@ -4,26 +4,26 @@ public static class TokenizerTestsData
 {
     public const string UsingTokens = """
                                       
-                                                  usingBegin
+                                                  usingBegin;
                                                   using system;
                                                   using system.collections;
                                                   using system.collections.generic;
-                                                  usingEnd
+                                                  usingEnd;
                                               
                                       """;
 
     public const string ControllerTokens = """
-                                           class TestController
+                                           class TestController;
                                            route: /home;
 
-                                           endpoint Index
+                                           endpoint Index;
                                            route: /test;
                                            method: [GET, POST];
-                                           bodyBegin
+                                           bodyBegin;
                                             // comment todo: body
-                                           bodyEnd
-                                           endpointEnd
-                                           
-                                           classEnd
+                                           bodyEnd;
+                                           endpointEnd;
+
+                                           classEnd;
                                            """;
 }
