@@ -22,9 +22,9 @@ internal static  class TokenTypeExtension {
     {
         return tokenType switch
         {
-            TokenType.UsingBegin => "usingBegin;",
-            TokenType.UsingEnd => "usingEnd;",
-            TokenType.Using => string.Empty,
+            TokenType.UsingBegin => "usingBegin",
+            TokenType.UsingEnd => "usingEnd",
+            TokenType.Using => "using",
             TokenType.Class => "class",
             TokenType.Route => "route:",
             _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
