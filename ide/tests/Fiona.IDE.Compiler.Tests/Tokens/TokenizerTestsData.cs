@@ -16,7 +16,7 @@ public static class TokenizerTestsData
                                            class TestController;
                                            route: /home;
 
-                                           endpoint Index;
+                                           endpoint: Index;
                                            route: /test;
                                            method: [GET, POST];
                                            bodyBegin;

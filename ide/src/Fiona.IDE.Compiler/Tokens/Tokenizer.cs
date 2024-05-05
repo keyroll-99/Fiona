@@ -14,17 +14,6 @@ internal static class Tokenizer
         }
 
         return ReadTokensFromInputAsync(input);
-        
-        // string? inputLine = await input.ReadLineAsync();
-        // if (inputLine is null)
-        // {
-        //     throw new Exception("TODO: custom exception");// Todo custom exception
-        // }
-        //
-        // tokens.AddRange(await GetUsingTokens(input));
-        // tokens.AddRange(await GetClassTokens(input));
-        //
-        // return tokens;
     }
 
     private static async Task<IReadOnlyCollection<IToken>> ReadTokensFromInputAsync(StreamReader input)
