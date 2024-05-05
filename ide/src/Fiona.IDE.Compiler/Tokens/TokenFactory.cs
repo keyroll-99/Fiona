@@ -4,7 +4,6 @@ internal static class TokenFactory
 {
     private static readonly Dictionary<TokenType, Func<string, IToken?>> TokenVerify = new()
     {
-
         {
             TokenType.UsingBegin, GetStartUsingToken
         },
@@ -40,6 +39,15 @@ internal static class TokenFactory
         }
     };
 
+    private static readonly Dictionary<TokenType, string> TokenKeywords = new();
+
+    static TokenFactory()
+    {
+        foreach (TokenType tokenType in Enum.GetValues<TokenType>())
+        {
+            TokenKeywords[tokenType] = tokenType.GetTokenKeyword();
+        }
+    }
 
     public static IToken CreateToken(string command)
     {
@@ -53,11 +61,11 @@ internal static class TokenFactory
             }
         }
 
-        throw new Exception("todo");
+        throw new Exception("Unknown token type");
     }
 
     private static IEnumerable<TokenType> GetTokenTypesToCheck(string input)
-        => Enum.GetValues<TokenType>().Where(tokenType => input.Contains(tokenType.GetTokenKeyword()));
+        => Enum.GetValues<TokenType>().Where(tokenType => input.Contains(TokenKeywords[tokenType]));
 
     private static IToken? GetStartUsingToken(string command)
         => GetTokenEquals(command, TokenType.UsingBegin);
@@ -94,7 +102,7 @@ internal static class TokenFactory
 
     private static IToken? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {
-        string keyword = tokenType.GetTokenKeyword();
+        string keyword = TokenKeywords[tokenType];
         if (command.StartsWith(keyword, StringComparison.CurrentCultureIgnoreCase))
         {
             return hasValue ? new Token(tokenType, command[keyword.Length..].Trim()) : new Token(tokenType);
@@ -104,7 +112,6 @@ internal static class TokenFactory
 
     private static IToken? GetTokenEquals(string command, TokenType tokenType)
     {
-        return
-            string.Equals(command.Trim(), tokenType.GetTokenKeyword(), StringComparison.CurrentCultureIgnoreCase) ? new Token(tokenType) : null;
+        return string.Equals(command.Trim(), TokenKeywords[tokenType], StringComparison.CurrentCultureIgnoreCase) ? new Token(tokenType) : null;
     }
 }
