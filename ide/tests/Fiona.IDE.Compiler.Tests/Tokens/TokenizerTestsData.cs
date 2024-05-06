@@ -24,4 +24,6 @@ public static class TokenizerTestsData
                                            bodyEnd;
                                            endpointEnd;
                                            """;
+
+    public const string FullTokensTest = UsingTokens + ControllerTokens;
 }

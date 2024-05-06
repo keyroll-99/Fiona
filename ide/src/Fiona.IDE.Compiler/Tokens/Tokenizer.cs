@@ -1,12 +1,11 @@
 using Fiona.IDE.Compiler.Tokens.Exceptons;
-using System.Collections;
 
 namespace Fiona.IDE.Compiler.Tokens;
 
 internal static class Tokenizer
 {
-    private const string SplitChar = ";";
-    
+    private static readonly char[] SplitChars = [';'];
+
     public static Task<IReadOnlyCollection<IToken>> GetTokensAsync(StreamReader input)
     {
         if (input is null)
@@ -25,7 +24,7 @@ internal static class Tokenizer
             IEnumerable<string> commands = await GetCommandsFromNextLineAsync(input);
             tokens.AddRange(commands.Select(TokenFactory.CreateToken));
         }
-        
+
         return tokens;
     }
 
@@ -36,8 +35,8 @@ internal static class Tokenizer
         {
             throw new Exception("Something went wrong while read file");
         }
-        List<string> splitLine = inputLine.Split(SplitChar).ToList();
+        List<string> splitLine = inputLine.Split(SplitChars, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
 
-        return splitLine.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim());
+        return splitLine;
     }
 }
