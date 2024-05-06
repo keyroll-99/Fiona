@@ -1,3 +1,4 @@
+using Fiona.IDE.Compiler.Parser;
 using Fiona.IDE.Compiler.Tokens;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,7 @@ namespace Fiona.IDE.Compiler
         public static IServiceCollection AddCompiler(this IServiceCollection services)
         {
             services.AddSingleton<ICompiler, Compiler>();
+            services.AddSingleton<IParser, Parser.Parser>();
             return services;
         }
 
