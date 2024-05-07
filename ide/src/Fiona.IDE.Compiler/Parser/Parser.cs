@@ -3,13 +3,15 @@ using Fiona.IDE.ProjectManager.Models;
 
 namespace Fiona.IDE.Compiler.Parser;
 
-internal class Parser : IParser
+internal sealed class Parser(Validator validator) : IParser
 {
 
-
-
-    public Task ParseAsync(IReadOnlyCollection<IToken> tokens, ProjectFile projectFile)
+    public async Task<string> ParseAsync(IEnumerable<IToken> tokens, ProjectFile projectFile)
     {
-        return Task.CompletedTask;
+        if (!await validator.ValidateAsync(tokens))
+        {
+            throw new Exception();
+        }
+        return "parsed";
     }
 }

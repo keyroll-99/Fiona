@@ -1,16 +1,17 @@
+using Fiona.IDE.Compiler.Tests.Shared;
 using Fiona.IDE.Compiler.Tokens;
 using FluentAssertions;
 using System.Text;
 
 namespace Fiona.IDE.Compiler.Tests.Tokens;
 
-public class TokenizerTests
+public sealed class TokenizerTests
 {
     [Fact]
     public async Task When_Given_String_With_Using_Clause_Should_Return_Using_Tokens()
     {
         // Arrange
-        using MemoryStream stream = new(Encoding.UTF8.GetBytes(TokenizerTestsData.UsingTokens!));
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.UsingTokens!));
         using StreamReader reader = new(stream);
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
@@ -32,7 +33,7 @@ public class TokenizerTests
     public async Task When_Given_String_With_Controller_Clause_Should_Return_Controller_Tokens()
     {
         // Arrange
-        using MemoryStream stream = new(Encoding.UTF8.GetBytes(TokenizerTestsData.ControllerTokens));
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.ControllerTokens));
         using StreamReader reader = new(stream);
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
@@ -62,7 +63,7 @@ public class TokenizerTests
     public async Task When_Given_String_With_Full_Endpoint_Definition_Clause_Should_Return_Using_Tokens()
     {
         // Arrange
-        using MemoryStream stream = new(Encoding.UTF8.GetBytes(TokenizerTestsData.FullTokensTest!));
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
         using StreamReader reader = new(stream);
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);

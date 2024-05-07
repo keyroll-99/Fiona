@@ -100,7 +100,7 @@ internal static class TokenFactory
     private static IToken? GetMethodToken(string command)
         => GetTokenStartWith(command, TokenType.Method);
 
-    private static IToken? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
+    private static Token? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {
         string keyword = TokenKeywords[tokenType];
         if (command.StartsWith(keyword, StringComparison.CurrentCultureIgnoreCase))

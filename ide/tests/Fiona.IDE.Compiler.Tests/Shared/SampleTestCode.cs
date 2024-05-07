@@ -1,6 +1,6 @@
-namespace Fiona.IDE.Compiler.Tests.Tokens;
+namespace Fiona.IDE.Compiler.Tests.Shared;
 
-public static class TokenizerTestsData
+public static class SampleTestCode
 {
     public const string UsingTokens = """
                                       
