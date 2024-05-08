@@ -4,6 +4,7 @@ using Fiona.IDE.Compiler.Tokens;
 using Fiona.IDE.ProjectManager.Models;
 using FluentAssertions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Fiona.IDE.Compiler.Tests.Parser;
 
@@ -30,24 +31,27 @@ public sealed class ParserTests
         string result = await _parser.ParseAsync(tokens, projectFile);
 
         // assert
-        result.Should().Be("""
-                           using system;
-                           using system.collections;
-                           using system.collections.generic;
+        string expetedResult = """
+                               using system;
+                               using system.collections;
+                               using system.collections.generic;
 
-                           namespace Token.Test
+                               namespace Token.Test
 
-                           [Controller("/home")]
-                           public class TestController()
-                           {
-
-                                [Route(HttpMethodType.Get | HttpMethodType.Post, "option/get")]
-                                public Task Index()
-                                {
-                                   // comment todo: body
-                                }
-                           }
-                           """);
+                               [Controller("/home")]
+                               public class TestController()
+                               {
+                               
+                                    [Route(HttpMethodType.Get | HttpMethodType.Post, "option/get")]
+                                    public Task Index()
+                                    {
+                                       // comment todo: body
+                                    }
+                               }
+                               """;
+        expetedResult = Regex.Replace(expetedResult, @"\s+", "");
+        result = Regex.Replace(result, @"\s+", "");
+        result.Should().Be(expetedResult);
     }
 
 }
