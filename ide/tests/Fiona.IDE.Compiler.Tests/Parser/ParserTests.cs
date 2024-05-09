@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Fiona.IDE.Compiler.Tests.Parser;
 
-public sealed class ParserTests
+public sealed class ParserTests : IDisposable
 {
     private readonly IDE.Compiler.Parser.Parser _parser;
 
@@ -25,33 +25,37 @@ public sealed class ParserTests
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
         using StreamReader reader = new(stream);
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
-        ProjectFile projectFile = ProjectFile.Create("./Token/Test");
+        ProjectFile projectFile = ProjectFile.Create("./Test.fn");
 
         // act
         string result = await _parser.ParseAsync(tokens, projectFile);
 
         // assert
-        string expetedResult = """
-                               using system;
-                               using system.collections;
-                               using system.collections.generic;
+        string expectedResult = """
+                                using system;
+                                using system.collections;
+                                using system.collections.generic;
 
-                               namespace Token.Test
+                                namespace Token.Test
 
-                               [Controller("/home")]
-                               public class TestController()
-                               {
-                               
-                                    [Route(HttpMethodType.Get | HttpMethodType.Post, "option/get")]
-                                    public Task Index()
-                                    {
-                                       // comment todo: body
-                                    }
-                               }
-                               """;
-        expetedResult = Regex.Replace(expetedResult, @"\s+", "");
+                                [Controller("/home")]
+                                public class TestController()
+                                {
+                                
+                                     [Route(HttpMethodType.Get | HttpMethodType.Post, "option/get")]
+                                     public Task Index()
+                                     {
+                                        // comment todo: body
+                                     }
+                                }
+                                """;
+        expectedResult = Regex.Replace(expectedResult, @"\s+", "");
         result = Regex.Replace(result, @"\s+", "");
-        result.Should().Be(expetedResult);
+        result.Should().Be(expectedResult);
     }
 
+    public void Dispose()
+    {
+        File.Delete("./Test.fn");
+    }
 }
