@@ -4,9 +4,14 @@ namespace Fiona.IDE.Compiler.Parser;
 
 internal sealed class Validator
 {
-    public Task<bool> ValidateAsync(IEnumerable<IToken> tokens)
+    public async Task<bool> ValidateAsync(IEnumerable<IToken> tokens)
     {
-        return Task.FromResult(true);
-
+        return ValidateUsing(tokens);
     }
+
+    private bool ValidateUsing(IEnumerable<IToken> tokens)
+    {
+        return true;
+    }
+    
 }
