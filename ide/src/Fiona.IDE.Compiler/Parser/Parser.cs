@@ -1,3 +1,4 @@
+using Fiona.IDE.Compiler.Parser.Exceptions;
 using Fiona.IDE.Compiler.Tokens;
 using Fiona.IDE.ProjectManager.Models;
 
@@ -6,12 +7,16 @@ namespace Fiona.IDE.Compiler.Parser;
 internal sealed class Parser(Validator validator) : IParser
 {
 
-    public async Task<string> ParseAsync(IEnumerable<IToken> tokens, ProjectFile projectFile)
+    public async Task<string> ParseAsync(IReadOnlyCollection<IToken> tokens, ProjectFile projectFile)
     {
-        if (!await validator.ValidateAsync(tokens))
+        try
         {
-            throw new Exception();
+            await validator.ValidateAsync(tokens);
         }
-        return "parsed";
+        catch (ValidationError e)
+        {
+            throw new ParserException(projectFile.Name);
+        }
+        return "Parsed file content";
     }
 }

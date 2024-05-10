@@ -1,17 +1,30 @@
+using Fiona.IDE.Compiler.Parser.Exceptions;
 using Fiona.IDE.Compiler.Tokens;
 
 namespace Fiona.IDE.Compiler.Parser;
 
 internal sealed class Validator
 {
-    public async Task<bool> ValidateAsync(IEnumerable<IToken> tokens)
+    public async Task ValidateAsync(IReadOnlyCollection<IToken> tokens)
     {
-        return ValidateUsing(tokens);
+        for (int i = 0; i < tokens.Count; i++)
+        {
+            if (tokens.ElementAt(i).Type == TokenType.UsingBegin)
+            {
+                i = ValidateUsing(tokens, i + 1);
+            }            
+        }
     }
 
-    private bool ValidateUsing(IEnumerable<IToken> tokens)
+
+    private int ValidateUsing(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
-        return true;
+        for (int i = startIndex; startIndex < tokens.Count; startIndex++)
+        {
+            
+        }
+        throw new ValidationError("Cannot validate using statement.");
     }
+
     
 }
