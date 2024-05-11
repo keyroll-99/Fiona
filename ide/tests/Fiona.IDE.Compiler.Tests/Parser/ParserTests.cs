@@ -9,37 +9,26 @@ using System.Text.RegularExpressions;
 
 namespace Fiona.IDE.Compiler.Tests.Parser;
 
-public sealed class ParserTests : IDisposable
+public partial class ParserTests
 {
     private readonly IDE.Compiler.Parser.Parser _parser;
-    private readonly ProjectFile _projectFile; 
-
 
     public ParserTests()
     {
         Validator validator = new();
         _parser = new IDE.Compiler.Parser.Parser(validator);
-        try
-        {
-            File.Delete("./Test.fn");
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
-        _projectFile = ProjectFile.Create("./Test.fn");
     }
-
     [Fact]
     public async Task When_Given_TokenizedCode_Should_Return_Parsed_Code()
     {
         // arrange
+        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCode_Should_Return_Parsed_Code));
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
         using StreamReader reader = new(stream);
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
 
         // act
-        string result = await _parser.ParseAsync(tokens, _projectFile);
+        string result = await _parser.ParseAsync(tokens, projectFile);
 
         // assert
         string expectedResult = """
@@ -66,38 +55,38 @@ public sealed class ParserTests : IDisposable
     }
 
     [Theory, MemberData(nameof(InvalidTokenMemberData))]
-    internal async Task When_Given_Invalid_Tokens_Then_Throw_Exception(params Token[] tokens)
+    internal async Task When_Given_Invalid_Using_Tokens_Then_Throw_Exception(string fileName, params Token[] tokens)
     {
+        // Arrange
+        ProjectFile projectFile = GetTestProjectFile(fileName);
+
         // Act
-        Func<Task<string>> action = async () => await _parser.ParseAsync(tokens, _projectFile);
-        
+        Func<Task<string>> action = async () => await _parser.ParseAsync(tokens, projectFile);
+
         // Assert
         await action.Should().ThrowAsync<ParserException>();
     }
 
-    public static IEnumerable<object[]> InvalidTokenMemberData =>
-    [
-        [
-            new Token(TokenType.UsingBegin),
-            new Token(TokenType.BodyBegin),
-            new Token(TokenType.UsingEnd),
-        ],
-        [
-            new Token(TokenType.Using, "system"),
-            new Token(TokenType.UsingEnd),
-        ],
-        [
-            new Token(TokenType.UsingBegin),
-            new Token(TokenType.Using, "system"),
-        ],[
-            new Token(TokenType.UsingEnd),
-            new Token(TokenType.BodyBegin),
-            new Token(TokenType.UsingBegin),
-        ],
-    ];
-
-    public void Dispose()
+    [Theory, MemberData(nameof(ValidTokenMemberData))]
+    internal async Task When_Given_Valid_Using_Tokens_Then_Should_Not_Throw_Error(string fileName, params Token[] tokens)
     {
-        File.Delete("./Test.fn");
+        // Arrange
+        ProjectFile projectFile = GetTestProjectFile(fileName);
+
+        // Act
+        Func<Task<string>> action = async () => await _parser.ParseAsync(tokens, projectFile);
+
+        // Assert
+        await action.Should().NotThrowAsync<ParserException>();
     }
+    
+    private ProjectFile GetTestProjectFile(string name)
+    {
+        if (File.Exists(name))
+        {
+            File.Delete(name);
+        }
+        return ProjectFile.Create(name);
+    }
+
 }

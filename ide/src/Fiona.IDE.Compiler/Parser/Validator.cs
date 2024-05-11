@@ -5,26 +5,74 @@ namespace Fiona.IDE.Compiler.Parser;
 
 internal sealed class Validator
 {
-    public async Task ValidateAsync(IReadOnlyCollection<IToken> tokens)
+    
+    public static async Task ValidateAsync(IReadOnlyCollection<IToken> tokens)
     {
+        await Task.CompletedTask;
+        bool foundUsing = false;
         for (int i = 0; i < tokens.Count; i++)
         {
-            if (tokens.ElementAt(i).Type == TokenType.UsingBegin)
+            IToken currentElement = tokens.ElementAt(i);
+            switch (currentElement.Type)
             {
-                i = ValidateUsing(tokens, i + 1);
-            }            
+                case TokenType.UsingBegin:
+                    if (foundUsing)
+                    {
+                        throw new ValidationError("Duplicate using statement.");
+                    }
+                    i = ValidateUsing(tokens, i + 1);
+                    foundUsing = true;
+                    continue;
+                case TokenType.Class:
+                    i = ValidateClass(tokens, i + 1);
+                    continue;
+                case TokenType.UsingEnd:
+                case TokenType.Using:
+                case TokenType.Route:
+                case TokenType.Endpoint:
+                case TokenType.EndpointEnd:
+                case TokenType.BodyBegin:
+                case TokenType.BodyEnd:
+                case TokenType.Comment:
+                case TokenType.Method:
+                default:
+                    throw new ValidationError("Invalid order of code.");
+            }
         }
     }
 
-
-    private int ValidateUsing(IReadOnlyCollection<IToken> tokens, int startIndex)
+    private static int ValidateUsing(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
-        for (int i = startIndex; startIndex < tokens.Count; startIndex++)
+        for (int i = startIndex; i < tokens.Count; i++)
         {
-            
+            IToken currentToken = tokens.ElementAt(i);
+            if (currentToken.Type == TokenType.UsingEnd)
+            {
+                return i;
+            }
+            if (currentToken.Type != TokenType.Using)
+            {
+                throw new ValidationError($"In the using statement was found {currentToken.Type.ToString()}");
+            }
         }
         throw new ValidationError("Cannot validate using statement.");
     }
-
+    
+    private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
+    {
+        for (int i = startIndex; startIndex < tokens.Count; startIndex++)
+        {
+            IToken currentToken = tokens.ElementAt(i);
+            if (currentToken.Type == TokenType.Class)
+            {
+                return i;
+            }
+            if (currentToken.Type != TokenType.Method)
+            {
+                throw new ValidationError($"In the class statement was found {currentToken.Type.ToString()}");
+            }
+        }
+        throw new ValidationError("Cannot validate class statement.");
+    }
     
 }

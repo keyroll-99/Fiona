@@ -11,7 +11,7 @@ internal sealed class Parser(Validator validator) : IParser
     {
         try
         {
-            await validator.ValidateAsync(tokens);
+            await Validator.ValidateAsync(tokens);
         }
         catch (ValidationError e)
         {
