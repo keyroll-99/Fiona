@@ -4,32 +4,32 @@ namespace Fiona.IDE.Compiler.Tests.Parser;
 
 public partial class ParserTests
 {
-    public static IEnumerable<object[]> InvalidTokenMemberData =>
+    public static IEnumerable<object[]> InvalidUsingTokenData =>
     [
         [
-            $"{nameof(When_Given_Invalid_Using_Tokens_Then_Throw_Exception)}_1",
+            $"{nameof(InvalidUsingTokenData)}_1",
             new Token(TokenType.UsingBegin),
             new Token(TokenType.BodyBegin),
             new Token(TokenType.UsingEnd),
         ],
         [
-            $"{nameof(When_Given_Invalid_Using_Tokens_Then_Throw_Exception)}_2",
+            $"{nameof(InvalidUsingTokenData)}_2",
             new Token(TokenType.Using, "system"),
             new Token(TokenType.UsingEnd),
         ],
         [
-            $"{nameof(When_Given_Invalid_Using_Tokens_Then_Throw_Exception)}_3",
+            $"{nameof(InvalidUsingTokenData)}_3",
             new Token(TokenType.UsingBegin),
             new Token(TokenType.Using, "system"),
         ],
         [
-            $"{nameof(When_Given_Invalid_Using_Tokens_Then_Throw_Exception)}_4",
+            $"{nameof(InvalidUsingTokenData)}_4",
             new Token(TokenType.UsingEnd),
             new Token(TokenType.BodyBegin),
             new Token(TokenType.UsingBegin),
         ],
         [
-            $"{nameof(When_Given_Invalid_Using_Tokens_Then_Throw_Exception)}_5",
+            $"{nameof(InvalidUsingTokenData)}_5",
             new Token(TokenType.UsingBegin),
             new Token(TokenType.Using),
             new Token(TokenType.UsingEnd),
@@ -39,14 +39,110 @@ public partial class ParserTests
         ],
     ];
 
-    public static IEnumerable<object[]> ValidTokenMemberData =>
+    public static IEnumerable<object[]> ValidUsingTokenData =>
     [
         [
-            $"{nameof(When_Given_Valid_Using_Tokens_Then_Should_Not_Throw_Error)}_1",
+            $"{nameof(ValidUsingTokenData)}_1",
             new Token(TokenType.UsingBegin),
             new Token(TokenType.Using, "system"),
             new Token(TokenType.Using, "system.collections"),
             new Token(TokenType.UsingEnd),
+        ],
+    ];
+
+    public static IEnumerable<object[]> InvalidClassTokenData =>
+    [
+        [
+            $"{nameof(InvalidClassTokenData)}_1",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Route, "/home"),
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_2",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Endpoint, "/home"),
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_3",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Method, "/home"),
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_4",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.BodyBegin),
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_5",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Method),
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_6",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.BodyBegin)
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_7",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.BodyEnd),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.BodyEnd)
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_8",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Comment),
+            new Token(TokenType.BodyEnd),
+            // Missing EndpointEnd
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_9",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Method),
+            new Token(TokenType.BodyEnd),
+            new Token(TokenType.EndpointEnd)
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_10",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Route),
+            new Token(TokenType.BodyEnd),
+            new Token(TokenType.EndpointEnd)
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_11",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Endpoint),
+            new Token(TokenType.BodyEnd),
+            new Token(TokenType.EndpointEnd)
+        ],        [
+            $"{nameof(InvalidClassTokenData)}_12",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Class, "Index"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Endpoint),
+            new Token(TokenType.BodyEnd),
+            new Token(TokenType.EndpointEnd)
         ],
     ];
 

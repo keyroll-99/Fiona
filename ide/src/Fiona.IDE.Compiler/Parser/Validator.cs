@@ -60,19 +60,7 @@ internal sealed class Validator
     
     private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
-        for (int i = startIndex; startIndex < tokens.Count; startIndex++)
-        {
-            IToken currentToken = tokens.ElementAt(i);
-            if (currentToken.Type == TokenType.Class)
-            {
-                return i;
-            }
-            if (currentToken.Type != TokenType.Method)
-            {
-                throw new ValidationError($"In the class statement was found {currentToken.Type.ToString()}");
-            }
-        }
-        throw new ValidationError("Cannot validate class statement.");
+        return tokens.Count;
     }
     
 }

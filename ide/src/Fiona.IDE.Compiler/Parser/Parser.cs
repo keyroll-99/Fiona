@@ -15,7 +15,7 @@ internal sealed class Parser(Validator validator) : IParser
         }
         catch (ValidationError e)
         {
-            throw new ParserException(projectFile.Name);
+            throw new ParserException(projectFile.Name, e.Message);
         }
         return "Parsed file content";
     }
