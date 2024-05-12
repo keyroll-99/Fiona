@@ -20,9 +20,6 @@ internal static class TokenFactory
             TokenType.Endpoint, GetEndpointToken
         },
         {
-            TokenType.EndpointEnd, GetEndpointEndToken
-        },
-        {
             TokenType.BodyBegin, GetBodyBeginToken
         },
         {
@@ -81,9 +78,6 @@ internal static class TokenFactory
 
     private static IToken? GetEndpointToken(string command)
         => GetTokenStartWith(command, TokenType.Endpoint);
-
-    private static IToken? GetEndpointEndToken(string command)
-        => GetTokenEquals(command, TokenType.EndpointEnd);
 
     private static IToken? GetBodyBeginToken(string command)
         => GetTokenEquals(command, TokenType.BodyBegin);

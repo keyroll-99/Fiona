@@ -22,7 +22,6 @@ public static class SampleTestCode
                                            bodyBegin;
                                             // comment todo: body
                                            bodyEnd;
-                                           endpointEnd;
                                            """;
 
     public const string FullTokensTest = UsingTokens + ControllerTokens;

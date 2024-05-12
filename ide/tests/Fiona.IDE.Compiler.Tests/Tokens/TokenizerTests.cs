@@ -55,8 +55,6 @@ public sealed class TokenizerTests
         tokens.ToList()[6].Type.Should().Be(TokenType.Comment);
         tokens.ToList()[7].Value.Should().Be(TokenType.BodyEnd.ToString());
         tokens.ToList()[7].Type.Should().Be(TokenType.BodyEnd);
-        tokens.ToList()[8].Value.Should().Be(TokenType.EndpointEnd.ToString());
-        tokens.ToList()[8].Type.Should().Be(TokenType.EndpointEnd);
     }
     
       [Fact]
@@ -95,7 +93,5 @@ public sealed class TokenizerTests
         tokens.ToList()[11].Type.Should().Be(TokenType.Comment);
         tokens.ToList()[12].Value.Should().Be(TokenType.BodyEnd.ToString());
         tokens.ToList()[12].Type.Should().Be(TokenType.BodyEnd);
-        tokens.ToList()[13].Value.Should().Be(TokenType.EndpointEnd.ToString());
-        tokens.ToList()[13].Type.Should().Be(TokenType.EndpointEnd);
     }
 }

@@ -26,15 +26,6 @@ internal sealed class Validator
                 case TokenType.Class:
                     i = ValidateClass(tokens, i + 1);
                     continue;
-                case TokenType.UsingEnd:
-                case TokenType.Using:
-                case TokenType.Route:
-                case TokenType.Endpoint:
-                case TokenType.EndpointEnd:
-                case TokenType.BodyBegin:
-                case TokenType.BodyEnd:
-                case TokenType.Comment:
-                case TokenType.Method:
                 default:
                     throw new ValidationError("Invalid order of code.");
             }
@@ -60,7 +51,81 @@ internal sealed class Validator
     
     private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
+        bool isRoutingDefine = false;
+        for (int i = startIndex; i < tokens.Count; i++)
+        {
+            IToken currentToken = tokens.ElementAt(i);
+            switch (currentToken.Type)
+            {
+                case TokenType.Route:
+                    if (isRoutingDefine)
+                    {
+                        throw new ValidationError("Duplicate route definition.");
+                    }
+                    isRoutingDefine = true;
+                    continue;
+                case TokenType.Endpoint:
+                    i = ValidateEndpoint(tokens, i + 1, currentToken.Value);
+                    continue;
+                default:
+                    throw new ValidationError("Invalid Token");
+            }
+            
+        }
         return tokens.Count;
+    }
+
+    private static int ValidateEndpoint(IReadOnlyCollection<IToken> tokens, int startIndex, string endpointName)
+    {
+        bool isMethodDefine = false;
+        bool isRouteDefine = false;
+        for(int i = startIndex; i < tokens.Count; i++)
+        {
+            IToken currentToken = tokens.ElementAt(i);
+            switch (currentToken.Type)
+            {
+                case TokenType.Method:
+                    if (isMethodDefine)
+                    {
+                        throw new ValidationError($"Method in {endpointName} is define two times" );
+                    }
+                    isMethodDefine = true;
+                    continue;
+                case TokenType.Route:
+                    if (isRouteDefine)
+                    {
+                        throw new ValidationError($"Route in {endpointName} is define two times" );
+                    }
+                    isRouteDefine = true;
+                    continue;
+                case TokenType.BodyBegin:
+                    return ValidateMethodBody(tokens, i + 1, endpointName);
+                default:
+                    throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in endpoint declaration");
+            }
+      
+        }
+
+        return tokens.Count;
+    }
+    
+    private static int ValidateMethodBody(IReadOnlyCollection<IToken> tokens, int startIndex, string endpointName)
+    {
+        for (int i = startIndex; i < tokens.Count; i++)
+        {
+            IToken currentToken = tokens.ElementAt(i);
+            switch (currentToken.Type)
+            {
+                case TokenType.Comment:
+                    continue;
+                case TokenType.BodyEnd:
+                    return i;
+                default:
+                    throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in body");
+            }
+        }
+        
+        throw new ValidationError($"Not found end of body in {endpointName}");
     }
     
 }

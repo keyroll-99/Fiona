@@ -100,22 +100,12 @@ public partial class ParserTests
             new Token(TokenType.BodyEnd)
         ],
         [
-            $"{nameof(InvalidClassTokenData)}_8",
-            new Token(TokenType.Class, "TestController"),
-            new Token(TokenType.Endpoint, "Index"),
-            new Token(TokenType.BodyBegin),
-            new Token(TokenType.Comment),
-            new Token(TokenType.BodyEnd),
-            // Missing EndpointEnd
-        ],
-        [
             $"{nameof(InvalidClassTokenData)}_9",
             new Token(TokenType.Class, "TestController"),
             new Token(TokenType.Endpoint, "Index"),
             new Token(TokenType.BodyBegin),
             new Token(TokenType.Method),
             new Token(TokenType.BodyEnd),
-            new Token(TokenType.EndpointEnd)
         ],
         [
             $"{nameof(InvalidClassTokenData)}_10",
@@ -124,7 +114,6 @@ public partial class ParserTests
             new Token(TokenType.BodyBegin),
             new Token(TokenType.Route),
             new Token(TokenType.BodyEnd),
-            new Token(TokenType.EndpointEnd)
         ],
         [
             $"{nameof(InvalidClassTokenData)}_11",
@@ -133,7 +122,6 @@ public partial class ParserTests
             new Token(TokenType.BodyBegin),
             new Token(TokenType.Endpoint),
             new Token(TokenType.BodyEnd),
-            new Token(TokenType.EndpointEnd)
         ],        [
             $"{nameof(InvalidClassTokenData)}_12",
             new Token(TokenType.Class, "TestController"),
@@ -142,7 +130,11 @@ public partial class ParserTests
             new Token(TokenType.BodyBegin),
             new Token(TokenType.Endpoint),
             new Token(TokenType.BodyEnd),
-            new Token(TokenType.EndpointEnd)
+        ],        [
+            $"{nameof(InvalidClassTokenData)}_13",
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Route),
+            new Token(TokenType.Route)
         ],
     ];
 
