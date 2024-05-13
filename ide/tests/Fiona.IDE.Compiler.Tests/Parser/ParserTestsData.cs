@@ -137,5 +137,22 @@ public partial class ParserTests
             new Token(TokenType.Route)
         ],
     ];
+    
+    public static IEnumerable<object[]> ValidClassTokenData =>
+    [
+        [
+            $"{nameof(ValidClassTokenData)}_1",
+            new Token(TokenType.UsingBegin),
+            new Token(TokenType.Using, "System"),
+            new Token(TokenType.UsingEnd),
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Route, "Home"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.Method, "[GET, POST]"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Comment, "comment todo: body"),
+            new Token(TokenType.BodyEnd),
+        ],
+    ];
 
 }

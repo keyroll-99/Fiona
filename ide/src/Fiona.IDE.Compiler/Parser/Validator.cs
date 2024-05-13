@@ -27,7 +27,7 @@ internal sealed class Validator
                     i = ValidateClass(tokens, i + 1);
                     continue;
                 default:
-                    throw new ValidationError("Invalid order of code.");
+                    throw new ValidationError($"Cannot use {currentElement.Type.GetTokenKeyword()} out of class definition.");
             }
         }
     }
@@ -46,7 +46,7 @@ internal sealed class Validator
                 throw new ValidationError($"In the using statement was found {currentToken.Type.ToString()}");
             }
         }
-        throw new ValidationError("Cannot validate using statement.");
+        throw new ValidationError("Not found end of using statement.");
     }
     
     private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
@@ -68,7 +68,7 @@ internal sealed class Validator
                     i = ValidateEndpoint(tokens, i + 1, currentToken.Value);
                     continue;
                 default:
-                    throw new ValidationError("Invalid Token");
+                    throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in class definition.");
             }
             
         }

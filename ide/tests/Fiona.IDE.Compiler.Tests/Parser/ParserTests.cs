@@ -15,12 +15,11 @@ public partial class ParserTests
 
     public ParserTests()
     {
-        Validator validator = new();
-        _parser = new IDE.Compiler.Parser.Parser(validator);
+        _parser = new IDE.Compiler.Parser.Parser();
     }
     
  #pragma warning disable xUnit1004
-    [Fact(Skip = "Not implemented")]
+    [Fact]
  #pragma warning restore xUnit1004
     public async Task When_Given_TokenizedCode_Should_Return_Parsed_Code()
     {
@@ -31,8 +30,10 @@ public partial class ParserTests
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
 
         // act
-        string result = await _parser.ParseAsync(tokens, projectFile);
-
+        ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
+        string resultReader = Encoding.UTF8.GetString(result.ToArray());
+        
+        
         // assert
         string expectedResult = """
                                 using system;
@@ -53,8 +54,8 @@ public partial class ParserTests
                                 }
                                 """;
         expectedResult = Regex.Replace(expectedResult, @"\s+", "");
-        result = Regex.Replace(result, @"\s+", "");
-        result.Should().Be(expectedResult);
+        resultReader = Regex.Replace(resultReader, @"\s+", "");
+        resultReader.Should().Be(expectedResult);
     }
 
     [Theory, MemberData(nameof(InvalidUsingTokenData))]
@@ -64,7 +65,7 @@ public partial class ParserTests
         ProjectFile projectFile = GetTestProjectFile(fileName);
 
         // Act
-        Func<Task<string>> action = async () => await _parser.ParseAsync(tokens, projectFile);
+        Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
 
         // Assert
         await action.Should().ThrowAsync<ParserException>();
@@ -77,7 +78,7 @@ public partial class ParserTests
         ProjectFile projectFile = GetTestProjectFile(fileName);
 
         // Act
-        Func<Task<string>> action = async () => await _parser.ParseAsync(tokens, projectFile);
+        Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
 
         // Assert
         await action.Should().NotThrowAsync<ParserException>();
@@ -90,11 +91,25 @@ public partial class ParserTests
         ProjectFile projectFile = GetTestProjectFile(fileName);
 
         // Act
-        Func<Task<string>> action = async () => await _parser.ParseAsync(tokens, projectFile);
+        Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
 
         // Assert
         await action.Should().ThrowAsync<ParserException>();
     }
+    
+    [Theory, MemberData(nameof(ValidClassTokenData))]
+    internal async Task When_Given_Valid_Class_Tokens_Then_Should_Not_Throw_Error(string fileName, params Token[] tokens)
+    {
+        // Arrange
+        ProjectFile projectFile = GetTestProjectFile(fileName);
+
+        // Act
+        Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
+
+        // Assert
+        await action.Should().NotThrowAsync<ParserException>();
+    }
+    
     
     private ProjectFile GetTestProjectFile(string name)
     {
