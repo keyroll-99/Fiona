@@ -56,8 +56,9 @@ Good to have - 30-60 days
 - [X] Tools
 	- [X] Publish nuget package
 - [ ] Compiler
-	- [ ] Parsing class
- 	- [ ] Parsing Method
+	- [X] Parsing class
+ 	- [X] Parsing Method
+	- [ ] Parsing Return type
 	- [ ] Parsing logic statment
  	- [ ] Parsing loop statment
 - [ ] GUI
