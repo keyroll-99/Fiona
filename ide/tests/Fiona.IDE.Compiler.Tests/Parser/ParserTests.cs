@@ -46,8 +46,8 @@ public partial class ParserTests
                                 public class TestController()
                                 {
                                 
-                                     [Route(HttpMethodType.Get | HttpMethodType.Post, "option/get")]
-                                     public Task Index()
+                                     [Route(HttpMethodType.Get | HttpMethodType.Post, "/test")]
+                                     public async Task Index()
                                      {
                                      }
                                 }

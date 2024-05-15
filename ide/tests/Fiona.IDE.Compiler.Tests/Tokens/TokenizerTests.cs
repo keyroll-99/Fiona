@@ -38,7 +38,7 @@ public sealed class TokenizerTests
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         // Assert
-        tokens.Count.Should().Be(9);
+        tokens.Count.Should().Be(8);
         tokens.First().Value.Should().Be("TestController");
         tokens.First().Type.Should().Be(TokenType.Class);
         tokens.ToList()[1].Value.Should().Be("/home");
@@ -66,7 +66,7 @@ public sealed class TokenizerTests
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         // Assert
-        tokens.Count.Should().Be(14);
+        tokens.Count.Should().Be(13);
         tokens.First().Value.Should().Be(TokenType.UsingBegin.ToString());
         tokens.First().Type.Should().Be(TokenType.UsingBegin);
         tokens.ToList()[1].Value.Should().Be("system");

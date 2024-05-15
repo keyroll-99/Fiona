@@ -29,6 +29,19 @@ internal static class HttpMethodTypeExtensionMethods
             _ => null
         };
     }
+    
+    public static string GetMethodTypesUsing(this HttpMethodType httpMethodType)
+    {
+        return httpMethodType switch
+        {
+            HttpMethodType.Get => "HttpMethodType.Get",
+            HttpMethodType.Post => "HttpMethodType.Post",
+            HttpMethodType.Put => "HttpMethodType.Put",
+            HttpMethodType.Patch => "HttpMethodType.Patch",
+            HttpMethodType.Delete => "HttpMethodType.Delete",
+            _ => throw new ArgumentOutOfRangeException(nameof(httpMethodType), httpMethodType, null)
+        };
+    }
 
     public static bool HasBody(this HttpMethodType methodType)
     {

@@ -36,7 +36,8 @@ internal sealed class Parser : IParser
                     continue;
             }
         }
-        return new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(stringBuilder.ToString()));
+        var rest = stringBuilder.ToString();
+        return new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(rest));
     }
 
 
@@ -75,7 +76,8 @@ internal sealed class Parser : IParser
             endpoints.Add(endpoint);
             i = endIndex;
         }
-
+        Class @class = new(endpoints, controllerRoute?.Value);
+        stringBuilder.Append(@class.GenerateSourceCode());
         return tokens.Count;
     }
 
