@@ -59,7 +59,7 @@ internal sealed class Parser : IParser
     {
         IToken classToken = tokens.ElementAt(index++);
         IToken? controllerRoute = null;
-        if(classToken.Type == TokenType.Route)
+        if (tokens.ElementAt(index).Type == TokenType.Route)
         {
             controllerRoute = tokens.ElementAt(index);
             index += 1;
@@ -74,26 +74,54 @@ internal sealed class Parser : IParser
             }
             endpoints.Add(endpoint);
             i = endIndex;
-        }       
- 
+        }
+
         return tokens.Count;
     }
-    
-    
+
+
     private static (Endpoint? endpoint, int endIndex) GetNextEndpoint(IReadOnlyCollection<IToken> tokens, int index)
     {
+
         IToken? routeToken = null;
         IToken? methodToken = null;
-        
-        for(int i = index; i < tokens.Count; i++)
+        IToken? endpointToken = tokens.ElementAt(index++);
+
+        for (int i = index; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
-            switch (cu)
+            switch (currentToken.Type)
             {
-                
+                case TokenType.Method:
+                    methodToken = currentToken;
+                    continue;
+                case TokenType.Route:
+                    routeToken = currentToken;
+                    continue;
+                case TokenType.BodyBegin:
+                    IReadOnlyCollection<IToken> bodyTokens = GetBodyTokens(tokens, i + 1);
+                    return (new Endpoint(endpointToken.Value, routeToken?.Value, methodToken?.Value, bodyTokens), i + bodyTokens.Count + 1);
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            
+
         }
         return (null, index);
+    }
+
+    private static IReadOnlyCollection<IToken> GetBodyTokens(IReadOnlyCollection<IToken> tokens, int startIndex)
+    {
+        List<IToken> result = [];
+        for (int i = startIndex; i < tokens.Count; i++)
+        {
+            IToken currentToken = tokens.ElementAt(i);
+            if (currentToken.Type == TokenType.BodyEnd)
+            {
+                break;
+            }
+            result.Add(currentToken);
+        }
+
+        return result;
     }
 }

@@ -49,7 +49,6 @@ public partial class ParserTests
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "option/get")]
                                      public Task Index()
                                      {
-                                        // comment todo: body
                                      }
                                 }
                                 """;
