@@ -87,6 +87,7 @@ internal sealed class Parser : IParser
 
         IToken? routeToken = null;
         IToken? methodToken = null;
+        IToken? returnType = null;
         IToken? endpointToken = tokens.ElementAt(index++);
 
         for (int i = index; i < tokens.Count; i++)
@@ -100,9 +101,12 @@ internal sealed class Parser : IParser
                 case TokenType.Route:
                     routeToken = currentToken;
                     continue;
+                case TokenType.ReturnType:
+                    returnType = currentToken;
+                    continue;
                 case TokenType.BodyBegin:
                     IReadOnlyCollection<IToken> bodyTokens = GetBodyTokens(tokens, i + 1);
-                    return (new Endpoint(endpointToken.Value, routeToken?.Value, methodToken?.Value, bodyTokens), i + bodyTokens.Count + 1);
+                    return (new Endpoint(endpointToken.Value, routeToken?.Value, methodToken?.Value, returnType?.Value, bodyTokens), i + bodyTokens.Count + 1);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

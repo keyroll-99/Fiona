@@ -79,6 +79,7 @@ internal sealed class Validator
     {
         bool isMethodDefine = false;
         bool isRouteDefine = false;
+        bool isReturnDefine = false;
         for(int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
@@ -97,6 +98,13 @@ internal sealed class Validator
                         throw new ValidationError($"Route in {endpointName} is define two times" );
                     }
                     isRouteDefine = true;
+                    continue;
+                case TokenType.ReturnType:
+                    if (isReturnDefine)
+                    {
+                        throw new ValidationError($"Return type in {endpointName} is define two times" );
+                    }
+                    isMethodDefine = true;
                     continue;
                 case TokenType.BodyBegin:
                     return ValidateMethodBody(tokens, i + 1, endpointName);

@@ -19,6 +19,7 @@ public static class SampleTestCode
                                            endpoint: Index;
                                            route: /test;
                                            method: [GET, POST];
+                                           return: User;
                                            bodyBegin;
                                             // comment todo: body
                                            bodyEnd;

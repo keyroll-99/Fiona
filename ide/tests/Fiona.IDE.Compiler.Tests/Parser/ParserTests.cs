@@ -47,7 +47,7 @@ public partial class ParserTests
                                 {
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/test")]
-                                     public async Task Index()
+                                     public async Task<User> Index()
                                      {
                                      }
                                 }

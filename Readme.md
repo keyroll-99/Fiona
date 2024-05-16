@@ -58,7 +58,8 @@ Good to have - 30-60 days
 - [ ] Compiler
 	- [X] Parsing class
  	- [X] Parsing Method
-	- [ ] Parsing Return type
+	- [X] Parsing Return type
+    - [ ] Parsing parameters
 	- [ ] Parsing logic statment
  	- [ ] Parsing loop statment
 - [ ] GUI

@@ -33,6 +33,9 @@ internal static class TokenFactory
         },
         {
             TokenType.Method, GetMethodToken
+        },
+        {
+            TokenType.ReturnType, GetReturnToken
         }
     };
 
@@ -93,6 +96,9 @@ internal static class TokenFactory
 
     private static IToken? GetMethodToken(string command)
         => GetTokenStartWith(command, TokenType.Method);
+    
+    private static IToken? GetReturnToken(string command)
+        => GetTokenStartWith(command, TokenType.ReturnType);
 
     private static Token? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {
