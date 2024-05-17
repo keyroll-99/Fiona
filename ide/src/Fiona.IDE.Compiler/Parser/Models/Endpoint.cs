@@ -17,7 +17,7 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
         sourceCode.Append($"[Route({methodTypes}{routeValue})]\n");
         AppendMethodDeclaration(sourceCode);
         AppendBody(sourceCode);
-        sourceCode.Append("}");
+        sourceCode.Append('}');
 
         return sourceCode.ToString();
     }

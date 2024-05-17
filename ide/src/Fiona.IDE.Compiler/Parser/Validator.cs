@@ -5,7 +5,7 @@ namespace Fiona.IDE.Compiler.Parser;
 
 internal sealed class Validator
 {
-    
+
     public static async Task ValidateAsync(IReadOnlyCollection<IToken> tokens)
     {
         await Task.CompletedTask;
@@ -48,7 +48,7 @@ internal sealed class Validator
         }
         throw new ValidationError("Not found end of using statement.");
     }
-    
+
     private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
         bool isRoutingDefine = false;
@@ -70,7 +70,7 @@ internal sealed class Validator
                 default:
                     throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in class definition.");
             }
-            
+
         }
         return tokens.Count;
     }
@@ -80,7 +80,8 @@ internal sealed class Validator
         bool isMethodDefine = false;
         bool isRouteDefine = false;
         bool isReturnDefine = false;
-        for(int i = startIndex; i < tokens.Count; i++)
+        bool isInputDefine = false;
+        for (int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
             switch (currentToken.Type)
@@ -88,35 +89,48 @@ internal sealed class Validator
                 case TokenType.Method:
                     if (isMethodDefine)
                     {
-                        throw new ValidationError($"Method in {endpointName} is define two times" );
+                        throw new ValidationError($"Method in {endpointName} is define two times");
                     }
                     isMethodDefine = true;
                     continue;
                 case TokenType.Route:
                     if (isRouteDefine)
                     {
-                        throw new ValidationError($"Route in {endpointName} is define two times" );
+                        throw new ValidationError($"Route in {endpointName} is define two times");
                     }
                     isRouteDefine = true;
                     continue;
                 case TokenType.ReturnType:
                     if (isReturnDefine)
                     {
-                        throw new ValidationError($"Return type in {endpointName} is define two times" );
+                        throw new ValidationError($"Return type in {endpointName} is define two times");
                     }
-                    isMethodDefine = true;
+                    isReturnDefine = true;
+                    continue;
+                case TokenType.Parameter:
+                    if (isInputDefine)
+                    {
+                        throw new ValidationError($"Parameter type in {endpointName} is define two times");
+                    }
+                    ValidateParameter(currentToken);
+                    isInputDefine = true;
                     continue;
                 case TokenType.BodyBegin:
                     return ValidateMethodBody(tokens, i + 1, endpointName);
                 default:
                     throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in endpoint declaration");
             }
-      
+
         }
 
         return tokens.Count;
     }
-    
+
+    private static void ValidateParameter(IToken parameterToken)
+    {
+        // TODO: Implement parameter validation
+    }
+
     private static int ValidateMethodBody(IReadOnlyCollection<IToken> tokens, int startIndex, string endpointName)
     {
         for (int i = startIndex; i < tokens.Count; i++)
@@ -132,8 +146,8 @@ internal sealed class Validator
                     throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in body");
             }
         }
-        
+
         throw new ValidationError($"Not found end of body in {endpointName}");
     }
-    
+
 }

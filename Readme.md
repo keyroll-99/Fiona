@@ -60,8 +60,10 @@ Good to have - 30-60 days
  	- [X] Parsing Method
 	- [X] Parsing Return type
     - [ ] Parsing parameters
-	- [ ] Parsing logic statment
- 	- [ ] Parsing loop statment
+	- [ ] Parsing DI
+    - [ ] Namespace
+	- [ ] Parsing logic statement
+ 	- [ ] Parsing loop statement
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu

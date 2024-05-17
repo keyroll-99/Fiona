@@ -26,4 +26,25 @@ public static class SampleTestCode
                                            """;
 
     public const string FullTokensTest = UsingTokens + ControllerTokens;
+
+    public const string ControllerWithParameters = """
+                                                   class TestController;
+                                                   route: /home;
+                                                   
+                                                   endpoint: Index;
+                                                   route: /{name};
+                                                   method: [GET, POST];
+                                                   return: User;
+                                                   input:
+                                                     - [FromRoute] name: string
+                                                     - [FromQuery] age: int
+                                                     - [FromBody] user: User
+                                                     - [Cookie] userId: long;
+                                                   bodyBegin;
+                                                    // comment todo: body
+                                                   bodyEnd;
+                                                   """;
+
+    public const string FullTokensTestWithParameter = UsingTokens + ControllerTokens;
+
 }

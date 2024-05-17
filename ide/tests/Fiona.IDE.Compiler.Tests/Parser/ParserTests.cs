@@ -18,9 +18,7 @@ public partial class ParserTests
         _parser = new IDE.Compiler.Parser.Parser();
     }
     
- #pragma warning disable xUnit1004
     [Fact]
- #pragma warning restore xUnit1004
     public async Task When_Given_TokenizedCode_Should_Return_Parsed_Code()
     {
         // arrange
@@ -48,6 +46,43 @@ public partial class ParserTests
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/test")]
                                      public async Task<User> Index()
+                                     {
+                                     }
+                                }
+                                """;
+        expectedResult = Regex.Replace(expectedResult, @"\s+", "");
+        resultReader = Regex.Replace(resultReader, @"\s+", "");
+        resultReader.Should().Be(expectedResult);
+    }
+    
+    [Fact]
+    public async Task When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code()
+    {
+        // arrange
+        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCode_Should_Return_Parsed_Code));
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
+        using StreamReader reader = new(stream);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+
+        // act
+        ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
+        string resultReader = Encoding.UTF8.GetString(result.ToArray());
+        
+        
+        // assert
+        string expectedResult = """
+                                using system;
+                                using system.collections;
+                                using system.collections.generic;
+
+                                namespace Token.Test
+
+                                [Controller("/home")]
+                                public class TestController()
+                                {
+                                
+                                     [Route(HttpMethodType.Get | HttpMethodType.Post, "/{name}", ["age"])]
+                                     public async Task<User> Index(string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
                                      {
                                      }
                                 }

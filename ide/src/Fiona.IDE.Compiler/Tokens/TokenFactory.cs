@@ -36,6 +36,9 @@ internal static class TokenFactory
         },
         {
             TokenType.ReturnType, GetReturnToken
+        },
+        {
+            TokenType.Parameter, GetParameterToken
         }
     };
 
@@ -96,9 +99,20 @@ internal static class TokenFactory
 
     private static IToken? GetMethodToken(string command)
         => GetTokenStartWith(command, TokenType.Method);
-    
+
     private static IToken? GetReturnToken(string command)
         => GetTokenStartWith(command, TokenType.ReturnType);
+
+    private static IToken? GetParameterToken(string command)
+    {
+        string keyword = TokenKeywords[TokenType.Parameter];
+        if (!command.StartsWith(keyword, StringComparison.CurrentCultureIgnoreCase))
+        {
+            return null;
+        }
+        string[] parameters = command[keyword.Length..].Trim().Split('-').Select(x => x.Trim()).ToArray();
+        return new Token(TokenType.Parameter, parameters);
+    }
 
     private static Token? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {
