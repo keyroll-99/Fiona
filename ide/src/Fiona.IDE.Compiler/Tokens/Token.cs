@@ -3,7 +3,7 @@ namespace Fiona.IDE.Compiler.Tokens;
 internal sealed class Token : IToken
 {
     public string? Value { get; }
-    public string[]? ArrayOfValue { get; }
+    public string[]? ArrayOfValues { get; }
     public TokenType Type { get; }
 
     public Token(TokenType type) : this(type, type.ToString())
@@ -17,7 +17,7 @@ internal sealed class Token : IToken
     
     public Token(TokenType type, params string[] arrayOfValue)
     {
-        ArrayOfValue = arrayOfValue;
+        ArrayOfValues = arrayOfValue;
         Type = type;
     }
 }

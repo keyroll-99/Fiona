@@ -4,5 +4,5 @@ internal interface IToken
 {
     public string? Value { get; }
     public TokenType Type { get; }
-    public string[]? ArrayOfValue { get; }
+    public string[]? ArrayOfValues { get; }
 }

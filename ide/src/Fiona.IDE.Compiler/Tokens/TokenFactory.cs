@@ -110,7 +110,12 @@ internal static class TokenFactory
         {
             return null;
         }
-        string[] parameters = command[keyword.Length..].Trim().Split('-').Select(x => x.Trim()).ToArray();
+        string[] parameters = command[keyword.Length..]
+            .Trim()
+            .Split('-')
+            .Select(x => x.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToArray();
         return new Token(TokenType.Parameter, parameters);
     }
 

@@ -126,9 +126,33 @@ internal sealed class Validator
         return tokens.Count;
     }
 
+    private static readonly IReadOnlyCollection<string> AvailableParameterTypes =
+    [
+        "FromRoute", "QueryParam", "Body", "Cookie"
+    ];
+
     private static void ValidateParameter(IToken parameterToken)
     {
-        // TODO: Implement parameter validation
+        foreach (string parameter in parameterToken.ArrayOfValues ?? [])
+        {
+            (string? parameterDeclaration, string? parameterType) = parameter.Split(":") switch
+            {
+                { Length: 2 } array => (array[0], array[1]),
+                _ => throw new ValidationError("Invalid parameter declaration")
+            };
+            
+            (string? parameterAttribute, string parameterName) = parameterDeclaration.Split(" ") switch
+            {
+                { Length: 2 } array => (array[0], array[1]),
+                _ => throw new ValidationError("Invalid parameter declaration")
+            };
+            
+            parameterAttribute = parameterAttribute.Replace("[", "").Replace("]", "");
+            if (!AvailableParameterTypes.Contains(parameterAttribute))
+            {
+                throw new ValidationError($"Invalid parameter type {parameterAttribute}");
+            }
+        }
     }
 
     private static int ValidateMethodBody(IReadOnlyCollection<IToken> tokens, int startIndex, string endpointName)

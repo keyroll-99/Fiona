@@ -59,8 +59,8 @@ public partial class ParserTests
     public async Task When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code()
     {
         // arrange
-        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCode_Should_Return_Parsed_Code));
-        using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
+        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code));
+        using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTestWithParameter!));
         using StreamReader reader = new(stream);
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
 

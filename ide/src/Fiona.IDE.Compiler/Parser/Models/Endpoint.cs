@@ -3,10 +3,11 @@ using System.Text;
 
 namespace Fiona.IDE.Compiler.Parser.Models;
 
-internal sealed class Endpoint(string name, string? route, string? methodTypes, string? returnType, IReadOnlyCollection<IToken> bodyTokens)
+internal sealed class Endpoint(string name, string? route, string? methodTypes, string? returnType, List<Parameter> parameters, IReadOnlyCollection<IToken> bodyTokens)
 {
     private readonly IReadOnlyCollection<HttpMethodType> _methodTypes = GetMethodTypes(methodTypes);
     private readonly IReadOnlyCollection<IToken> _bodyTokens = bodyTokens;
+    private readonly List<Parameter> _parameters = parameters;
 
     public string BuildSourceCode()
     {
@@ -21,7 +22,7 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
 
         return sourceCode.ToString();
     }
-    
+
     private void AppendMethodDeclaration(StringBuilder sourceCode)
     {
         sourceCode.Append("public async Task");
@@ -29,8 +30,10 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
         {
             sourceCode.Append($"<{returnType}>");
         }
-        
-        sourceCode.Append($" {name}() {{");
+
+        string parameters = string.Join(", ", _parameters.Select(x => x.GenerateSourceCode()));
+
+        sourceCode.Append($" {name}({parameters}) {{");
     }
 
     private void AppendBody(StringBuilder stringBuilder)

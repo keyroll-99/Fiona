@@ -5,8 +5,7 @@ public static class SampleTestCode
     public const string UsingTokens = """
                                       
                                                   usingBegin;
-                                                  using system;
-                                                  using system.collections;
+                                                  using system; using system.collections;
                                                   using system.collections.generic;
                                                   usingEnd;
                                               
@@ -37,14 +36,14 @@ public static class SampleTestCode
                                                    return: User;
                                                    input:
                                                      - [FromRoute] name: string
-                                                     - [FromQuery] age: int
-                                                     - [FromBody] user: User
+                                                     - [QueryParam] age: int
+                                                     - [Body] user: User
                                                      - [Cookie] userId: long;
                                                    bodyBegin;
                                                     // comment todo: body
                                                    bodyEnd;
                                                    """;
 
-    public const string FullTokensTestWithParameter = UsingTokens + ControllerTokens;
+    public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
 
 }
