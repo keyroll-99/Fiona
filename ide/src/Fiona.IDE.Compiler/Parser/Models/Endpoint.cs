@@ -7,7 +7,6 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
 {
     private readonly IReadOnlyCollection<HttpMethodType> _methodTypes = GetMethodTypes(methodTypes);
     private readonly IReadOnlyCollection<IToken> _bodyTokens = bodyTokens;
-    private readonly List<Parameter> _parameters = parameters;
 
     public string BuildSourceCode()
     {
@@ -25,10 +24,10 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
     {
         string methodTypes = string.Join(" | ", _methodTypes.Select(x => x.GetMethodTypesUsing()));
         string routeValue = route is not null ? $", \"{route}\"" : "";
-        IEnumerable<Parameter> queryParameters = _parameters.Where(x => x.Type == ParameterType.Query).ToList();
-        string parameters = queryParameters.Any() ? $", [{string.Join(", ", queryParameters.Select(x => $"\"{x.Name}\""))}]" : string.Empty;
+        IEnumerable<Parameter> queryParameters = parameters.Where(x => x.Type == ParameterType.Query).ToList();
+        string parameters1 = queryParameters.Any() ? $", [{string.Join(", ", queryParameters.Select(x => $"\"{x.Name}\""))}]" : string.Empty;
 
-        sourceCode.Append($"[Route({methodTypes}{routeValue}{parameters})]\n");
+        sourceCode.Append($"[Route({methodTypes}{routeValue}{parameters1})]\n");
     }
 
     private void AppendMethodDeclaration(StringBuilder sourceCode)
@@ -39,9 +38,9 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
             sourceCode.Append($"<{returnType}>");
         }
 
-        string parameters = string.Join(", ", _parameters.Select(x => x.GenerateSourceCode()));
+        string parameters1 = string.Join(", ", parameters.Select(x => x.GenerateSourceCode()));
 
-        sourceCode.Append($" {name}({parameters}) {{");
+        sourceCode.Append($" {name}({parameters1}) {{");
     }
 
     private void AppendBody(StringBuilder stringBuilder)

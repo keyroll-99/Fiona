@@ -104,20 +104,7 @@ internal static class TokenFactory
         => GetTokenStartWith(command, TokenType.ReturnType);
 
     private static IToken? GetParameterToken(string command)
-    {
-        string keyword = TokenKeywords[TokenType.Parameter];
-        if (!command.StartsWith(keyword, StringComparison.CurrentCultureIgnoreCase))
-        {
-            return null;
-        }
-        string[] parameters = command[keyword.Length..]
-            .Trim()
-            .Split('-')
-            .Select(x => x.Trim())
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .ToArray();
-        return new Token(TokenType.Parameter, parameters);
-    }
+        => GetArrayToken(command, TokenType.Parameter);
 
     private static Token? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {
@@ -132,5 +119,22 @@ internal static class TokenFactory
     private static IToken? GetTokenEquals(string command, TokenType tokenType)
     {
         return string.Equals(command.Trim(), TokenKeywords[tokenType], StringComparison.CurrentCultureIgnoreCase) ? new Token(tokenType) : null;
+    }
+
+    private static IToken? GetArrayToken(string command, TokenType tokenType)
+    {
+        string keyword = TokenKeywords[tokenType];
+        if (!command.StartsWith(keyword, StringComparison.CurrentCultureIgnoreCase))
+        {
+            return null;
+        }
+        
+        string[] parameters = command[keyword.Length..]
+            .Trim()
+            .Split('-')
+            .Select(x => x.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToArray();
+        return new Token(tokenType, parameters);
     }
 }

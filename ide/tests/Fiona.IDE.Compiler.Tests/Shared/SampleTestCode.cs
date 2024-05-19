@@ -25,22 +25,25 @@ public static class SampleTestCode
 
     public const string FullTokensTest = UsingTokens + ControllerTokens;
 
-    public const string ControllerWithParameters = """
-                                                   class TestController;
-                                                   route: /home;
-                                                   
-                                                   endpoint: Index;
-                                                   route: /{name};
-                                                   method: [GET, POST];
-                                                   return: User;
-                                                   input:
-                                                     - [FromRoute] name: string
-                                                     - [QueryParam] age: int
-                                                     - [Body] user: User
-                                                     - [Cookie] userId: long;
-                                                   bodyBegin;
-                                                   bodyEnd;
-                                                   """; // TODO: how to mark comment?
+    private const string ControllerWithParameters = """
+                                                    class TestController;
+                                                    route: /home;
+
+                                                    endpoint: Index;
+                                                    route: /{name};
+                                                    method: [GET, POST];
+                                                    return: User;
+                                                    input:
+                                                        - [FromRoute] name: string
+                                                        - [QueryParam] age: int
+                                                        - [Body] user: User
+                                                        - [Cookie] userId: long;
+                                                    inject:
+                                                        - userService: IUserService;
+                                                        - logger: ILogger<TestController>;
+                                                    bodyBegin;
+                                                    bodyEnd;
+                                                    """; // TODO: how to mark comment?
 
     public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
 
