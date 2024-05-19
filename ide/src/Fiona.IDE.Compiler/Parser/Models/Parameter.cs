@@ -5,6 +5,9 @@ namespace Fiona.IDE.Compiler.Parser.Models;
 
 internal sealed class Parameter
 {
+    public ParameterType Type { get; }
+    public string Name => _name;
+
     private readonly string _attribute;
     private readonly string _type;
     private readonly string _name;
@@ -14,6 +17,15 @@ internal sealed class Parameter
         _attribute = attribute;
         _type = type;
         _name = name;
+
+        Type = attribute switch
+        {
+            "[Body]" => ParameterType.Body,
+            "[QueryParam]" => ParameterType.Query,
+            "[FromRoute]" => ParameterType.Path,
+            "[Cookie]" => ParameterType.Cookie,
+            _ => throw new ValidationError("Invalid parameter attribute")
+        };
     }
 
     public string GenerateSourceCode()

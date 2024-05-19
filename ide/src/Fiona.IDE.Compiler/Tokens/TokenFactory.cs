@@ -98,7 +98,7 @@ internal static class TokenFactory
         => GetTokenStartWith(command, TokenType.Class);
 
     private static IToken? GetMethodToken(string command)
-        => GetTokenStartWith(command, TokenType.Method);
+        => GetTokenStartWith(command, TokenType.Method); // TODO It should behave like GetParameterToken
 
     private static IToken? GetReturnToken(string command)
         => GetTokenStartWith(command, TokenType.ReturnType);

@@ -25,9 +25,9 @@ public partial class ParserTests
         ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCode_Should_Return_Parsed_Code));
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
         using StreamReader reader = new(stream);
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
 
         // act
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
         string resultReader = Encoding.UTF8.GetString(result.ToArray());
         
@@ -62,9 +62,9 @@ public partial class ParserTests
         ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code));
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTestWithParameter!));
         using StreamReader reader = new(stream);
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
 
         // act
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
         string resultReader = Encoding.UTF8.GetString(result.ToArray());
         
@@ -82,7 +82,7 @@ public partial class ParserTests
                                 {
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/{name}", ["age"])]
-                                     public async Task<User> Index(string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
+                                     public async Task<User> Index([FromRoute] string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
                                      {
                                      }
                                 }

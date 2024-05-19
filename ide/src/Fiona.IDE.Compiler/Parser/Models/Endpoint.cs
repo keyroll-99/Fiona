@@ -11,16 +11,24 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
 
     public string BuildSourceCode()
     {
-        StringBuilder sourceCode = new StringBuilder(1000);
-
-        string methodTypes = string.Join(" | ", _methodTypes.Select(x => x.GetMethodTypesUsing()));
-        string routeValue = route is not null ? $", \"{route}\"" : "";
-        sourceCode.Append($"[Route({methodTypes}{routeValue})]\n");
+        StringBuilder sourceCode = new(1000);
+        
+        AppendAttributes(sourceCode);
         AppendMethodDeclaration(sourceCode);
         AppendBody(sourceCode);
         sourceCode.Append('}');
 
         return sourceCode.ToString();
+    }
+
+    private void AppendAttributes(StringBuilder sourceCode)
+    {
+        string methodTypes = string.Join(" | ", _methodTypes.Select(x => x.GetMethodTypesUsing()));
+        string routeValue = route is not null ? $", \"{route}\"" : "";
+        IEnumerable<Parameter> queryParameters = _parameters.Where(x => x.Type == ParameterType.Query).ToList();
+        string parameters = queryParameters.Any() ? $", [{string.Join(", ", queryParameters.Select(x => $"\"{x.Name}\""))}]" : string.Empty;
+
+        sourceCode.Append($"[Route({methodTypes}{routeValue}{parameters})]\n");
     }
 
     private void AppendMethodDeclaration(StringBuilder sourceCode)

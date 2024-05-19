@@ -20,7 +20,6 @@ public static class SampleTestCode
                                            method: [GET, POST];
                                            return: User;
                                            bodyBegin;
-                                            // comment todo: body
                                            bodyEnd;
                                            """;
 
@@ -40,9 +39,8 @@ public static class SampleTestCode
                                                      - [Body] user: User
                                                      - [Cookie] userId: long;
                                                    bodyBegin;
-                                                    // comment todo: body
                                                    bodyEnd;
-                                                   """;
+                                                   """; // TODO: how to mark comment?
 
     public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
 

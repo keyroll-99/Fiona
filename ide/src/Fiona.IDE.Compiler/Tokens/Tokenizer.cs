@@ -1,10 +1,11 @@
 using Fiona.IDE.Compiler.Tokens.Exceptons;
+using System.Text;
 
 namespace Fiona.IDE.Compiler.Tokens;
 
 internal static class Tokenizer
 {
-    private static readonly char[] SplitChars = [';'];
+    private static readonly char[] SplitChars = [';', '*'];
 
     public static Task<IReadOnlyCollection<IToken>> GetTokensAsync(StreamReader input)
     {
@@ -19,64 +20,59 @@ internal static class Tokenizer
     private static async Task<IReadOnlyCollection<IToken>> ReadTokensFromInputAsync(StreamReader input)
     {
         List<IToken> tokens = [];
-        try{
-            while (true)
-            {
-                string commands = await GetNextCommand(input);
-                if (string.IsNullOrWhiteSpace(commands))
-                {
-                    continue;
-                }
-                tokens.Add(TokenFactory.CreateToken(commands));
-            }
-        } catch (EndOfStreamException)
+        StringBuilder buffer = new();
+        while (!input.EndOfStream)
         {
-            return tokens;
+            IEnumerable<string>? commands = await GetNextCommands(input, buffer);
+            if (commands is null || (!commands.Any()))
+            {
+                continue;
+            }
+            tokens.AddRange(commands.Select(TokenFactory.CreateToken));
         }
-        // while (true)
-        // {
-        //     string commands = await GetNextCommand(input);
-        //     if (string.IsNullOrWhiteSpace(commands))
-        //     {
-        //         continue;
-        //     }
-        //     tokens.Add(TokenFactory.CreateToken(commands));
-        // }
-        //
-        // return tokens;
+
+        return tokens;
     }
 
-    private static async Task<string> GetNextCommand(StreamReader input)
+    private static async Task<IEnumerable<string>?> GetNextCommands(StreamReader input, StringBuilder buffer)
     {
-        // TODO: fix buffer issue
-        string result = "";
+        // Here: Musze oznaczac jakos "Brudne linie", czyli takie ktore maja dwa albo wiecej znakow rozdzielajacych
+        List<string> result = [];
         while (true)
         {
-            string? inputLine = await input.ReadLineAsync();
+            string? inputLine = (await input.ReadLineAsync())?.Trim();
             if (inputLine is null)
             {
                 throw new Exception("Something went wrong while read file");
             }
             if (string.IsNullOrWhiteSpace(inputLine))
             {
-                return string.Empty;
+                return null;
             }
 
             int indexOfFirstSplitChar = inputLine.IndexOfAny(SplitChars);
-            if (indexOfFirstSplitChar == -1)
+            StringBuilder resultBuilder = new();
+            while (indexOfFirstSplitChar != -1)
             {
-                result += inputLine;
-                continue;
+                resultBuilder.Clear();
+                string line = inputLine[..indexOfFirstSplitChar].Trim();
+                inputLine = inputLine[(indexOfFirstSplitChar + 1)..].Trim();
+
+                if (buffer.Length > 0)
+                {
+                    resultBuilder.Append(buffer);
+                    buffer.Clear();
+                }
+                resultBuilder.Append(line);
+                result.Add(resultBuilder.ToString());
+                indexOfFirstSplitChar = inputLine.IndexOfAny(SplitChars);
             }
-            var x = inputLine.Length - indexOfFirstSplitChar - 1;
-            var currentPosition = input.BaseStream.Position;
 
-            input.DiscardBufferedData();
-            input.BaseStream.Seek(currentPosition - x, SeekOrigin.Begin);
-            result += inputLine[..indexOfFirstSplitChar].Trim();
-            break;
+            if (!string.IsNullOrWhiteSpace(inputLine))
+            {
+                buffer.Append(inputLine);
+            }
+            return result;
         }
-
-        return result;
     }
 }

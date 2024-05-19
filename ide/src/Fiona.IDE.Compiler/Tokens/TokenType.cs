@@ -30,7 +30,7 @@ internal static  class TokenTypeExtension {
             TokenType.Endpoint => "endpoint:",
             TokenType.BodyBegin => "bodyBegin",
             TokenType.BodyEnd => "bodyEnd",
-            TokenType.Comment => "//",
+            TokenType.Comment => "*",
             TokenType.Class => "class",
             TokenType.Method => "method:",
             TokenType.ReturnType => "return:",
