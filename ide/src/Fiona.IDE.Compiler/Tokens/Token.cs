@@ -13,8 +13,9 @@ internal sealed class Token : IToken
     {
         Value = value;
         Type = type;
+        ArrayOfValues = [value];
     }
-    
+
     public Token(TokenType type, params string[] arrayOfValue)
     {
         ArrayOfValues = arrayOfValue;

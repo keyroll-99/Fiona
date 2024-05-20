@@ -67,7 +67,7 @@ Good to have - 30-60 days
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
-	- [ ] Creating project
+	- [X] Creating project
   - [ ] Users can connect boxes
 	- [ ] Run project
 	- [ ] Adding controller 

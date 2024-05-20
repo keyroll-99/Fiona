@@ -81,6 +81,7 @@ internal sealed class Validator
         bool isRouteDefine = false;
         bool isReturnDefine = false;
         bool isInputDefine = false;
+        bool isDiDefine = false;
         for (int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
@@ -113,6 +114,13 @@ internal sealed class Validator
                         throw new ValidationError($"Parameter type in {endpointName} is define two times");
                     }
                     ValidateParameter(currentToken);
+                    isInputDefine = true;
+                    continue;
+                case TokenType.Dependency:
+                    if (isDiDefine)
+                    {
+                        throw new ValidationError($"Parameter type in {endpointName} is define two times");
+                    }
                     isInputDefine = true;
                     continue;
                 case TokenType.BodyBegin:

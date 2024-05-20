@@ -166,6 +166,22 @@ public partial class ParserTests
             new Token(TokenType.BodyBegin),
             new Token(TokenType.Comment, "comment todo: body"),
             new Token(TokenType.BodyEnd),
+        ],
+        [
+            $"{nameof(InvalidClassTokenData)}_16",
+            new Token(TokenType.UsingBegin),
+            new Token(TokenType.Using, "System"),
+            new Token(TokenType.UsingEnd),
+            new Token(TokenType.Class, "TestController"),
+            new Token(TokenType.Route, "Home"),
+            new Token(TokenType.Endpoint, "Index"),
+            new Token(TokenType.Method, "[GET, POST]"),
+            new Token(TokenType.Parameter, "  [FromRoute] name: string", " [QueryParam] age: int", " [Body] user: User"),
+            new Token(TokenType.Dependency, "userService : IUserService", "logger : ILogger<TestController>"),
+            new Token(TokenType.Dependency, "userService : IUserService", "logger : ILogger<TestController>"),
+            new Token(TokenType.BodyBegin),
+            new Token(TokenType.Comment, "comment todo: body"),
+            new Token(TokenType.BodyEnd),
         ]
     ];
 

@@ -116,12 +116,12 @@ internal static class TokenFactory
         return null;
     }
 
-    private static IToken? GetTokenEquals(string command, TokenType tokenType)
+    private static Token? GetTokenEquals(string command, TokenType tokenType)
     {
         return string.Equals(command.Trim(), TokenKeywords[tokenType], StringComparison.CurrentCultureIgnoreCase) ? new Token(tokenType) : null;
     }
 
-    private static IToken? GetArrayToken(string command, TokenType tokenType)
+    private static Token? GetArrayToken(string command, TokenType tokenType)
     {
         string keyword = TokenKeywords[tokenType];
         if (!command.StartsWith(keyword, StringComparison.CurrentCultureIgnoreCase))
