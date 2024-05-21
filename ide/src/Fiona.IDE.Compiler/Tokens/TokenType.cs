@@ -36,7 +36,7 @@ internal static  class TokenTypeExtension {
             TokenType.Method => "method:",
             TokenType.ReturnType => "return:",
             TokenType.Parameter => "input:",
-            TokenType.Dependency => "inject: ",
+            TokenType.Dependency => "inject:",
             _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
         };
     }

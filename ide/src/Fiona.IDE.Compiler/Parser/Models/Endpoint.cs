@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Fiona.IDE.Compiler.Parser.Models;
 
-internal sealed class Endpoint(string name, string? route, string? methodTypes, string? returnType, List<Parameter> parameters, IReadOnlyCollection<IToken> bodyTokens)
+internal sealed class Endpoint(string name, string? route, string? methodTypes, string? returnType, IReadOnlyCollection<Parameter> parameters, IReadOnlyCollection<Dependency> dependencies, IReadOnlyCollection<IToken> bodyTokens)
 {
     private readonly IReadOnlyCollection<HttpMethodType> _methodTypes = GetMethodTypes(methodTypes);
     private readonly IReadOnlyCollection<IToken> _bodyTokens = bodyTokens;
@@ -11,8 +11,10 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
     public string BuildSourceCode()
     {
         StringBuilder sourceCode = new(1000);
-        
+
         AppendAttributes(sourceCode);
+        AppendDependency(sourceCode);
+        AppendConstructor(sourceCode);
         AppendMethodDeclaration(sourceCode);
         AppendBody(sourceCode);
         sourceCode.Append('}');
@@ -28,6 +30,20 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
         string parameters1 = queryParameters.Any() ? $", [{string.Join(", ", queryParameters.Select(x => $"\"{x.Name}\""))}]" : string.Empty;
 
         sourceCode.Append($"[Route({methodTypes}{routeValue}{parameters1})]\n");
+    }
+
+    private void AppendDependency(StringBuilder sourceCode)
+    {
+        foreach (Dependency dependency in dependencies)
+        {
+            sourceCode.Append($"[Inject] {dependency.FullDeclaration}\n");
+        }
+    }
+
+    private void AppendConstructor(StringBuilder sourceCode)
+    {
+        string constructorParameters = string.Join(", ", dependencies.Select(x => x.FullDeclaration));
+        sourceCode.Append($"public {name}({constructorParameters}) {{ }}\n");
     }
 
     private void AppendMethodDeclaration(StringBuilder sourceCode)

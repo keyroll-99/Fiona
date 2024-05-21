@@ -52,6 +52,8 @@ internal sealed class Validator
     private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
         bool isRoutingDefine = false;
+        bool isDiDefine = false;
+
         for (int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
@@ -67,6 +69,13 @@ internal sealed class Validator
                 case TokenType.Endpoint:
                     i = ValidateEndpoint(tokens, i + 1, currentToken.Value);
                     continue;
+                case TokenType.Dependency:
+                    if (isDiDefine)
+                    {
+                        throw new ValidationError($"Parameter type in {} is define two times");
+                    }
+                    isDiDefine = true;
+                    continue;
                 default:
                     throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in class definition.");
             }
@@ -81,7 +90,6 @@ internal sealed class Validator
         bool isRouteDefine = false;
         bool isReturnDefine = false;
         bool isInputDefine = false;
-        bool isDiDefine = false;
         for (int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
@@ -114,13 +122,6 @@ internal sealed class Validator
                         throw new ValidationError($"Parameter type in {endpointName} is define two times");
                     }
                     ValidateParameter(currentToken);
-                    isInputDefine = true;
-                    continue;
-                case TokenType.Dependency:
-                    if (isDiDefine)
-                    {
-                        throw new ValidationError($"Parameter type in {endpointName} is define two times");
-                    }
                     isInputDefine = true;
                     continue;
                 case TokenType.BodyBegin:

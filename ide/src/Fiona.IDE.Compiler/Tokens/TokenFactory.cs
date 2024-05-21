@@ -1,3 +1,5 @@
+using Fiona.IDE.Compiler.Parser.Exceptions;
+
 namespace Fiona.IDE.Compiler.Tokens;
 
 internal static class TokenFactory
@@ -39,6 +41,9 @@ internal static class TokenFactory
         },
         {
             TokenType.Parameter, GetParameterToken
+        },
+        {
+            TokenType.Dependency, GetDependencyToken
         }
     };
 
@@ -64,7 +69,7 @@ internal static class TokenFactory
             }
         }
 
-        throw new Exception("Unknown token type");
+        throw new ValidationError("Cannot parse file");
     }
 
     private static IEnumerable<TokenType> GetTokenTypesToCheck(string input)
@@ -105,6 +110,9 @@ internal static class TokenFactory
 
     private static IToken? GetParameterToken(string command)
         => GetArrayToken(command, TokenType.Parameter);
+
+    private static IToken? GetDependencyToken(string command)
+        => GetArrayToken(command, TokenType.Dependency);
 
     private static Token? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {

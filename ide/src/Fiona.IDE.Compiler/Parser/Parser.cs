@@ -81,7 +81,7 @@ internal sealed class Parser : IParser
         return tokens.Count;
     }
 
-
+    // Maybe it should be move to facotry class?
     private static (Endpoint? endpoint, int endIndex) GetNextEndpoint(IReadOnlyCollection<IToken> tokens, int index)
     {
 
@@ -89,6 +89,7 @@ internal sealed class Parser : IParser
         IToken? methodToken = null;
         IToken? returnType = null;
         List<Parameter> parameters = [];
+        List<Dependency> dependencies = [];
         IToken? endpointToken = tokens.ElementAt(index++);
 
         for (int i = index; i < tokens.Count; i++)
@@ -108,6 +109,9 @@ internal sealed class Parser : IParser
                 case TokenType.Parameter:
                     parameters = Parameter.GetParametersFromToken(currentToken);
                     continue;
+                case TokenType.Dependency:
+                    dependencies = Dependency.GetDependenciesFromToken(currentToken);
+                    continue;
                 case TokenType.BodyBegin:
                     IReadOnlyCollection<IToken> bodyTokens = GetBodyTokens(tokens, i + 1);
                     Endpoint endpoint = new(endpointToken.Value!,
@@ -115,6 +119,7 @@ internal sealed class Parser : IParser
                                             methodToken?.Value,
                                             returnType?.Value,
                                             parameters,
+                                            dependencies,
                                             bodyTokens);
                     return (endpoint, i + bodyTokens.Count + 1);
                 default:

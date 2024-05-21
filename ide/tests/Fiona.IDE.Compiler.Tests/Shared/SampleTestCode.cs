@@ -28,6 +28,9 @@ public static class SampleTestCode
     private const string ControllerWithParameters = """
                                                     class TestController;
                                                     route: /home;
+                                                    inject:
+                                                    - userService: IUserService
+                                                    - logger: ILogger<TestController>;
 
                                                     endpoint: Index;
                                                     route: /{name};
@@ -38,9 +41,6 @@ public static class SampleTestCode
                                                         - [QueryParam] age: int
                                                         - [Body] user: User
                                                         - [Cookie] userId: long;
-                                                    inject:
-                                                        - userService: IUserService;
-                                                        - logger: ILogger<TestController>;
                                                     bodyBegin;
                                                     bodyEnd;
                                                     """; // TODO: how to mark comment?

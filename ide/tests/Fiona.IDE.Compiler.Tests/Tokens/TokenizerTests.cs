@@ -38,7 +38,7 @@ public sealed class TokenizerTests
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         // Assert
-        tokens.Count.Should().Be(9);
+        tokens.Count.Should().Be(8);
         tokens.First().Value.Should().Be("TestController");
         tokens.First().Type.Should().Be(TokenType.Class);
         tokens.ElementAt(1).Value.Should().Be("/home");
@@ -53,10 +53,8 @@ public sealed class TokenizerTests
         tokens.ElementAt(5).Type.Should().Be(TokenType.ReturnType);       
         tokens.ElementAt(6).Value.Should().Be(TokenType.BodyBegin.ToString());
         tokens.ElementAt(6).Type.Should().Be(TokenType.BodyBegin);
-        tokens.ElementAt(7).Value.Should().Be("comment todo: body");
-        tokens.ElementAt(7).Type.Should().Be(TokenType.Comment);
-        tokens.ElementAt(8).Value.Should().Be(TokenType.BodyEnd.ToString());
-        tokens.ElementAt(8).Type.Should().Be(TokenType.BodyEnd);
+        tokens.ElementAt(7).Value.Should().Be(TokenType.BodyEnd.ToString());
+        tokens.ElementAt(7).Type.Should().Be(TokenType.BodyEnd);
     }
     
       [Fact]
@@ -68,7 +66,7 @@ public sealed class TokenizerTests
         // Act
         IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
         // Assert
-        tokens.Count.Should().Be(14);
+        tokens.Count.Should().Be(13);
         tokens.First().Value.Should().Be(TokenType.UsingBegin.ToString());
         tokens.First().Type.Should().Be(TokenType.UsingBegin);
         tokens.ElementAt(1).Value.Should().Be("system");
@@ -93,9 +91,7 @@ public sealed class TokenizerTests
         tokens.ElementAt(10).Value.Should().Be("User");
         tokens.ElementAt(11).Value.Should().Be(TokenType.BodyBegin.ToString());
         tokens.ElementAt(11).Type.Should().Be(TokenType.BodyBegin);
-        tokens.ElementAt(12).Value.Should().Be("comment todo: body");
-        tokens.ElementAt(12).Type.Should().Be(TokenType.Comment);
-        tokens.ElementAt(13).Value.Should().Be(TokenType.BodyEnd.ToString());
-        tokens.ElementAt(13).Type.Should().Be(TokenType.BodyEnd);
+        tokens.ElementAt(12).Value.Should().Be(TokenType.BodyEnd.ToString());
+        tokens.ElementAt(12).Type.Should().Be(TokenType.BodyEnd);
     }
 }
