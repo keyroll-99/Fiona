@@ -41,7 +41,7 @@ public partial class ParserTests
                                 namespace Token.Test
 
                                 [Controller("/home")]
-                                public class TestController()
+                                public class TestController
                                 {
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/test")]
@@ -78,8 +78,15 @@ public partial class ParserTests
                                 namespace Token.Test
 
                                 [Controller("/home")]
-                                public class TestController()
+                                public class TestController
                                 {
+                                    private readonly IUserService userService;
+                                    private readonly ILogger<TestController> logger;
+                                    
+                                    public TestController(IUserService userService, ILogger<TestController> logger){
+                                        this.userService = userService;
+                                        this.logger = logger;
+                                    }
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/{name}", ["age"])]
                                      public async Task<User> Index([FromRoute] string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)

@@ -60,7 +60,7 @@ Good to have - 30-60 days
  	- [X] Parsing Method
 	- [X] Parsing Return type
     - [X] Parsing parameters
-	- [ ] Parsing DI
+	- [X] Parsing DI
     - [ ] Namespace
 	- [ ] Parsing logic statement
  	- [ ] Parsing loop statement

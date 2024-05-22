@@ -24,7 +24,7 @@ internal sealed class Validator
                     foundUsing = true;
                     continue;
                 case TokenType.Class:
-                    i = ValidateClass(tokens, i + 1);
+                    i = ValidateClass(tokens, i + 1, currentElement);
                     continue;
                 default:
                     throw new ValidationError($"Cannot use {currentElement.Type.GetTokenKeyword()} out of class definition.");
@@ -49,7 +49,7 @@ internal sealed class Validator
         throw new ValidationError("Not found end of using statement.");
     }
 
-    private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex)
+    private static int ValidateClass(IReadOnlyCollection<IToken> tokens, int startIndex, IToken classToken)
     {
         bool isRoutingDefine = false;
         bool isDiDefine = false;
@@ -72,7 +72,7 @@ internal sealed class Validator
                 case TokenType.Dependency:
                     if (isDiDefine)
                     {
-                        throw new ValidationError($"Parameter type in {} is define two times");
+                        throw new ValidationError($"Parameter type in {classToken.Value} is define two times");
                     }
                     isDiDefine = true;
                     continue;

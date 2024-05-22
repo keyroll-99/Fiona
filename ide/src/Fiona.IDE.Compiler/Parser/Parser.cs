@@ -60,23 +60,33 @@ internal sealed class Parser : IParser
     {
         IToken classToken = tokens.ElementAt(index++);
         IToken? controllerRoute = null;
-        if (tokens.ElementAt(index).Type == TokenType.Route)
-        {
-            controllerRoute = tokens.ElementAt(index);
-            index += 1;
-        }
+        List<Dependency>? dependencies = null;
         List<Endpoint> endpoints = [];
+
         for (int i = index; i < tokens.Count; i++)
         {
-            (Endpoint? endpoint, int endIndex) = GetNextEndpoint(tokens, i);
-            if (endpoint is null)
+            IToken currentToken = tokens.ElementAt(i);
+            switch (currentToken.Type)
             {
-                break;
+                case TokenType.Route:
+                    controllerRoute = currentToken;
+                    continue;
+                case TokenType.Dependency:
+                    dependencies = Dependency.GetDependenciesFromToken(currentToken);
+                    continue;
+                case TokenType.Endpoint:
+                    (Endpoint? endpoint, int endIndex) = GetNextEndpoint(tokens, i);
+                    if (endpoint is null)
+                    {
+                        break;
+                    }
+                    endpoints.Add(endpoint);
+                    i = endIndex;
+                continue;
             }
-            endpoints.Add(endpoint);
-            i = endIndex;
         }
-        Class @class = new(endpoints, controllerRoute?.Value, classToken.Value!);
+        
+        Class @class = new(endpoints, controllerRoute?.Value, classToken.Value!, dependencies);
         stringBuilder.Append(@class.GenerateSourceCode());
         return tokens.Count;
     }
@@ -119,7 +129,6 @@ internal sealed class Parser : IParser
                                             methodToken?.Value,
                                             returnType?.Value,
                                             parameters,
-                                            dependencies,
                                             bodyTokens);
                     return (endpoint, i + bodyTokens.Count + 1);
                 default:
