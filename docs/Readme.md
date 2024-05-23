@@ -11,5 +11,6 @@ Welcome to Fiona's documentation, the framework is currently under active develo
 1. [Cookie](Cookie.md)
 1. [Logger](Logger.md)
 1. [Dependency injection](Dependency-injection.md)
+1. [Fiona language](Fiona-language.md s)
 1. [Blueprint](Blueprints.md.md)
 
