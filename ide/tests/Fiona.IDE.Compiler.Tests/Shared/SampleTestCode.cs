@@ -12,6 +12,8 @@ public static class SampleTestCode
                                       """;
 
     public const string ControllerTokens = """
+                                           namespace: Token.Test;
+                                           
                                            class TestController;
                                            route: /home;
 
@@ -26,6 +28,7 @@ public static class SampleTestCode
     public const string FullTokensTest = UsingTokens + ControllerTokens;
 
     private const string ControllerWithParameters = """
+                                                    namespace: Token.Test;
                                                     class TestController;
                                                     route: /home;
                                                     inject:

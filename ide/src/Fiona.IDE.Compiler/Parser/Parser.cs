@@ -21,7 +21,7 @@ internal sealed class Parser : IParser
             throw new ParserException(projectFile.Name, e.Message);
         }
 
-        StringBuilder stringBuilder = new StringBuilder(20_000);
+        StringBuilder stringBuilder = new(20_000);
         for (int i = 0; i < tokens.Count; i++)
         {
             IToken currentElement = tokens.ElementAt(i);
@@ -29,14 +29,16 @@ internal sealed class Parser : IParser
             {
                 case TokenType.UsingBegin:
                     i = AppendUsing(stringBuilder, tokens, i + 1);
-                    stringBuilder.Append("\n namespace Token.Test\n");
+                    continue;
+                case TokenType.Namespace:
+                    stringBuilder.AppendFormat("namespace {0};\n", currentElement.Value);
                     continue;
                 case TokenType.Class:
                     i = AppendClass(stringBuilder, tokens, i);
                     continue;
             }
         }
-        var rest = stringBuilder.ToString();
+        string rest = stringBuilder.ToString();
         return new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(rest));
     }
 

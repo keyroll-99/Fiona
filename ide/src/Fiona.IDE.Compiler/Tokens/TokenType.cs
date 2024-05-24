@@ -14,7 +14,8 @@ internal enum TokenType
     Method,
     ReturnType,
     Parameter,
-    Dependency
+    Dependency,
+    Namespace
 }
 
 
@@ -37,6 +38,7 @@ internal static  class TokenTypeExtension {
             TokenType.ReturnType => "return:",
             TokenType.Parameter => "input:",
             TokenType.Dependency => "inject:",
+            TokenType.Namespace => "namespace:",
             _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
         };
     }

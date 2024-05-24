@@ -44,6 +44,9 @@ internal static class TokenFactory
         },
         {
             TokenType.Dependency, GetDependencyToken
+        },
+        {
+            TokenType.Namespace, GetNamespaceToken
         }
     };
 
@@ -113,6 +116,9 @@ internal static class TokenFactory
 
     private static IToken? GetDependencyToken(string command)
         => GetArrayToken(command, TokenType.Dependency);
+
+    private static IToken? GetNamespaceToken(string command)
+        => GetTokenStartWith(command, TokenType.Namespace);
 
     private static Token? GetTokenStartWith(string command, TokenType tokenType, bool hasValue = true)
     {

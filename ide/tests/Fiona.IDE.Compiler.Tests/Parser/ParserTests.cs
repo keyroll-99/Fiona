@@ -38,7 +38,7 @@ public partial class ParserTests
                                 using system.collections;
                                 using system.collections.generic;
 
-                                namespace Token.Test
+                                namespace Token.Test;
 
                                 [Controller("/home")]
                                 public class TestController
@@ -75,7 +75,7 @@ public partial class ParserTests
                                 using system.collections;
                                 using system.collections.generic;
 
-                                namespace Token.Test
+                                namespace Token.Test;
 
                                 [Controller("/home")]
                                 public class TestController

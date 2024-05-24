@@ -10,6 +10,7 @@ internal sealed class Validator
     {
         await Task.CompletedTask;
         bool foundUsing = false;
+        bool foundNamespace = false;
         for (int i = 0; i < tokens.Count; i++)
         {
             IToken currentElement = tokens.ElementAt(i);
@@ -20,10 +21,25 @@ internal sealed class Validator
                     {
                         throw new ValidationError("Duplicate using statement.");
                     }
+                    if (foundUsing)
+                    {
+                        throw new ValidationError("Namespace definition is before using statement.");
+                    }
                     i = ValidateUsing(tokens, i + 1);
                     foundUsing = true;
                     continue;
+                case TokenType.Namespace:
+                    if (foundNamespace)
+                    {
+                        throw new ValidationError("Duplicate namespace statement.");
+                    }
+                    foundNamespace = true;
+                    continue;
                 case TokenType.Class:
+                    if (!foundNamespace)
+                    {
+                        throw new ValidationError("Not found namespace definition before class definition.");
+                    }
                     i = ValidateClass(tokens, i + 1, currentElement);
                     continue;
                 default:
