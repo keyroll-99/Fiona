@@ -62,8 +62,12 @@ Good to have - 30-60 days
     - [X] Parsing parameters
 	- [X] Parsing DI
     - [X] Namespace
+    - [ ] Parsing variable assignment and declaration
+    - [ ] Parsing method call
+    - [ ] Parsing return
 	- [ ] Parsing logic statement
  	- [ ] Parsing loop statement
+    - [ ] Parsing comment
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu

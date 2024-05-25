@@ -47,6 +47,28 @@ public static class SampleTestCode
                                                     bodyBegin;
                                                     bodyEnd;
                                                     """; // TODO: how to mark comment?
+    
+    private const string ControllerWithBody = """
+                                                    namespace: Token.Test;
+                                                    class TestController;
+                                                    route: /home;
+                                                    inject:
+                                                    - userService: IUserService
+                                                    - logger: ILogger<TestController>;
+
+                                                    endpoint: Index;
+                                                    route: /{name};
+                                                    method: [GET, POST];
+                                                    return: User;
+                                                    input:
+                                                        - [FromRoute] name: string
+                                                        - [QueryParam] age: int
+                                                        - [Body] user: User
+                                                        - [Cookie] userId: long;
+                                                    bodyBegin;
+                                                    
+                                                    bodyEnd;
+                                                    """; // TODO: how to mark comment?
 
     public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
 

@@ -36,7 +36,6 @@ internal static class Tokenizer
 
     private static async Task<IEnumerable<string>?> GetNextCommands(StreamReader input, StringBuilder buffer)
     {
-        // Here: Musze oznaczac jakos "Brudne linie", czyli takie ktore maja dwa albo wiecej znakow rozdzielajacych
         List<string> result = [];
         while (true)
         {
