@@ -1,4 +1,5 @@
 using Fiona.IDE.Compiler.Parser.Exceptions;
+using System.Text;
 
 namespace Fiona.IDE.Compiler.Tokens;
 
@@ -73,6 +74,31 @@ internal static class TokenFactory
         }
 
         throw new ValidationError("Cannot parse file");
+    }
+    
+    public static IToken CreateBodyToken(StreamReader input)
+    {
+        return new Token(TokenType.Body, GetBodyPart(input));
+    }
+    
+    private static string GetBodyPart(StreamReader input)
+    {
+        StringBuilder body = new();
+        while (!input.EndOfStream)
+        {
+            string? line = input.ReadLine();
+            if (line is null)
+            {
+                throw new ValidationError("Not found end of body.");
+            }
+            string[] 
+            if (line.Trim() == TokenKeywords[TokenType.BodyEnd])
+            {
+                return body.ToString();
+            }
+            body.AppendLine(line);
+        }
+        throw new ValidationError("Cannot find end of body");
     }
 
     private static IEnumerable<TokenType> GetTokenTypesToCheck(string input)

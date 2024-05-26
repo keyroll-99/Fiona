@@ -5,6 +5,7 @@ internal sealed class Token : IToken
     public string? Value { get; }
     public string[]? ArrayOfValues { get; }
     public TokenType Type { get; }
+    
 
     public Token(TokenType type) : this(type, type.ToString())
     {

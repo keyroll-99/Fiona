@@ -66,7 +66,16 @@ public static class SampleTestCode
                                                         - [Body] user: User
                                                         - [Cookie] userId: long;
                                                     bodyBegin;
-                                                    
+                                                    var x = 10;
+                                                    var y = userService.GetAge();
+                                                    if(x > y)
+                                                    {
+                                                        return user;
+                                                    }
+                                                    else
+                                                    {
+                                                        return null;
+                                                    }
                                                     bodyEnd;
                                                     """; // TODO: how to mark comment?
 

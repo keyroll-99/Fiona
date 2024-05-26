@@ -23,12 +23,16 @@ internal static class Tokenizer
         StringBuilder buffer = new();
         while (!input.EndOfStream)
         {
-            IEnumerable<string>? commands = await GetNextCommands(input, buffer);
+            IList<string>? commands = (await GetNextCommands(input, buffer))?.ToList();
             if (commands is null || (!commands.Any()))
             {
                 continue;
             }
             tokens.AddRange(commands.Select(TokenFactory.CreateToken));
+            if(tokens[^1].Type == TokenType.BodyBegin)
+            {
+                tokens.Add(TokenFactory.CreateBodyToken(input));
+            }
         }
 
         return tokens;
@@ -74,4 +78,6 @@ internal static class Tokenizer
             return result;
         }
     }
+
+
 }
