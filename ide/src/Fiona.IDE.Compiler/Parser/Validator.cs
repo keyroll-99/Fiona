@@ -182,11 +182,19 @@ internal sealed class Validator
 
     private static int ValidateMethodBody(IReadOnlyCollection<IToken> tokens, int startIndex, string endpointName)
     {
+        bool isBodyDefine = false;
         for (int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);
             switch (currentToken.Type)
             {
+                case TokenType.Body:
+                    if (isBodyDefine)
+                    {
+                        throw new ValidationError("Body is define two times");
+                    }
+                    isBodyDefine = true;
+                    continue;
                 case TokenType.Comment:
                     continue;
                 case TokenType.BodyEnd:

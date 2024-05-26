@@ -101,7 +101,6 @@ internal sealed class Parser : IParser
         IToken? methodToken = null;
         IToken? returnType = null;
         List<Parameter> parameters = [];
-        List<Dependency> dependencies = [];
         IToken? endpointToken = tokens.ElementAt(index++);
 
         for (int i = index; i < tokens.Count; i++)
@@ -121,18 +120,15 @@ internal sealed class Parser : IParser
                 case TokenType.Parameter:
                     parameters = Parameter.GetParametersFromToken(currentToken);
                     continue;
-                case TokenType.Dependency:
-                    dependencies = Dependency.GetDependenciesFromToken(currentToken);
-                    continue;
                 case TokenType.BodyBegin:
-                    IReadOnlyCollection<IToken> bodyTokens = GetBodyTokens(tokens, i + 1);
+                    IToken? bodyToken = GetBodyToken(tokens, i + 1);
                     Endpoint endpoint = new(endpointToken.Value!,
                                             routeToken?.Value,
                                             methodToken?.Value,
                                             returnType?.Value,
                                             parameters,
-                                            bodyTokens);
-                    return (endpoint, i + bodyTokens.Count + 1);
+                                            bodyToken);
+                    return (endpoint, bodyToken is not null ? i + 2 : i + 1);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -141,19 +137,8 @@ internal sealed class Parser : IParser
         return (null, index);
     }
 
-    private static IReadOnlyCollection<IToken> GetBodyTokens(IReadOnlyCollection<IToken> tokens, int startIndex)
+    private static IToken? GetBodyToken(IReadOnlyCollection<IToken> tokens, int startIndex)
     {
-        List<IToken> result = [];
-        for (int i = startIndex; i < tokens.Count; i++)
-        {
-            IToken currentToken = tokens.ElementAt(i);
-            if (currentToken.Type == TokenType.BodyEnd)
-            {
-                break;
-            }
-            result.Add(currentToken);
-        }
-
-        return result;
+        return tokens.ElementAt(startIndex).Type == TokenType.Body ? tokens.ElementAt(startIndex) : null;
     }
 }

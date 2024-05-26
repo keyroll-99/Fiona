@@ -29,10 +29,16 @@ internal static class Tokenizer
                 continue;
             }
             tokens.AddRange(commands.Select(TokenFactory.CreateToken));
-            if(tokens[^1].Type == TokenType.BodyBegin)
+            if (tokens[^1].Type != TokenType.BodyBegin)
             {
-                tokens.Add(TokenFactory.CreateBodyToken(input));
+                continue;
             }
+            IToken? bodyToken = TokenFactory.CreateBodyToken(input);
+            if (bodyToken is not null)
+            {
+                tokens.Add(bodyToken);
+            }
+            tokens.Add(TokenFactory.CreateToken(TokenType.BodyEnd.GetTokenKeyword()));
         }
 
         return tokens;

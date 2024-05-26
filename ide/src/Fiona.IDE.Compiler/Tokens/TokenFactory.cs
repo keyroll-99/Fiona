@@ -75,12 +75,17 @@ internal static class TokenFactory
 
         throw new ValidationError("Cannot parse file");
     }
-    
-    public static IToken CreateBodyToken(StreamReader input)
+
+    public static IToken? CreateBodyToken(StreamReader input)
     {
-        return new Token(TokenType.Body, GetBodyPart(input));
+        string body = GetBodyPart(input);
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            return null;
+        }
+        return new Token(TokenType.Body, body);
     }
-    
+
     private static string GetBodyPart(StreamReader input)
     {
         StringBuilder body = new();
@@ -91,14 +96,36 @@ internal static class TokenFactory
             {
                 throw new ValidationError("Not found end of body.");
             }
-            string[] 
-            if (line.Trim() == TokenKeywords[TokenType.BodyEnd])
+            IList<string> splitLines = line.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+
+            if (splitLines.Contains(TokenKeywords[TokenType.BodyEnd]))
             {
+                splitLines.Remove(TokenKeywords[TokenType.BodyEnd]);
+                AppendLines(body, splitLines, line);
                 return body.ToString();
             }
-            body.AppendLine(line);
+            AppendLines(body, splitLines, line);
         }
         throw new ValidationError("Cannot find end of body");
+    }
+
+    private static void AppendLines(StringBuilder body, IList<string> lines, string originalLine)
+    {
+        switch (lines.Count)
+        {
+            case 0:
+                return;
+            case 1:
+                body.Append($"{originalLine}\n");
+                return;
+        }
+
+        string bodyLine = string.Join(";\n", lines);
+        if (originalLine.EndsWith(';'))
+        {
+            bodyLine += ";";
+        }
+        body.Append(bodyLine);
     }
 
     private static IEnumerable<TokenType> GetTokenTypesToCheck(string input)
@@ -132,7 +159,7 @@ internal static class TokenFactory
         => GetTokenStartWith(command, TokenType.Class);
 
     private static IToken? GetMethodToken(string command)
-        => GetTokenStartWith(command, TokenType.Method); // TODO It should behave like GetParameterToken
+        => GetTokenStartWith(command, TokenType.Method);// TODO It should behave like GetParameterToken
 
     private static IToken? GetReturnToken(string command)
         => GetTokenStartWith(command, TokenType.ReturnType);
@@ -168,7 +195,7 @@ internal static class TokenFactory
         {
             return null;
         }
-        
+
         string[] parameters = command[keyword.Length..]
             .Trim()
             .Split('-')

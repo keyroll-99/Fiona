@@ -48,7 +48,9 @@ public static class SampleTestCode
                                                     bodyEnd;
                                                     """; // TODO: how to mark comment?
     
-    private const string ControllerWithBody = """
+    public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
+    
+    public const string ControllerWithBody = """
                                                     namespace: Token.Test;
                                                     class TestController;
                                                     route: /home;
@@ -79,6 +81,7 @@ public static class SampleTestCode
                                                     bodyEnd;
                                                     """; // TODO: how to mark comment?
 
-    public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
+    public const string FullControllerWithBody = UsingTokens + ControllerWithBody;
+
 
 }
