@@ -16,7 +16,7 @@ public static class SampleTestCode
                                            
                                            class TestController;
                                            route: /home;
-
+                            
                                            endpoint: Index;
                                            route: /test;
                                            method: [GET, POST];
@@ -46,40 +46,42 @@ public static class SampleTestCode
                                                         - [Cookie] userId: long;
                                                     bodyBegin;
                                                     bodyEnd;
-                                                    """; // TODO: how to mark comment?
+                                                    """;
     
     public const string FullTokensTestWithParameter = UsingTokens + ControllerWithParameters;
-    
-    public const string ControllerWithBody = """
-                                                    namespace: Token.Test;
-                                                    class TestController;
-                                                    route: /home;
-                                                    inject:
-                                                    - userService: IUserService
-                                                    - logger: ILogger<TestController>;
 
-                                                    endpoint: Index;
-                                                    route: /{name};
-                                                    method: [GET, POST];
-                                                    return: User;
-                                                    input:
-                                                        - [FromRoute] name: string
-                                                        - [QueryParam] age: int
-                                                        - [Body] user: User
-                                                        - [Cookie] userId: long;
-                                                    bodyBegin;
-                                                    var x = 10;
-                                                    var y = userService.GetAge();
-                                                    if(x > y)
-                                                    {
-                                                        return user;
-                                                    }
-                                                    else
-                                                    {
-                                                        return null;
-                                                    }
-                                                    bodyEnd;
-                                                    """; // TODO: how to mark comment?
+    private const string ControllerWithBody = """
+                                              namespace: Token.Test;
+                                              class TestController;
+                                              route: /home;
+                                              inject:
+                                              - userService: IUserService
+                                              - logger: ILogger<TestController>;
+
+                                              endpoint: Index;
+                                              route: /{name};
+                                              method: [GET, POST];
+                                              return: User;
+                                              input:
+                                                  - [FromRoute] name: string
+                                                  - [QueryParam] age: int
+                                                  - [Body] user: User
+                                                  - [Cookie] userId: long;
+                                              // Testowy komentarz
+                                              // return: Home;
+                                              bodyBegin;
+                                              var x = 10;
+                                              var y = userService.GetAge();
+                                              if(x > y)
+                                              {
+                                                  return user;
+                                              }
+                                              else
+                                              {
+                                                  return null;
+                                              }
+                                              bodyEnd;
+                                              """;
 
     public const string FullControllerWithBody = UsingTokens + ControllerWithBody;
 

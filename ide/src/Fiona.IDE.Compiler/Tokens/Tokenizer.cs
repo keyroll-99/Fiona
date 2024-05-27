@@ -7,14 +7,14 @@ internal static class Tokenizer
 {
     private static readonly char[] SplitChars = [';', '*'];
 
-    public static Task<IReadOnlyCollection<IToken>> GetTokensAsync(StreamReader input)
+    public static async Task<IReadOnlyCollection<IToken>> GetTokensAsync(StreamReader input)
     {
         if (input is null)
         {
             throw new EmptyInputStreamException();
         }
 
-        return ReadTokensFromInputAsync(input);
+        return (await ReadTokensFromInputAsync(input)).Where(t => t.Type != TokenType.Comment).ToList();
     }
 
     private static async Task<IReadOnlyCollection<IToken>> ReadTokensFromInputAsync(StreamReader input)

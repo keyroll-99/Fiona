@@ -42,6 +42,8 @@ internal sealed class Validator
                     }
                     i = ValidateClass(tokens, i + 1, currentElement);
                     continue;
+                case TokenType.Comment:
+                    continue;
                 default:
                     throw new ValidationError($"Cannot use {currentElement.Type.GetTokenKeyword()} out of class definition.");
             }
@@ -84,6 +86,8 @@ internal sealed class Validator
                     continue;
                 case TokenType.Endpoint:
                     i = ValidateEndpoint(tokens, i + 1, currentToken.Value);
+                    continue;
+                case TokenType.Comment:
                     continue;
                 case TokenType.Dependency:
                     if (isDiDefine)
@@ -142,6 +146,8 @@ internal sealed class Validator
                     continue;
                 case TokenType.BodyBegin:
                     return ValidateMethodBody(tokens, i + 1, endpointName);
+                case TokenType.Comment:
+                    continue;
                 default:
                     throw new ValidationError($"Cannot use {currentToken.Type.GetTokenKeyword()} in endpoint declaration");
             }

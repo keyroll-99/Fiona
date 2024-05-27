@@ -63,7 +63,7 @@ Good to have - 30-60 days
 	- [X] Parsing DI
     - [X] Namespace
     - [X] Parsing body
-    - [ ] Parsing comment
+    - [X] Parsing comment
 - [ ] GUI
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu

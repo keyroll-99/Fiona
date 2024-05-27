@@ -20,7 +20,6 @@ internal sealed class Parser : IParser
         {
             throw new ParserException(projectFile.Name, e.Message);
         }
-
         StringBuilder stringBuilder = new(20_000);
         for (int i = 0; i < tokens.Count; i++)
         {
