@@ -3,11 +3,13 @@
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Components
 @using Fiona.IDE.ProjectManager
+@using Fiona.IDE.ProjectManager.Models
 @inject NavigationManager NavManager
 
 
-<div>
+<div class="configuration">
     <button @onclick="AddEndpoint">add endpoint</button>
+    
 </div>
 
 <div class="diagram-container">
@@ -24,6 +26,8 @@
     [Parameter]
     public string? @namespace { get; init; } = default;
 
+    private ProjectFile CurrentFile { get; set; }
+
     private BlazorDiagram Diagram { get; set; } = null!;
 
 
@@ -34,7 +38,9 @@
             NavManager.NavigateTo("/");
         }
         
-        var options = new BlazorDiagramOptions
+        CurrentFile = ProjectManager.GetProjectFileByNamespace(@namespace!);
+        
+        BlazorDiagramOptions options = new BlazorDiagramOptions
         {
             AllowMultiSelection = true,
             Zoom =

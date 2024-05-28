@@ -7,16 +7,16 @@ namespace Fiona.IDE.ProjectManager.Models
     {
         public string Path { get; }
         public string Name { get; }
-        public static string Extension = "fn";
-        public string Namespace => Path.Replace(System.IO.Path.DirectorySeparatorChar.ToString(), ".");
-        
-        
+        public string Namespace { get; }
+        public const string Extension = "fn";
+
+
         [JsonConstructor]
         private ProjectFile(string path)
         {
             Path = path;
             Name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
-
+            Namespace = path.Replace(System.IO.Path.DirectorySeparatorChar.ToString(), ".").Split(":").Last().Replace(".fn", "")[1..];
         }
 
         internal static ProjectFile Create(string path)
@@ -26,6 +26,8 @@ namespace Fiona.IDE.ProjectManager.Models
                 throw new FileAlreadyExistsException(path);
             }
             File.Create(path);
+            
+            
             
             return new ProjectFile(path);
         }

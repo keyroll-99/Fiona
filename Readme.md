@@ -68,13 +68,16 @@ Good to have - 30-60 days
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
 	- [X] Creating project
-  - [ ] Users can connect boxes
-	- [ ] Run project
-	- [ ] Adding controller 
-	- [ ] Adding service
-	- [ ] Add a way to create a simple CRUD
-	- [ ] Add logic statement
-	- [ ] Add loop statement
+    - [ ] Configuration endpoint class
+    - [ ] Save to file
+    - [ ] Load from file
+    - [ ] Users can connect boxes
+    - [ ] Run project
+    - [ ] Adding controller 
+    - [ ] Adding service
+    - [ ] Add a way to create a simple CRUD
+    - [ ] Add logic statement
+    - [ ] Add loop statement
 
 Nice to have - 30 days
 - [ ] Tools
