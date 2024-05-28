@@ -7,9 +7,10 @@ namespace Fiona.IDE.ProjectManager.Models
     {
         public string Path { get; }
         public string Name { get; }
-
         public static string Extension = "fn";
-
+        public string Namespace => Path.Replace(System.IO.Path.DirectorySeparatorChar.ToString(), ".");
+        
+        
         [JsonConstructor]
         private ProjectFile(string path)
         {

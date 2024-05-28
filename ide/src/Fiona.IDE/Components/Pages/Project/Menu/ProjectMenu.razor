@@ -1,5 +1,8 @@
 ﻿@using Fiona.IDE.ProjectManager
 @using Fiona.IDE.ProjectManager.Models
+@inject NavigationManager NavManager
+
+
 <BarItem>
     <BarDropdown>
         <BarDropdownToggle>Files</BarDropdownToggle>
@@ -8,7 +11,7 @@
             <DropdownDivider Class="divider" />
             @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
             {
-                <BarDropdownItem>@projectFile.Name</BarDropdownItem>
+                <BarDropdownItem @onclick="() => OpenFile(projectFile)">@projectFile.Name</BarDropdownItem>
             }
         </BarDropdownMenu>
     </BarDropdown>
@@ -39,6 +42,11 @@
     {
         StateHasChanged();
         CloseCreateNewFileModal();
+    }
+
+    private void OpenFile(ProjectFile projectFile)
+    {
+        NavManager.NavigateTo($"/project-editor/{projectFile.Namespace}");
     }
 }
 
