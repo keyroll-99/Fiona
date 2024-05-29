@@ -29,11 +29,11 @@ namespace Fiona.IDE.ProjectManager.Models
             return await JsonSerializer.DeserializeAsync<FslnFile>(fs);
         }
 
-        internal Task AddFile(string name, string path)
+        internal async Task AddFile(string name, string path)
         {
             ProjectFileUrl!.Add(
-                ProjectFile.Create($"{path}{System.IO.Path.DirectorySeparatorChar}{name}.{ProjectFile.Extension}"));
-            return SaveAsync();
+                 await ProjectFile.Create($"{path}{System.IO.Path.DirectorySeparatorChar}{name}.{ProjectFile.Extension}"));
+            await SaveAsync();
         }
 
         private async Task SaveAsync()

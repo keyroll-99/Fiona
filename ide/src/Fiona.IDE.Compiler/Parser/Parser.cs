@@ -4,6 +4,9 @@ using Fiona.IDE.Compiler.Tokens;
 using Fiona.IDE.ProjectManager.Models;
 using Microsoft.VisualBasic;
 using System.Text;
+using Class=Fiona.IDE.Compiler.Parser.Models.Class;
+using Dependency=Fiona.IDE.Compiler.Parser.Models.Dependency;
+using Endpoint=Fiona.IDE.Compiler.Parser.Models.Endpoint;
 
 namespace Fiona.IDE.Compiler.Parser;
 

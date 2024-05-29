@@ -22,7 +22,7 @@ public partial class ParserTests
     public async Task When_Given_TokenizedCode_Should_Return_Parsed_Code()
     {
         // arrange
-        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCode_Should_Return_Parsed_Code));
+        ProjectFile projectFile = await GetTestProjectFile(nameof(When_Given_TokenizedCode_Should_Return_Parsed_Code));
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
         using StreamReader reader = new(stream);
 
@@ -59,7 +59,7 @@ public partial class ParserTests
     public async Task When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code()
     {
         // arrange
-        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code));
+        ProjectFile projectFile = await GetTestProjectFile(nameof(When_Given_TokenizedCodeWithParameter_Should_Return_Parsed_Code));
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTestWithParameter!));
         using StreamReader reader = new(stream);
 
@@ -103,7 +103,7 @@ public partial class ParserTests
     public async Task When_Given_TokenizedCodeWithParameterAndBody_Should_Return_Parsed_Code()
     {
         // arrange
-        ProjectFile projectFile = GetTestProjectFile(nameof(When_Given_TokenizedCodeWithParameterAndBody_Should_Return_Parsed_Code));
+        ProjectFile projectFile = await GetTestProjectFile(nameof(When_Given_TokenizedCodeWithParameterAndBody_Should_Return_Parsed_Code));
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullControllerWithBody!));
         using StreamReader reader = new(stream);
 
@@ -157,7 +157,7 @@ public partial class ParserTests
     internal async Task When_Given_Invalid_Using_Tokens_Then_Throw_Exception(string fileName, params Token[] tokens)
     {
         // Arrange
-        ProjectFile projectFile = GetTestProjectFile(fileName);
+        ProjectFile projectFile = await GetTestProjectFile(fileName);
 
         // Act
         Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
@@ -170,7 +170,7 @@ public partial class ParserTests
     internal async Task When_Given_Valid_Using_Tokens_Then_Should_Not_Throw_Error(string fileName, params Token[] tokens)
     {
         // Arrange
-        ProjectFile projectFile = GetTestProjectFile(fileName);
+        ProjectFile projectFile = await GetTestProjectFile(fileName);
 
         // Act
         Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
@@ -183,7 +183,7 @@ public partial class ParserTests
     internal async Task When_Given_Invalid_Class_Tokens_Then_Throw_Exception(string fileName, params Token[] tokens)
     {
         // Arrange
-        ProjectFile projectFile = GetTestProjectFile(fileName);
+        ProjectFile projectFile = await GetTestProjectFile(fileName);
 
         // Act
         Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
@@ -196,7 +196,7 @@ public partial class ParserTests
     internal async Task When_Given_Valid_Class_Tokens_Then_Should_Not_Throw_Error(string fileName, params Token[] tokens)
     {
         // Arrange
-        ProjectFile projectFile = GetTestProjectFile(fileName);
+        ProjectFile projectFile = await GetTestProjectFile(fileName);
 
         // Act
         Func<Task<ReadOnlyMemory<byte>>> action = async () => await _parser.ParseAsync(tokens, projectFile);
@@ -206,13 +206,13 @@ public partial class ParserTests
     }
     
     
-    private ProjectFile GetTestProjectFile(string name)
+    private async Task<ProjectFile> GetTestProjectFile(string name)
     {
         if (File.Exists(name))
         {
             File.Delete(name);
         }
-        return ProjectFile.Create(name);
+        return await ProjectFile.Create(name);
     }
 
 }
