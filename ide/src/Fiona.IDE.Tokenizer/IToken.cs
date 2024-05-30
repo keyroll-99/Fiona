@@ -1,6 +1,6 @@
-namespace Fiona.IDE.Compiler.Tokens;
+namespace Fiona.IDE.Tokenizer;
 
-internal interface IToken
+public interface IToken
 {
     public string? Value { get; }
     public TokenType Type { get; }

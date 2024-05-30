@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Fiona.IDE.ProjectManager\Fiona.IDE.ProjectManager.csproj" />
+      <ProjectReference Include="..\Fiona.IDE.Tokenizer\Fiona.IDE.Tokenizer.csproj" />
     </ItemGroup>
     
 </Project>

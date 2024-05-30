@@ -28,7 +28,9 @@ public sealed class ProjectFile
         {
             throw new FileAlreadyExistsException(path);
         }
-        File.Create(path);
+        FileStream fileHandler = File.Create(path);
+        // We have to close file after create
+        fileHandler.Close();
         
         ProjectFile projectFile = new(path);
 

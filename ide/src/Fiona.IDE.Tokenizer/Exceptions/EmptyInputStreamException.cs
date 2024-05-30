@@ -1,4 +1,4 @@
-namespace Fiona.IDE.Compiler.Tokens.Exceptons;
+namespace Fiona.IDE.Tokenizer.Exceptions;
 
 public class EmptyInputStreamException() : Exception("The input stream is null")
 {

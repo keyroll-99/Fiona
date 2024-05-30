@@ -1,4 +1,4 @@
-namespace Fiona.IDE.Compiler.Tokens;
+namespace Fiona.IDE.Tokenizer;
 
 internal sealed class Token : IToken
 {

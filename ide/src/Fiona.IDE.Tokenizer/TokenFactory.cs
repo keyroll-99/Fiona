@@ -1,7 +1,7 @@
-using Fiona.IDE.Compiler.Parser.Exceptions;
+using Fiona.IDE.Tokenizer.Exceptions;
 using System.Text;
 
-namespace Fiona.IDE.Compiler.Tokens;
+namespace Fiona.IDE.Tokenizer;
 
 internal static class TokenFactory
 {

@@ -1,4 +1,4 @@
-using Fiona.IDE.Compiler.Tokens;
+using Fiona.IDE.Tokenizer;
 
 namespace Fiona.IDE.Compiler.Tests.Parser;
 

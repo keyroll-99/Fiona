@@ -1,9 +1,9 @@
-using Fiona.IDE.Compiler.Tokens.Exceptons;
+using Fiona.IDE.Tokenizer.Exceptions;
 using System.Text;
 
-namespace Fiona.IDE.Compiler.Tokens;
+namespace Fiona.IDE.Tokenizer;
 
-internal static class Tokenizer
+public static class Tokenizer
 {
     private static readonly char[] SplitChars = [';', '*'];
 

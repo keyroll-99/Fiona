@@ -1,4 +1,4 @@
-using Fiona.IDE.Compiler.Tokens;
+using Fiona.IDE.Tokenizer;
 using System.Text;
 
 namespace Fiona.IDE.Compiler.Parser.Models;

@@ -1,7 +1,7 @@
 using Fiona.IDE.Compiler.Parser.Exceptions;
 using Fiona.IDE.Compiler.Parser.Models;
-using Fiona.IDE.Compiler.Tokens;
 using Fiona.IDE.ProjectManager.Models;
+using Fiona.IDE.Tokenizer;
 using Microsoft.VisualBasic;
 using System.Text;
 using Class=Fiona.IDE.Compiler.Parser.Models.Class;

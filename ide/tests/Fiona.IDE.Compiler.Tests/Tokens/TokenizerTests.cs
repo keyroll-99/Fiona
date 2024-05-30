@@ -1,5 +1,5 @@
 using Fiona.IDE.Compiler.Tests.Shared;
-using Fiona.IDE.Compiler.Tokens;
+using Fiona.IDE.Tokenizer;
 using FluentAssertions;
 using System.Text;
 
@@ -14,7 +14,7 @@ public sealed class TokenizerTests
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.UsingTokens!));
         using StreamReader reader = new(stream);
         // Act
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
         // Assert
         tokens.Count.Should().Be(5);
         tokens.First().Value.Should().Be(TokenType.UsingBegin.ToString());
@@ -36,7 +36,7 @@ public sealed class TokenizerTests
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.ControllerTokens));
         using StreamReader reader = new(stream);
         // Act
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
         // Assert
         tokens.Count.Should().Be(9);
         tokens.First().Value.Should().Be("Token.Test");
@@ -66,7 +66,7 @@ public sealed class TokenizerTests
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(SampleTestCode.FullTokensTest!));
         using StreamReader reader = new(stream);
         // Act
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
         // Assert
         tokens.Count.Should().Be(14);
         tokens.First().Value.Should().Be(TokenType.UsingBegin.ToString());

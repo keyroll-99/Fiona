@@ -1,6 +1,6 @@
-namespace Fiona.IDE.Compiler.Tokens;
+namespace Fiona.IDE.Tokenizer;
 
-internal enum TokenType
+public enum TokenType
 {
     UsingBegin,
     UsingEnd,
@@ -20,7 +20,7 @@ internal enum TokenType
 }
 
 
-internal static  class TokenTypeExtension {
+public static  class TokenTypeExtension {
 
     public static string GetTokenKeyword(this TokenType tokenType)
     {

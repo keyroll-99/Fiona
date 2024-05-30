@@ -1,8 +1,7 @@
-using Fiona.IDE.Compiler.Parser;
 using Fiona.IDE.Compiler.Parser.Exceptions;
 using Fiona.IDE.Compiler.Tests.Shared;
-using Fiona.IDE.Compiler.Tokens;
 using Fiona.IDE.ProjectManager.Models;
+using Fiona.IDE.Tokenizer;
 using FluentAssertions;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -27,7 +26,7 @@ public partial class ParserTests
         using StreamReader reader = new(stream);
 
         // act
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
         ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
         string resultReader = Encoding.UTF8.GetString(result.ToArray());
         
@@ -64,7 +63,7 @@ public partial class ParserTests
         using StreamReader reader = new(stream);
 
         // act
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
         ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
         string resultReader = Encoding.UTF8.GetString(result.ToArray());
         
@@ -108,7 +107,7 @@ public partial class ParserTests
         using StreamReader reader = new(stream);
 
         // act
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
         ReadOnlyMemory<byte> result = await _parser.ParseAsync(tokens, projectFile);
         string resultReader = Encoding.UTF8.GetString(result.ToArray());
         
