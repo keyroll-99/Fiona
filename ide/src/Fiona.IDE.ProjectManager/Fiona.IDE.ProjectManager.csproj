@@ -11,4 +11,8 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Fiona.IDE.Tokenizer\Fiona.IDE.Tokenizer.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -39,7 +39,7 @@ namespace Fiona.IDE.ProjectManager
         public IEnumerable<ProjectFile> GetFiles()
             => Project?.ProjectFileUrl ?? Enumerable.Empty<ProjectFile>() ;
         public ProjectFile GetProjectFileByNamespace(string @namespace) 
-            => Project?.ProjectFileUrl.FirstOrDefault(x => x.Namespace == @namespace) ?? throw new ProjectFileNotFoundException(@namespace);
+            => Project?.ProjectFileUrl.FirstOrDefault(x => x.Class.Namespace == @namespace) ?? throw new ProjectFileNotFoundException(@namespace);
 
         public Task CreateFileAsync(string name, string folderPath)
         {
