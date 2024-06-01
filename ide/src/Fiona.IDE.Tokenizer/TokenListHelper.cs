@@ -16,13 +16,13 @@ public static class TokenListHelper
                     break;
                 case TokenType.UsingEnd:
                     isUsingPart = false;
-                    break;
+                    return (result, i);
                 case TokenType.Using:
                     if (isUsingPart)
                     {
                         result.Add(currentToken);
                     }
-                    return (result, i);
+                    break;
                 case TokenType.Comment:
                     continue;
             }

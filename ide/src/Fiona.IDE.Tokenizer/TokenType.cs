@@ -40,8 +40,12 @@ public static  class TokenTypeExtension {
             TokenType.Parameter => "input:",
             TokenType.Dependency => "inject:",
             TokenType.Namespace => "namespace:",
-            TokenType.Body => "",
             _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
         };
+    }
+
+    public static IEnumerable<TokenType> GetTokenTypesWithKeyword(this List<TokenType> tokens)
+    {
+        return tokens.Where(x => x != TokenType.Body);
     }
 }

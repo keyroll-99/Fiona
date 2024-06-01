@@ -1,4 +1,5 @@
 ﻿using Fiona.IDE.ProjectManager.Exceptions;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Fiona.IDE.ProjectManager.Models;
@@ -7,6 +8,7 @@ public sealed class ProjectFile
 {
     public string Path { get; }
     public string Name { get; }
+    [NotMapped]
     public Class Class { get; }
     public const string Extension = "fn";
 

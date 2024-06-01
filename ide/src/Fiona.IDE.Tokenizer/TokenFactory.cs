@@ -55,7 +55,7 @@ internal static class TokenFactory
 
     static TokenFactory()
     {
-        foreach (TokenType tokenType in Enum.GetValues<TokenType>())
+        foreach (TokenType tokenType in  Enum.GetValues<TokenType>().ToList().GetTokenTypesWithKeyword())
         {
             TokenKeywords[tokenType] = tokenType.GetTokenKeyword();
         }
@@ -129,7 +129,7 @@ internal static class TokenFactory
     }
 
     private static IEnumerable<TokenType> GetTokenTypesToCheck(string input)
-        => Enum.GetValues<TokenType>().Where(tokenType => input.Contains(TokenKeywords[tokenType])).Where(x => x != TokenType.Body);
+        => Enum.GetValues<TokenType>().Where(tokenType => input.Contains(TokenKeywords[tokenType]));
 
     private static IToken? GetStartUsingToken(string command)
         => GetTokenEquals(command, TokenType.UsingBegin);
