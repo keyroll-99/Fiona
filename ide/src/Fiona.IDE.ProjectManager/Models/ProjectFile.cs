@@ -58,14 +58,15 @@ internal static class ProjectFileExtensions
 {
     public static string GetBaseContent(this ProjectFile projectFile)
     {
+        string @namespace = $"{projectFile.Path.Replace(System.IO.Path.DirectorySeparatorChar.ToString(), ".").Split(":").Last()[1..^(projectFile.Name.Length + 1)]}";
         return $"""
                usingBegin;
                using Fiona.Hosting.Controller.Attributes;
                using Fiona.Hosting.Routing;
                using Fiona.Hosting.Routing.Attributes;
                usingEnd;
-               namespace: {projectFile.Path.Replace(System.IO.Path.DirectorySeparatorChar.ToString(), ".").Split(":").Last().Replace(".fn", "")[1..]};
-               class {projectFile.Name};
+               namespace: {@namespace};
+               class {projectFile.Name[..^(ProjectFile.Extension.Length + 1)]};
                """;
     }
 
