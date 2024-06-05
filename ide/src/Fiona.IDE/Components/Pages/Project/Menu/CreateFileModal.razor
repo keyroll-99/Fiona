@@ -68,7 +68,7 @@
 
         try
         {
-            await ProjectManager.CreateFileAsync(_fileName!, _folderPath);
+            await ProjectManager.CreateFileAsync(_fileName!, _folderPath).ConfigureAwait(false);
             Parent.AfterCreateNewFile();
         }
         catch (Exception ex)
