@@ -85,11 +85,7 @@
         }
         catch (Exception ex)
         {
-#if DEBUG
             _exceptionMessage = ex.Message;
-#else
-            _exceptionMessage = "An error occurred while loading the project";
-#endif
         }
     }
 

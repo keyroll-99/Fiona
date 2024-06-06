@@ -49,7 +49,9 @@ public sealed class ProjectFile
     
     private async Task SaveContentAsync(string content)
     {
-        await File.WriteAllTextAsync(Path, content);
+        await using StreamWriter writer = new(Path);
+        await writer.WriteAsync(content);
+        writer.Close();
     }
         
 }
