@@ -207,11 +207,17 @@ public partial class ParserTests
     
     private async Task<ProjectFile> GetTestProjectFile(string name)
     {
-        if (File.Exists(name))
+        string filePath = $"namespace{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}{name}.fn";
+        if (!Directory.Exists($"namespace{Path.DirectorySeparatorChar}{name}"))
         {
-            File.Delete(name);
+            Directory.CreateDirectory($"namespace{Path.DirectorySeparatorChar}{name}");
         }
-        return await ProjectFile.Create(name);
+        
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+        return await ProjectFile.Create(filePath);
     }
 
 }
