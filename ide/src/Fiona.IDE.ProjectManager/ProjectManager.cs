@@ -20,7 +20,7 @@ namespace Fiona.IDE.ProjectManager
         public async Task<string> CreateProject(string path, string name)
         {
             string fullPath = $"{path}{Path.DirectorySeparatorChar}{name}.fsln";
-            if (File.Exists(fullPath))
+            if (File.Exists(fullPath)) // Todo: or exists any other files
             {
                 throw new ProjectAlreadyExistsException(fullPath);
             }
@@ -38,8 +38,8 @@ namespace Fiona.IDE.ProjectManager
 
         public IEnumerable<ProjectFile> GetFiles()
             => Project?.ProjectFiles ?? Enumerable.Empty<ProjectFile>() ;
-        public ProjectFile GetProjectFileByNamespace(string @namespace) 
-            => Project?.ProjectFiles!.FirstOrDefault(x => x.Class.Namespace == @namespace) ?? throw new ProjectFileNotFoundException(@namespace);
+        public ProjectFile GetProjectFileByNamespaceAndName(string @namespace, string name) 
+            => Project?.ProjectFiles!.FirstOrDefault(x => x.Class.Namespace == @namespace && x.Class.Name == name) ?? throw new ProjectFileNotFoundException(@namespace);
 
         public Task CreateFileAsync(string name, string folderPath)
         {

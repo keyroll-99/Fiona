@@ -46,7 +46,7 @@
 
     private void OpenFile(ProjectFile projectFile)
     {
-        NavManager.NavigateTo($"/project-editor/{projectFile.Class.Namespace}");
+        NavManager.NavigateTo($"/project-editor/{projectFile.Class.Namespace}/{projectFile.Class.Name}");
     }
 }
 

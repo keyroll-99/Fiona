@@ -1,4 +1,4 @@
-﻿@page "/project-editor/{namespace}"
+﻿@page "/project-editor/{namespace}/{name}"
 @using Blazor.Diagrams.Core.Behaviors
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Components
@@ -9,6 +9,7 @@
 
 <div class="configuration">
     <TextEdit Text="@CurrentFile.Class.Namespace"/>
+    <TextEdit Text="@CurrentFile.Class.Name"/>
     <button @onclick="AddEndpoint">add endpoint</button>
 </div>
 
@@ -24,8 +25,12 @@
     public IProjectManager ProjectManager { get; init; } = default!;
 
     [Parameter]
-    public string? @namespace { get; init; } = default;
+    public string? @namespace{ get; init; } = default;
 
+    [Parameter]
+    public string? name{ get; init; } = default;
+
+    
     private ProjectFile CurrentFile { get; set; } = null!;
 
     private BlazorDiagram Diagram { get; set; } = null!;
@@ -38,7 +43,7 @@
             NavManager.NavigateTo("/");
         }
         
-        CurrentFile = ProjectManager.GetProjectFileByNamespace(@namespace!);
+        CurrentFile = ProjectManager.GetProjectFileByNamespaceAndName(@namespace!, name!);
         
         BlazorDiagramOptions options = new()
         {
@@ -58,6 +63,13 @@
         Diagram = new BlazorDiagram(options);
         Diagram.UnregisterBehavior<SelectionBehavior>();
         Diagram.RegisterBehavior(new DiagramBehavior(Diagram));
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        CurrentFile = ProjectManager.GetProjectFileByNamespaceAndName(@namespace!, name!);
+
     }
 
     private void AddEndpoint()
