@@ -1,18 +1,22 @@
 ﻿using Fiona.IDE.ProjectManager.Exceptions;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
 namespace Fiona.IDE.ProjectManager.Models
 {
-    public sealed class FslnFile(string name, List<ProjectFile> projectFileUrl, string path)
+    public sealed class FslnFile(string name, List<string> projectFilesPath, string path)
     {
         public string Name { get; private init; } = name;
         public string Path { get; private init; } = path;
-        public List<ProjectFile>? ProjectFileUrl { get; private init; } = projectFileUrl;
+        [NotMapped]
+        public List<ProjectFile>? ProjectFiles { get; private set; } = [];
+
+        public List<string> ProjectFilePath { get; private init; } = projectFilesPath;
         public static string Extension = ".fsln";
 
         internal static async Task<FslnFile> CreateAsync(string name, string pathToFolder)
         {
-            FslnFile fslnFile = new(name, Enumerable.Empty<ProjectFile>().ToList(), pathToFolder);
+            FslnFile fslnFile = new(name, Enumerable.Empty<string>().ToList(), pathToFolder);
             await fslnFile.SaveAsync();
             return fslnFile;
         }
@@ -26,13 +30,24 @@ namespace Fiona.IDE.ProjectManager.Models
             }
 
             await using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read);
-            return await JsonSerializer.DeserializeAsync<FslnFile>(fs);
+            FslnFile? fslnFile = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
+            if (fslnFile is null)
+            {
+                return null;
+            }
+
+            IEnumerable<Task<ProjectFile>> loadingTasks = fslnFile.ProjectFilePath.Select(ProjectFile.LoadAsync).ToList();
+            await Task.WhenAll(loadingTasks);
+            fslnFile.ProjectFiles = loadingTasks.Select(x => x.Result).ToList();
+            return fslnFile;
         }
 
         internal async Task AddFile(string name, string path)
         {
-            ProjectFileUrl!.Add(
-                 await ProjectFile.Create($"{path}{System.IO.Path.DirectorySeparatorChar}{name}.{ProjectFile.Extension}"));
+            string filePath = $"{path}{System.IO.Path.DirectorySeparatorChar}{name}.{ProjectFile.Extension}";
+            ProjectFiles!.Add(
+                 await ProjectFile.CreateAsync(filePath));
+            ProjectFilePath.Add(filePath);
             await SaveAsync();
         }
 

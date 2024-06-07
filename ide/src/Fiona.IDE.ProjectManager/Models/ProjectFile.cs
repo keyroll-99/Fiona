@@ -9,51 +9,46 @@ public sealed class ProjectFile
     public string Path { get; }
     public string Name { get; }
     [NotMapped]
-    public Class Class { get; }
+    public Class? Class { get; private set; }
     public const string Extension = "fn";
 
-
-    [JsonConstructor]
-    private ProjectFile(string path)
+    private ProjectFile(string path, string name, Class? @class)
     {
         Path = path;
-        Name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
-        Class = Class.Load(path).GetAwaiter().GetResult();
-    }
-
-    private ProjectFile(string path, Class @class)
-    {
-        Path = path;
-        Name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
+        Name = name;
         Class = @class;
     }
 
-    internal static async Task<ProjectFile> Create(string path)
+    internal static async Task<ProjectFile> LoadAsync(string path)
+    {
+        Class classInstance = await Class.Load(path);
+        string name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
+        return new ProjectFile(path, name, classInstance);
+    }
+
+    internal static async Task<ProjectFile> CreateAsync(string path)
     {
         if (File.Exists(path))
         {
             throw new FileAlreadyExistsException(path);
         }
-        FileStream fileHandler = File.Create(path);
-        // We have to close file after create
-        fileHandler.Close();
-        
-        ProjectFile projectFile = new(path, null!); // dommy class create to create inital conent
 
+        await using (FileStream fileHandler = File.Create(path))
+        {
+        }
+
+        // Create a dummy project file to initialize the content
+        ProjectFile projectFile = new(path, path.Split(System.IO.Path.DirectorySeparatorChar).Last(), null);
         await projectFile.SaveContentAsync(projectFile.GetBaseContent());
 
-        projectFile = new ProjectFile(path);
-        
-        return projectFile;
+        return await LoadAsync(path);
     }
-    
+
     private async Task SaveContentAsync(string content)
     {
         await using StreamWriter writer = new(Path);
         await writer.WriteAsync(content);
-        writer.Close();
     }
-        
 }
 
 internal static class ProjectFileExtensions
@@ -71,5 +66,4 @@ internal static class ProjectFileExtensions
                class {projectFile.Name[..^(ProjectFile.Extension.Length + 1)]};
                """;
     }
-
 }

@@ -217,7 +217,7 @@ public partial class ParserTests
         {
             File.Delete(filePath);
         }
-        return await ProjectFile.Create(filePath);
+        return await ProjectFile.CreateAsync(filePath);
     }
 
 }
