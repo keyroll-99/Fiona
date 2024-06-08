@@ -73,9 +73,9 @@ Good to have - 30-60 days
 	- [X] Creating project
     - [ ] Configuration endpoint class
     - [X] Save to file
-    - [ ] Remove file
+    - [X] Remove file
     - [X] Load from file
-    - [ ] Users can connect boxes
+    - [X] Users can connect boxes
     - [ ] Run project
     - [ ] Adding controller 
     - [ ] Adding service
