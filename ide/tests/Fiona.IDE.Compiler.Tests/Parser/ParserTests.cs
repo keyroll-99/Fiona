@@ -88,7 +88,7 @@ public partial class ParserTests
                                     }
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/{name}", ["age"])]
-                                     public async Task<User> Index([FromRoute] string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
+                                     public async Task<User> Index(string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
                                      {
                                      }
                                 }
@@ -132,7 +132,7 @@ public partial class ParserTests
                                     }
                                 
                                      [Route(HttpMethodType.Get | HttpMethodType.Post, "/{name}", ["age"])]
-                                     public async Task<User> Index([FromRoute] string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
+                                     public async Task<User> Index(string name, [QueryParam] int age, [Body] User user, [Cookie] long userId)
                                      {
                                         var x = 10;
                                         var y = userService.GetAge();
