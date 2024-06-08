@@ -45,6 +45,10 @@ namespace Fiona.IDE.ProjectManager
         {
             return Project!.AddFile(name, folderPath);
         }
+        public async Task RemoveFile(ProjectFile projectFile)
+        {
+            await Project!.RemoveFile(projectFile);
+        }
 
         public bool IsLoaded()
             => Project is not null;

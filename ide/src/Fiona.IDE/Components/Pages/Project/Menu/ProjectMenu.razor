@@ -2,24 +2,34 @@
 @using Fiona.IDE.ProjectManager.Models
 @inject NavigationManager NavManager
 
-
-<BarItem>
-    <BarDropdown>
-        <BarDropdownToggle>Files</BarDropdownToggle>
-        <BarDropdownMenu>
-            <BarDropdownItem Clicked="OpenCreateNewFileModal">Create file</BarDropdownItem>
-            <DropdownDivider Class="divider" />
-            @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
-            {
-                <BarDropdownItem @onclick="() => OpenFile(projectFile)">@projectFile.Name</BarDropdownItem>
-            }
-        </BarDropdownMenu>
-    </BarDropdown>
-</BarItem>
-
+<ContextMenuTrigger MenuId="main-context-menu" CssClass="main-context-menu_trigger">
+    <BarItem>
+        <BarDropdown>
+            <BarDropdownToggle>Files</BarDropdownToggle>
+            <BarDropdownMenu>
+                <BarDropdownItem Clicked="OpenCreateNewFileModal">Create file</BarDropdownItem>
+                <DropdownDivider Class="divider"/>
+                @foreach (ProjectFile projectFile in ProjectManager.GetFiles() ?? [])
+                {
+                    <ContextMenuTrigger MenuId="@projectFile.GetHashCode().ToString()">
+                        <BarDropdownItem @onclick="() => OpenFile(projectFile)">@projectFile.Name</BarDropdownItem>
+                        <ContextMenu Id=@projectFile.GetHashCode().ToString()>
+                            <Item CssClass="context-menu-item" OnClick="@OnClick">Remove</Item>
+                        </ContextMenu>
+                    </ContextMenuTrigger>
+                }
+            </BarDropdownMenu>
+        </BarDropdown>
+    </BarItem>
+</ContextMenuTrigger>
+<ContextMenu Id="main-context-menu">
+    <Item CssClass="context-menu-item" OnClick="OpenCreateNewFileModal">Create file</Item>
+</ContextMenu>
+ 
 <CascadingValue Value="this">
     <CreateFileModal/>
 </CascadingValue>
+
 
 @code
 {
@@ -44,9 +54,16 @@
         CloseCreateNewFileModal();
     }
 
+
     private void OpenFile(ProjectFile projectFile)
     {
         NavManager.NavigateTo($"/project-editor/{projectFile.Class.Namespace}/{projectFile.Class.Name}");
+    }
+    async Task OnClick(ItemClickEventArgs e)
+    {
+        ProjectFile fileToRemove = ProjectManager.GetFiles().Single(x => x.GetHashCode().ToString() == e.ContextMenuId);
+        await ProjectManager.RemoveFile(fileToRemove);
+        StateHasChanged();
     }
 }
 
@@ -54,5 +71,13 @@
     .divider{
         background: grey !important; // override basic style
         height: 1px;
+    }
+    
+    .main-context-menu_trigger{
+        border: 1px solid gray;
+    }
+
+    .context-menu-item{
+        color: #000c17;
     }
 </style>

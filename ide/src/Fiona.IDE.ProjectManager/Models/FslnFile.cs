@@ -50,6 +50,13 @@ namespace Fiona.IDE.ProjectManager.Models
             await SaveAsync();
         }
 
+        internal async Task RemoveFile(ProjectFile file)
+        {
+            ProjectFiles!.Remove(file);
+            ProjectFilesPath.Remove(file.Path);
+            await SaveAsync();
+        }
+
         private async Task SaveAsync()
         {
             await using FileStream fs = new($"{Path}{System.IO.Path.DirectorySeparatorChar}{Name}{Extension}",

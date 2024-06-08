@@ -12,6 +12,7 @@ namespace Fiona.IDE.ProjectManager
         IEnumerable<ProjectFile> GetFiles();
         ProjectFile GetProjectFileByNamespaceAndName(string @namespace, string name);
         Task CreateFileAsync(string name, string folderPath);
+        Task RemoveFile(ProjectFile projectFile);
 
     }
 }

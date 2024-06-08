@@ -36,6 +36,7 @@ namespace Fiona.IDE
             builder.Services.AddSingleton<MenuService>();
             builder.Services.AddProjectManager();
             builder.Services.AddCompiler();
+            builder.Services.AddBlazorContextMenu();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();

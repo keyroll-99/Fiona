@@ -128,6 +128,7 @@ public sealed class ProjectFile
             fileContentBuilder.AppendLine("bodyEnd;");
         }
     }
+    public override int GetHashCode() => HashCode.Combine(Path);
 }
 
 internal static class ProjectFileExtensions
