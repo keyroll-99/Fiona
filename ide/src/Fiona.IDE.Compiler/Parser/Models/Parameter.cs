@@ -14,10 +14,9 @@ internal sealed class Parameter
 
     private Parameter(string attribute, string type, string name)
     {
-        _attribute = attribute;
         _type = type;
         _name = name;
-
+        
         Type = attribute switch
         {
             "[Body]" => ParameterType.Body,
@@ -26,6 +25,11 @@ internal sealed class Parameter
             "[Cookie]" => ParameterType.Cookie,
             _ => throw new ValidationError("Invalid parameter attribute")
         };
+        _attribute = attribute;
+        if (Type == ParameterType.Path)
+        {
+            _attribute = string.Empty;// path doesn't have own attribute
+        }
     }
 
     public string GenerateSourceCode()

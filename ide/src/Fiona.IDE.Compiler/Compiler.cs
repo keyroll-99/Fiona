@@ -27,7 +27,9 @@ namespace Fiona.IDE.Compiler
             using StreamReader reader = new(file);
             IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
             ReadOnlyMemory<byte> parsedContent = (await parser.ParseAsync(tokens, projectFile));
-            await file.WriteAsync(parsedContent);
+
+            await using FileStream csFile = File.Open($"{projectFile.Path}.cs", FileMode.Create);
+            await csFile.WriteAsync(parsedContent);
         }
 
     }

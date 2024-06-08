@@ -21,6 +21,9 @@ The Repo will be renamed after 100 commits competition because I came up with th
 
 Nope, maybe in the future
 
+## Why this project's name is Fiona
+Because Fiona it's the name of my dog, which one I adopted from dog shelter few days before I start this project
+
 ## OS Support
 
 | OS     | Fiona.Hosting     | Fiona.Ui           |

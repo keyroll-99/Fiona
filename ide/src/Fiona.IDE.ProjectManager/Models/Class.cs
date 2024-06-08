@@ -52,6 +52,17 @@ public sealed class Class
         {
             indexOfStartEndpointsSearch = indexOfClassRouteToken;
         }
+
+        while (indexOfStartEndpointsSearch < tokens.Count)
+        {
+            (Endpoint? endpoint, int endOfSearch) = Endpoint.GetNextEndpoint(tokens, indexOfStartEndpointsSearch);
+            if (endpoint is null)
+            {
+                break;
+            }
+            endpoints.Add(endpoint);
+            indexOfStartEndpointsSearch = (endOfSearch + 1);
+        }
         
         
         return new Class(classToken.Value!, @namespace, dependencies, classRoute?.Value ?? string.Empty, endpoints, usings.Select(x => x.Value!).ToList());
