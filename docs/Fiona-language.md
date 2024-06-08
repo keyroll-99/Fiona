@@ -195,17 +195,6 @@ else
 bodyEnd;
 ```
 
-example of use:
-
-```csharp
-class IndexController;
-route: /home;
-inject:
-- userService: IUserService
-- logger: ILogger<TestController>;
-endpoint: 
-...
-
 ## Example
 
 code like this:
@@ -265,7 +254,7 @@ bodyEnd;
 
 ```
 
-will be generated:
+will be generated (of course generated code will be not formated):
 
 ```csharp
 using Fiona.Hosting.Controller.Attributes;

@@ -92,6 +92,7 @@ Nice to have - 30 days
 	- [ ] Auto impl register
 	- [ ] Auto inject to method
 	- [ ] Extension for EF
+    - [ ] Support fo cqrs
 	- [ ] Security
 		- [ ] CORS
 	- [ ] Before calling the action, an attribute
