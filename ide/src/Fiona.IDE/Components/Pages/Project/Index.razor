@@ -8,8 +8,8 @@
 
 
 <div class="configuration">
-    <TextEdit Text="@CurrentFile.Class.Namespace"/>
-    <TextEdit Text="@CurrentFile.Class.Name"/>
+    <TextEdit @bind-Text="@CurrentFile.Class.Namespace"/>
+    <TextEdit @bind-Text="@CurrentFile.Class.Name"/>
     <button @onclick="AddEndpoint">add endpoint</button>
 </div>
 
@@ -65,12 +65,13 @@
         Diagram.RegisterBehavior(new DiagramBehavior(Diagram));
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnParametersSet();
-        CurrentFile = ProjectManager.GetProjectFileByNamespaceAndName(@namespace!, name!);
-
+         base.OnParametersSet();
+         await CurrentFile.Save();
+         CurrentFile = ProjectManager.GetProjectFileByNamespaceAndName(@namespace!, name!);
     }
+
 
     private void AddEndpoint()
     {

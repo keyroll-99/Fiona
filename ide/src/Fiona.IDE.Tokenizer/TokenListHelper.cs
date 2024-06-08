@@ -15,7 +15,6 @@ public static class TokenListHelper
                     isUsingPart = true;
                     break;
                 case TokenType.UsingEnd:
-                    isUsingPart = false;
                     return (result, i);
                 case TokenType.Using:
                     if (isUsingPart)

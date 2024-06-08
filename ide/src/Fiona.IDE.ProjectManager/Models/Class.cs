@@ -1,31 +1,31 @@
 using Fiona.IDE.Tokenizer;
+using System.Text;
 
 namespace Fiona.IDE.ProjectManager.Models;
 
 public sealed class Class
 {
     public IReadOnlyCollection<Dependency> Dependencies => _dependencies.AsReadOnly();
-    public string Namespace => _namespace;
-    public string Route => _route;
+    public string Namespace { get; set; }
+
+    public string Route { get; set; }
+
     public IReadOnlyCollection<Endpoint> Endpoints => _endpoints.AsReadOnly();
     public IReadOnlyCollection<string> Usings => _usings.AsReadOnly();
-    public string Name => _name;
+    public string Name { get; set; }
 
     private List<Dependency> _dependencies;
-    private string _route;
     private List<Endpoint> _endpoints;
     private List<string> _usings;
-    private string _name;
-    private string _namespace;
 
     private Class(string name, string @namespace, List<Dependency> dependencies, string route, List<Endpoint> endpoints, List<string> usings)
     {
-        _name = name;
+        Name = name;
         _dependencies = dependencies;
-        _route = route;
+        Route = route;
         _endpoints = endpoints;
         _usings = usings;
-        _namespace = @namespace;
+        Namespace = @namespace;
     }
 
     public static async Task<Class> Load(string path)
@@ -56,4 +56,7 @@ public sealed class Class
         
         return new Class(classToken.Value!, @namespace, dependencies, classRoute?.Value ?? string.Empty, endpoints, usings.Select(x => x.Value!).ToList());
     }
+
+    public override string ToString()
+        => $"class {Name}";
 }

@@ -15,6 +15,11 @@ namespace Fiona.IDE.Compiler
             await Task.WhenAll(parsingTask);
         }
 
+        public async Task CompileFile(ProjectFile projectFile)
+        {
+            await ParseFileAsync(projectFile);
+        }
+
 
         private async Task ParseFileAsync(ProjectFile projectFile)
         {

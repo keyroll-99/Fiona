@@ -12,4 +12,7 @@ public sealed class Input
         _type = type;
         _attribute = attribute;
     }
+
+    public override string ToString() =>
+        $" [{_attribute}] {_name}: {_type}";
 }

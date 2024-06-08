@@ -24,4 +24,9 @@ public sealed class Dependency(string name, string type)
 
         return result;
     }
+
+    public override string ToString()
+    {
+        return $"{name}: {type}";
+    }
 }

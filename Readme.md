@@ -55,7 +55,7 @@ Must to have - I want to finish it by to end of march
 Good to have - 30-60 days
 - [X] Tools
 	- [X] Publish nuget package
-- [ ] Compiler
+- [X] Compiler
 	- [X] Parsing class
  	- [X] Parsing Method
 	- [X] Parsing Return type
@@ -69,8 +69,9 @@ Good to have - 30-60 days
 	- [X] Nav menu
 	- [X] Creating project
     - [ ] Configuration endpoint class
-    - [ ] Save to file
-    - [ ] Load from file
+    - [X] Save to file
+    - [ ] Remove file
+    - [X] Load from file
     - [ ] Users can connect boxes
     - [ ] Run project
     - [ ] Adding controller 
