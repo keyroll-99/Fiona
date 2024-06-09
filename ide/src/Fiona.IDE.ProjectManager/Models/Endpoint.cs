@@ -52,6 +52,9 @@ public sealed class Endpoint
                     continue;
                 case TokenType.BodyEnd:
                     return (new Endpoint(name, route, methods, returnType, inputs, body), i);
+                case TokenType.ReturnType:
+                    returnType = currentToken.Value!;
+                    continue;
             }
         }
 

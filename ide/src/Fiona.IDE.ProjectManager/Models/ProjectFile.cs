@@ -110,9 +110,9 @@ public sealed class ProjectFile
             }
             if (endpoint.Methods?.Count > 0)
             {
-                fileContentBuilder.AppendLine($"[{string.Join(',', endpoint.Methods)}]");
+                fileContentBuilder.AppendLine($"method: [{string.Join(',', endpoint.Methods)}];");
             }
-            fileContentBuilder.AppendLine($"return: {endpoint.ReturnType}");
+            fileContentBuilder.AppendLine($"return: {endpoint.ReturnType};");
             if (endpoint.Inputs.Count > 0)
             {
                 fileContentBuilder.AppendLine("input: ");
