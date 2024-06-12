@@ -39,7 +39,7 @@ There is two reason
 
 ## Road map
 
-Must to have - I want to finish it by to end of march
+Must have - I want to finish it by to end of march
 - [X] Server
 	- [X] Folder structure 
     - [X] First Tests
