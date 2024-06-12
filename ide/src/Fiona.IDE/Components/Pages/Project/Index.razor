@@ -2,8 +2,9 @@
 @using Blazor.Diagrams.Core.Behaviors
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Components
-@using Fiona.IDE.Compiler
+@using Fiona.Compiler
 @using Fiona.IDE.ProjectManager
+@using Fiona.IDE.ProjectManager.Mappers
 @using Fiona.IDE.ProjectManager.Models
 @inject NavigationManager NavManager
 
@@ -87,7 +88,7 @@
 
     private void CompileFile()
     {
-        Compiler.CompileFile(CurrentFile);
+        Compiler.CompileFile(CurrentFile.AsCompilerModel());
     }
 
 }

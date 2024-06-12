@@ -1,4 +1,4 @@
-using Fiona.IDE.Tokenizer;
+using Fiona.Compiler.Tokenizer;
 
 namespace Fiona.IDE.ProjectManager.Models;
 

@@ -1,5 +1,4 @@
-using Fiona.IDE.Tokenizer;
-using System.Text;
+using Fiona.Compiler.Tokenizer;
 
 namespace Fiona.IDE.ProjectManager.Models;
 
@@ -32,7 +31,7 @@ public sealed class Class
     {
         await using FileStream file = File.Open(path, FileMode.Open);
         using StreamReader reader = new(file);
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
 
         List<Dependency> dependencies = [];
         List<Endpoint> endpoints = [];

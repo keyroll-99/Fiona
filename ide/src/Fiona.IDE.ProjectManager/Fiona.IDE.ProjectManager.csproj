@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Fiona.IDE.Tokenizer\Fiona.IDE.Tokenizer.csproj" />
+      <ProjectReference Include="..\..\..\compiler\src\Fiona.Compiler\Fiona.Compiler.csproj" />
     </ItemGroup>
 
 </Project>

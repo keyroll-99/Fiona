@@ -1,12 +1,20 @@
+using Fiona.Compiler.Parser.Exceptions;
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.IDE.ProjectManager.Models;
+namespace Fiona.Compiler.Parser.Models;
 
-public sealed class Dependency(string name, string type)
+internal sealed class Dependency
 {
-    public string Name { get; } = name;
-    public string Type { get; } = type;
 
+    private Dependency(string name, string type)
+    {
+        Name = name;
+        Type = type;
+    }
+    public string Name { get; }
+    public string Type { get; }
+
+    public string FullDeclaration => $"{Type} {Name}";
 
     public static List<Dependency> GetDependenciesFromToken(IToken token)
     {
@@ -16,17 +24,12 @@ public sealed class Dependency(string name, string type)
             (string name, string type) = dependency.Split(":") switch
             {
                 { Length: 2 } array => (array[0], array[1]),
-                _ => throw new Exception("Invalid dependency declaration")
+                _ => throw new ValidationError("Invalid dependency declaration")
             };
 
             result.Add(new Dependency(name, type));
         }
 
         return result;
-    }
-
-    public override string ToString()
-    {
-        return $"{name}: {type}";
     }
 }
