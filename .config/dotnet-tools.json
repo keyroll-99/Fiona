@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "fiona.compiler.commandline": {
+      "version": "0.0.1",
+      "commands": [
+        "Fiona"
+      ],
+      "rollForward": false
+    }
+  }
+}
