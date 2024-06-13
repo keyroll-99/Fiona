@@ -25,7 +25,7 @@ Nope, maybe in the future
 Because Fiona it's the name of my dog, which one I adopted from dog shelter few days before I start this project
 
 ## Why I want to do this ecosystem
-There is two reason
+There are two reasons
 1. I want to learn new think like make own http server.
 2. I want to create a competition for asp.net because I don't currently know a c# alternative to it.
 
