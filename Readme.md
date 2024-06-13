@@ -25,9 +25,12 @@ Nope, maybe in the future
 Because Fiona it's the name of my dog, which one I adopted from dog shelter few days before I start this project
 
 ## Why I want to do this ecosystem
-There is two reason
-1. I want to learn new think like make own UI or http server.
+There are two reasons
+1. I want to learn new think like make own http server.
 2. I want to create a competition for asp.net because I don't currently know a c# alternative to it.
+
+## Link to nuget
+[nuget](https://www.nuget.org/packages/Fiona.Hosting)
 
 ## OS Support
 
@@ -138,6 +141,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleFionaServer.Controller;
 
+[Controller]
 public class HomeController(ILogger<HomeController> logger)
 {
     private readonly ILogger<HomeController> _logger = logger;
