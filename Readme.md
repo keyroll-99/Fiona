@@ -29,6 +29,9 @@ There are two reasons
 1. I want to learn new think like make own http server.
 2. I want to create a competition for asp.net because I don't currently know a c# alternative to it.
 
+## Link to nuget
+[nuget](https://www.nuget.org/packages/Fiona.Hosting)
+
 ## OS Support
 
 | OS     | Fiona.Hosting     | Fiona.Ui           |
