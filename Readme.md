@@ -138,6 +138,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleFionaServer.Controller;
 
+[Controller]
 public class HomeController(ILogger<HomeController> logger)
 {
     private readonly ILogger<HomeController> _logger = logger;
