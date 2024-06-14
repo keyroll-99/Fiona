@@ -1,16 +1,17 @@
-﻿using Fiona.IDE.ProjectManager.Exceptions;
+﻿using Fiona.Compiler.ProjectManager.Exceptions;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using System.Text.Json.Serialization;
 
-namespace Fiona.IDE.ProjectManager.Models;
+namespace Fiona.Compiler.ProjectManager.Models;
 
 public sealed class ProjectFile
 {
     public string Path { get; }
     public string Name { get; }
+
     [NotMapped]
     public Class? Class { get; private set; }
+
     public const string Extension = "fn";
 
     private ProjectFile(string path, string name, Class? @class)
@@ -36,7 +37,7 @@ public sealed class ProjectFile
     {
         Class classInstance = await Class.Load(path);
         string name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
-        return new ProjectFile(path, name, classInstance); 
+        return new ProjectFile(path, name, classInstance);
     }
 
     internal static async Task<ProjectFile> CreateAsync(string path)
@@ -66,7 +67,7 @@ public sealed class ProjectFile
     private void AddUsingContent(StringBuilder fileContentBuilder)
     {
         fileContentBuilder.AppendLine("usingBegin;");
-        foreach ( string @using in Class!.Usings)
+        foreach (string @using in Class!.Usings)
         {
             fileContentBuilder.AppendLine($"using {@using};");
         }
@@ -85,7 +86,7 @@ public sealed class ProjectFile
         {
             fileContentBuilder.AppendLine($"route: {Class.Route};");
         }
-        
+
         if (Class.Dependencies.Count > 0)
         {
             fileContentBuilder.AppendLine($"inject: ");
@@ -95,10 +96,10 @@ public sealed class ProjectFile
             }
             fileContentBuilder.AppendLine(";");
         }
-        
+
         AddMethodContent(fileContentBuilder);
     }
-    
+
     private void AddMethodContent(StringBuilder fileContentBuilder)
     {
         foreach (Endpoint endpoint in Class.Endpoints)
@@ -135,15 +136,15 @@ internal static class ProjectFileExtensions
 {
     public static string GetBaseContent(this ProjectFile projectFile)
     {
-        string @namespace = $"{projectFile.Path.Replace(System.IO.Path.DirectorySeparatorChar.ToString(), ".").Split(":").Last()[1..^(projectFile.Name.Length + 1)]}";
+        string @namespace = $"{projectFile.Path.Replace(Path.DirectorySeparatorChar.ToString(), ".").Split(":").Last()[1..^(projectFile.Name.Length + 1)]}";
         return $"""
-               usingBegin;
-               using Fiona.Hosting.Controller.Attributes;
-               using Fiona.Hosting.Routing;
-               using Fiona.Hosting.Routing.Attributes;
-               usingEnd;
-               namespace: {@namespace};
-               class {projectFile.Name[..^(ProjectFile.Extension.Length + 1)]};
-               """;
+                usingBegin;
+                using Fiona.Hosting.Controller.Attributes;
+                using Fiona.Hosting.Routing;
+                using Fiona.Hosting.Routing.Attributes;
+                usingEnd;
+                namespace: {@namespace};
+                class {projectFile.Name[..^(ProjectFile.Extension.Length + 1)]};
+                """;
     }
 }

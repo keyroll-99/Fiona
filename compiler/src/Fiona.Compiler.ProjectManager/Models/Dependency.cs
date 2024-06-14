@@ -1,6 +1,6 @@
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.IDE.ProjectManager.Models;
+namespace Fiona.Compiler.ProjectManager.Models;
 
 public sealed class Dependency(string name, string type)
 {
@@ -25,8 +25,5 @@ public sealed class Dependency(string name, string type)
         return result;
     }
 
-    public override string ToString()
-    {
-        return $"{name}: {type}";
-    }
+    public override string ToString() => $"{name}: {type}";
 }

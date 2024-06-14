@@ -2,9 +2,11 @@
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Fiona.Compiler;
+using Fiona.Compiler.ProjectManager;
 using Fiona.IDE.Components.Layout.Menu;
-using Fiona.IDE.ProjectManager;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using ILogger=Serilog.ILogger;
 
 namespace Fiona.IDE
 {
@@ -40,7 +42,6 @@ namespace Fiona.IDE
             
 #if WINDOWS
         builder.Services.AddTransient<IFolderPicker, Platforms.Windows.FolderPicker>();
-        builder.Services.AddSingleton<ICommandRunner, Platforms.Windows.CommandRunner>();
 #elif MACCATALYST
         builder.Services.AddTransient<IFolderPicker, Platforms.MacCatalyst.FolderPicker>();
 #endif

@@ -1,6 +1,6 @@
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.IDE.ProjectManager.Models;
+namespace Fiona.Compiler.ProjectManager.Models;
 
 public sealed class Class
 {
@@ -31,7 +31,7 @@ public sealed class Class
     {
         await using FileStream file = File.Open(path, FileMode.Open);
         using StreamReader reader = new(file);
-        IReadOnlyCollection<IToken> tokens = await Tokenizer.GetTokensAsync(reader);
+        IReadOnlyCollection<IToken> tokens = await Tokenizer.Tokenizer.GetTokensAsync(reader);
 
         List<Dependency> dependencies = [];
         List<Endpoint> endpoints = [];
@@ -47,7 +47,7 @@ public sealed class Class
             dependencies = Dependency.GetDependenciesFromToken(classDependency);
             indexOfStartEndpointsSearch = indexOfDependencyToken;
         }
-        if(classRoute is not null &&  indexOfClassRouteToken > indexOfStartEndpointsSearch)
+        if (classRoute is not null && indexOfClassRouteToken > indexOfStartEndpointsSearch)
         {
             indexOfStartEndpointsSearch = indexOfClassRouteToken;
         }
@@ -60,10 +60,10 @@ public sealed class Class
                 break;
             }
             endpoints.Add(endpoint);
-            indexOfStartEndpointsSearch = (endOfSearch + 1);
+            indexOfStartEndpointsSearch = endOfSearch + 1;
         }
-        
-        
+
+
         return new Class(classToken.Value!, @namespace, dependencies, classRoute?.Value ?? string.Empty, endpoints, usings.Select(x => x.Value!).ToList());
     }
 

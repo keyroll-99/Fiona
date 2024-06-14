@@ -1,12 +1,12 @@
 using Fiona.Compiler.Parser.Exceptions;
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.Compiler.Parser.Models;
+namespace Fiona.Compiler.Parser.Builders;
 
-internal sealed class Dependency
+internal sealed class DependencyBuilder
 {
 
-    private Dependency(string name, string type)
+    private DependencyBuilder(string name, string type)
     {
         Name = name;
         Type = type;
@@ -16,9 +16,9 @@ internal sealed class Dependency
 
     public string FullDeclaration => $"{Type} {Name}";
 
-    public static List<Dependency> GetDependenciesFromToken(IToken token)
+    public static List<DependencyBuilder> GetDependenciesFromToken(IToken token)
     {
-        List<Dependency> result = [];
+        List<DependencyBuilder> result = [];
         foreach (string dependency in token.ArrayOfValues ?? [])
         {
             (string name, string type) = dependency.Split(":") switch
@@ -27,7 +27,7 @@ internal sealed class Dependency
                 _ => throw new ValidationError("Invalid dependency declaration")
             };
 
-            result.Add(new Dependency(name, type));
+            result.Add(new DependencyBuilder(name, type));
         }
 
         return result;

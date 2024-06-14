@@ -1,4 +1,4 @@
-namespace Fiona.Compiler.Parser.Models;
+namespace Fiona.Compiler.Parser.Builders;
 
 internal enum ParameterType
 {

@@ -1,6 +1,6 @@
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.IDE.ProjectManager.Models;
+namespace Fiona.Compiler.ProjectManager.Models;
 
 public sealed class Input
 {

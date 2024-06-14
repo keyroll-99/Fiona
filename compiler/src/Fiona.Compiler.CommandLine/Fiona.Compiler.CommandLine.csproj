@@ -8,19 +8,21 @@
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>Fiona</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
-        <PackageVersion>0.0.1</PackageVersion>
+        <PackageVersion>0.0.2</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <Folder Include="nupkg\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Fiona.Compiler\Fiona.Compiler.csproj" />
-    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="PowerArgs" Version="4.0.3" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Fiona.Compiler.ProjectManager\Fiona.Compiler.ProjectManager.csproj" />
     </ItemGroup>
 
 

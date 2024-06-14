@@ -1,10 +1,7 @@
+using Fiona.Compiler.Parser.Builders;
 using Fiona.Compiler.Parser.Exceptions;
-using Fiona.Compiler.Parser.Models;
 using Fiona.Compiler.Tokenizer;
 using System.Text;
-using Class=Fiona.Compiler.Parser.Models.Class;
-using Dependency=Fiona.Compiler.Parser.Models.Dependency;
-using Endpoint=Fiona.Compiler.Parser.Models.Endpoint;
 
 namespace Fiona.Compiler.Parser;
 
@@ -62,8 +59,8 @@ internal sealed class Parser : IParser
     {
         IToken classToken = tokens.ElementAt(index++);
         IToken? controllerRoute = null;
-        List<Dependency>? dependencies = null;
-        List<Endpoint> endpoints = [];
+        List<DependencyBuilder>? dependencies = null;
+        List<EndpointBuilder> endpoints = [];
 
         for (int i = index; i < tokens.Count; i++)
         {
@@ -74,10 +71,10 @@ internal sealed class Parser : IParser
                     controllerRoute = currentToken;
                     continue;
                 case TokenType.Dependency:
-                    dependencies = Dependency.GetDependenciesFromToken(currentToken);
+                    dependencies = DependencyBuilder.GetDependenciesFromToken(currentToken);
                     continue;
                 case TokenType.Endpoint:
-                    (Endpoint? endpoint, int endIndex) = GetNextEndpoint(tokens, i);
+                    (EndpointBuilder? endpoint, int endIndex) = GetNextEndpoint(tokens, i);
                     if (endpoint is null)
                     {
                         break;
@@ -88,19 +85,19 @@ internal sealed class Parser : IParser
             }
         }
 
-        Class @class = new(endpoints, controllerRoute?.Value, classToken.Value!, dependencies);
-        stringBuilder.Append(@class.GenerateSourceCode());
+        ClassBuilder classBuilder = new(endpoints, controllerRoute?.Value, classToken.Value!, dependencies);
+        stringBuilder.Append(classBuilder.GenerateSourceCode());
         return tokens.Count;
     }
 
     // Maybe it should be move to facotry class?
-    private static (Endpoint? endpoint, int endIndex) GetNextEndpoint(IReadOnlyCollection<IToken> tokens, int index)
+    private static (EndpointBuilder? endpoint, int endIndex) GetNextEndpoint(IReadOnlyCollection<IToken> tokens, int index)
     {
 
         IToken? routeToken = null;
         IToken? methodToken = null;
         IToken? returnType = null;
-        List<Parameter> parameters = [];
+        List<ParameterBuilder> parameters = [];
         IToken? endpointToken = tokens.ElementAt(index++);
 
         for (int i = index; i < tokens.Count; i++)
@@ -118,17 +115,17 @@ internal sealed class Parser : IParser
                     returnType = currentToken;
                     continue;
                 case TokenType.Parameter:
-                    parameters = Parameter.GetParametersFromToken(currentToken);
+                    parameters = ParameterBuilder.GetParametersFromToken(currentToken);
                     continue;
                 case TokenType.BodyBegin:
                     IToken? bodyToken = GetBodyToken(tokens, i + 1);
-                    Endpoint endpoint = new(endpointToken.Value!,
+                    EndpointBuilder endpointBuilder = new(endpointToken.Value!,
                                             routeToken?.Value,
                                             methodToken?.Value,
                                             returnType?.Value,
                                             parameters,
                                             bodyToken);
-                    return (endpoint, bodyToken is not null ? i + 2 : i + 1);
+                    return (endpointBuilder, bodyToken is not null ? i + 2 : i + 1);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

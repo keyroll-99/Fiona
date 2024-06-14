@@ -1,11 +1,11 @@
 using Fiona.Compiler.Tokenizer;
 using System.Text;
 
-namespace Fiona.Compiler.Parser.Models;
+namespace Fiona.Compiler.Parser.Builders;
 
-internal sealed class Endpoint(string name, string? route, string? methodTypes, string? returnType, IReadOnlyCollection<Parameter> parameters, IToken? bodyToken)
+internal sealed class EndpointBuilder(string name, string? route, string? methodTypes, string? returnType, IReadOnlyCollection<ParameterBuilder> parameters, IToken? bodyToken)
 {
-    private readonly IReadOnlyCollection<HttpMethodType> _methodTypes = GetMethodTypes(methodTypes);
+    private readonly IReadOnlyCollection<HttpMethodTypeBuilder> _methodTypes = GetMethodTypes(methodTypes);
 
     public string BuildSourceCode()
     {
@@ -23,7 +23,7 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
     {
         string methodTypes = string.Join(" | ", _methodTypes.Select(x => x.GetMethodTypesUsing()));
         string routeValue = route is not null ? $", \"{route}\"" : "";
-        IEnumerable<Parameter> queryParameters = parameters.Where(x => x.Type == ParameterType.Query).ToList();
+        IEnumerable<ParameterBuilder> queryParameters = parameters.Where(x => x.Type == ParameterType.Query).ToList();
         string routeParameters = queryParameters.Any() ? $", [{string.Join(", ", queryParameters.Select(x => $"\"{x.Name}\""))}]" : string.Empty;
 
         sourceCode.Append($"[Route({methodTypes}{routeValue}{routeParameters})]\n");
@@ -52,7 +52,7 @@ internal sealed class Endpoint(string name, string? route, string? methodTypes, 
     }
 
 
-    private static IReadOnlyCollection<HttpMethodType> GetMethodTypes(string? methodTypes)
+    private static IReadOnlyCollection<HttpMethodTypeBuilder> GetMethodTypes(string? methodTypes)
     {
         methodTypes ??= "[GET]";
         IEnumerable<string> splitMethodTypes = methodTypes.Replace("[", "").Replace("]", "").Split(",").Select(x => x.Trim());

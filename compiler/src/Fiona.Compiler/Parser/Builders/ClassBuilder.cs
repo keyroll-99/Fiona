@@ -1,10 +1,10 @@
 using System.Text;
 
-namespace Fiona.Compiler.Parser.Models;
+namespace Fiona.Compiler.Parser.Builders;
 
-internal sealed class Class(IReadOnlyCollection<Endpoint> endpoints, string? route, string name, IReadOnlyCollection<Dependency>? dependencies)
+internal sealed class ClassBuilder(IReadOnlyCollection<EndpointBuilder> endpoints, string? route, string name, IReadOnlyCollection<DependencyBuilder>? dependencies)
 {
-    private readonly IReadOnlyCollection<Endpoint> _endpoints = endpoints;
+    private readonly IReadOnlyCollection<EndpointBuilder> _endpoints = endpoints;
 
     public string GenerateSourceCode()
     {
@@ -38,7 +38,7 @@ internal sealed class Class(IReadOnlyCollection<Endpoint> endpoints, string? rou
         {
             return;
         }
-        foreach (Dependency dependency in dependencies)
+        foreach (DependencyBuilder dependency in dependencies)
         {
             sourceCode.AppendLine($"private readonly {dependency.FullDeclaration};");
         }
@@ -52,7 +52,7 @@ internal sealed class Class(IReadOnlyCollection<Endpoint> endpoints, string? rou
         }
         sourceCode.AppendLine($"public {name}({string.Join(", ", dependencies.Select(x => $"{x.FullDeclaration}"))})");
         sourceCode.AppendLine("{");
-        foreach (Dependency dependency in dependencies)
+        foreach (DependencyBuilder dependency in dependencies)
         {
             sourceCode.AppendLine($"this.{dependency.Name} = {dependency.Name};");
         }
@@ -61,7 +61,7 @@ internal sealed class Class(IReadOnlyCollection<Endpoint> endpoints, string? rou
 
     private void AddEndpoints(StringBuilder sourceCode)
     {
-        foreach (Endpoint endpoint in _endpoints)
+        foreach (EndpointBuilder endpoint in _endpoints)
         {
             sourceCode.AppendLine(endpoint.BuildSourceCode());
         }

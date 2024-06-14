@@ -1,6 +1,6 @@
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.IDE.ProjectManager.Models;
+namespace Fiona.Compiler.ProjectManager.Models;
 
 public sealed class Endpoint
 {
@@ -29,7 +29,7 @@ public sealed class Endpoint
         string returnType = string.Empty;
         List<Input> inputs = [];
         string body = string.Empty;
-        
+
         for (int i = startIndex; i < tokens.Count; i++)
         {
             IToken currentToken = tokens.ElementAt(i);

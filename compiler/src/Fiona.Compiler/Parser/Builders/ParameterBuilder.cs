@@ -1,15 +1,15 @@
 using Fiona.Compiler.Parser.Exceptions;
 using Fiona.Compiler.Tokenizer;
 
-namespace Fiona.Compiler.Parser.Models;
+namespace Fiona.Compiler.Parser.Builders;
 
-internal sealed class Parameter
+internal sealed class ParameterBuilder
 {
 
     private readonly string _attribute;
     private readonly string _type;
 
-    private Parameter(string attribute, string type, string name)
+    private ParameterBuilder(string attribute, string type, string name)
     {
         _type = type;
         Name = name;
@@ -33,9 +33,9 @@ internal sealed class Parameter
 
     public string GenerateSourceCode() => $"{_attribute} {_type} {Name}";
 
-    public static List<Parameter> GetParametersFromToken(IToken token)
+    public static List<ParameterBuilder> GetParametersFromToken(IToken token)
     {
-        List<Parameter> result = [];
+        List<ParameterBuilder> result = [];
 
         foreach (string parameter in token.ArrayOfValues ?? [])
         {
@@ -51,7 +51,7 @@ internal sealed class Parameter
                 _ => throw new ValidationError("Invalid parameter declaration")
             };
 
-            result.Add(new Parameter(parameterAttribute, parameterType, parameterName));
+            result.Add(new ParameterBuilder(parameterAttribute, parameterType, parameterName));
         }
 
         return result;

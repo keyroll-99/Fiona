@@ -1,5 +1,7 @@
-﻿
+﻿using Fiona.Compiler.CommandLine.Models;
+using Fiona.Compiler.ProjectManager;
 using PowerArgs;
+
 
 await Args.InvokeActionAsync<FionaCompilerProgram>(args);
 
@@ -7,9 +9,10 @@ await Args.InvokeActionAsync<FionaCompilerProgram>(args);
 internal class FionaCompilerProgram
 {
     [ArgActionMethod, ArgDescription("Run compiler for program")]
-    public async Task Compile(RunCompilerArg arg)
+    public async Task Create(CreateSolutionArgs arg)
     {
-        Console.WriteLine(arg.Project);
+        IProjectManager projectManager = ProjectManagerFactory.GetOrCreate();
+        await projectManager.CreateProject(arg.Path, arg.Name);
     }
 
     [ArgActionMethod]
