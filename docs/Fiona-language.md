@@ -13,9 +13,9 @@ for two reason
 1. I wanted to learn how to make my own compiler, tokenizer etc.
 2. Is much easier when I have my format to work with files than adapting to the existing one
 
-
 ## How I can use this language?
-Unfortunately, there is currently no easy way to test this language. But if you want you can do it :)
+
+Unfortunately, there is currently no easy way to test this language From UI. But if you want you can do it :)
 
 1. Download this repo
 2. Run project FionaIDE
@@ -27,8 +27,17 @@ Unfortunately, there is currently no easy way to test this language. But if you 
 8. Open this file in FionaIDE
 9. Click the `Compile file` button
 
-Don't worry in the future this will not be such hard
+But you can use command line to test this language, currently I support only compile one file, but in the near future I
+should add command to compile whole solution
 
+1. Download nuget package from realise (in the future it will be available on the nuget)
+2. Install dotnet tool ```dotnet tool install --global --add-source {pathToNupkgFile} Fiona.Compiler.CommandLine```
+3. Create project by command ```dotnet Fiona Create {pathToDestinationFolder} {ProjectName}```
+   eg. `dotnet Fiona Create E:\100Commitow\ConsoleApp TestFromConsole`
+4. Create a file in the folder with console app
+5. Run command ```dotnet Fiona CompileFile {PathToFile} {PathToFolderWithFsln}```
+   eg. `dotnet Fiona CompileFile  E:\100comitow\ConsoleApp\TestFromConsole\aaa.fn E:\100comitow\ConsoleApp`
+   more about command [here](Fiona-Command-Line.md)
 
 ## Usings
 
@@ -127,24 +136,29 @@ available:
 5. DELETE
 
 example of use:
+
 ```
 method: [GET, POST];
 ```
 
 ## return
+
 We can define a route by using the keyword `return: {type};`. In the file we can have only one per endpoint
 
 example of use
+
 ```csharp
 return: User;
 ```
 
 ## input define
 
-input work with the array, so as argument we can pass few parameters to method, each element in array is separated by `-`
+input work with the array, so as argument we can pass few parameters to method, each element in array is separated
+by `-`
 symbol
 
 example of use
+
 ```csharp
 input:
   - [FromRoute] name: string
@@ -154,7 +168,9 @@ input:
 ```
 
 ## Body
+
 Body is the last section in the endpoint, `bodyEnd` tag finish endpoint define. The structure of method body is:
+
 1. bodyBegin tag which start body section
 2. body section, here you can write your c# code, which one will be in the body method
 3. bodyEnd which finishes body end of course finish endpoint definition
