@@ -63,7 +63,7 @@ Must have - I want to finish it by to end of march
 - [X] Tools
     - [X] Github actions to build it
 
-Good to have - 30-60 days
+Good to have
 - [X] Tools
 	- [X] Publish nuget package
 - [X] Compiler
@@ -75,7 +75,15 @@ Good to have - 30-60 days
     - [X] Namespace
     - [X] Parsing body
     - [X] Parsing comment
-- [ ] GUI
+- [ ] Console tool
+    - [ ] Create a solution from the console
+    - [ ] Compile one file
+    - [ ] Compile solution
+    - [ ] Run solution
+
+
+Nice to have
+- [ ] GUI (GUI will be reworked to another technology :), that's why I moved it to nice to have after the competition)
 	- [X] Simple view where the user can drag and drop boxes
 	- [X] Nav menu
 	- [X] Creating project
@@ -90,8 +98,6 @@ Good to have - 30-60 days
     - [ ] Add a way to create a simple CRUD
     - [ ] Add logic statement
     - [ ] Add loop statement
-
-Nice to have - 30 days
 - [ ] Tools
 	- [ ] Docker image
 - [ ] Server
@@ -100,7 +106,7 @@ Nice to have - 30 days
 	- [ ] Auto impl register
 	- [ ] Auto inject to method
 	- [ ] Extension for EF
-    - [ ] Support fo cqrs
+    - [ ] Support for cqrs
 	- [ ] Security
 		- [ ] CORS
 	- [ ] Before calling the action, an attribute
