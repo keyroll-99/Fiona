@@ -76,8 +76,8 @@ Good to have
     - [X] Parsing body
     - [X] Parsing comment
 - [ ] Console tool
-    - [ ] Create a solution from the console
-    - [ ] Compile one file
+    - [X] Create a solution from the console
+    - [X] Compile one file
     - [ ] Compile solution
     - [ ] Run solution
 
