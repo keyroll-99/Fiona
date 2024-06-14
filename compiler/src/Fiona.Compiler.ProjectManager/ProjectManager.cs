@@ -37,7 +37,6 @@ internal sealed class ProjectManager(ICommandRunner commandRunner, ILogger logge
 
     public async Task LoadProject(string path)
     {
-
         Project = await FslnFile.LoadAsync(path);
     }
 

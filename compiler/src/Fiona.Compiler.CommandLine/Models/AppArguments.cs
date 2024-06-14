@@ -11,10 +11,19 @@ internal class CreateSolutionArgs
     public required string Name { get; init; }
 }
 
-internal class CompileFileArg
+internal class CompileFileArgs
 {
+    
     [ArgRequired(PromptIfMissing = true), ArgDescription("Patch to file"), ArgPosition(1)]
     public required string PathToFile { get; init; }
+    
+    [ArgDescription("Path to fsln file (required if file is in different folder)"), ArgPosition(2)]
+    public string? PathToProject { get; init; }
+}
+
+internal class CreateFnFileArgs
+{
+    
 }
 
 internal class RunCompilerArg
