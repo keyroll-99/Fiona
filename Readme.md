@@ -78,7 +78,8 @@ Good to have
 - [ ] Console tool
     - [X] Create a solution from the console
     - [X] Compile one file
-    - [ ] Compile solution
+    - [X] Create file with template
+    - [X] Compile solution
     - [ ] Run solution
 
 

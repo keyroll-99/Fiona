@@ -5,18 +5,23 @@ using PowerArgs;
 using ProjectFile=Fiona.Compiler.ProjectManager.Models.ProjectFile;
 
 
-List<string> dummyArgs = new()
+List<string> createEndpointArgs = new()
 {
-    "CreateEndpoint", "TestFile3", "E:\\100comitow\\ConsoleApp\\FnFiles" , "E:\\100comitow\\ConsoleApp"
+    "CreateEndpoint", "TestFile3", "E:\\100comitow\\ConsoleApp\\FnFiles", "E:\\100comitow\\ConsoleApp"
 };
 
-List<string> dummyArgs2 = new()
+List<string> createProjectArgs = new()
 {
     "Create", "E:\\100comitow\\ConsoleApp", "TestConsole"
 };
 
+List<string> compileSolutionArgs = new()
+{
+    "Compile", "E:\\100comitow\\ConsoleApp"
+};
+
 //CompileFile  E:\100comitow\ConsoleApp\TestFromConsole\aaa.fn E:\100comitow\ConsoleApp
-await Args.InvokeActionAsync<FionaCompilerProgram>(dummyArgs.ToArray());
+await Args.InvokeActionAsync<FionaCompilerProgram>(compileSolutionArgs.ToArray());
 
 [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
 internal class FionaCompilerProgram
@@ -31,7 +36,7 @@ internal class FionaCompilerProgram
     [ArgActionMethod, ArgDescription("Compile one file to c#")]
     public async Task CompileFile(CompileFileArgs args)
     {
-        IProjectManager projectManager = await GetProjectManagerForFile(args.PathToFile, args.PathToProject);
+        IProjectManager projectManager = await GetProject(args.Project);
         ProjectFile? projectFile = projectManager.GetFiles().FirstOrDefault(f => f.Path == args.PathToFile);
         if (projectFile is null)
         {
@@ -46,7 +51,7 @@ internal class FionaCompilerProgram
     {
         if (args.Path is null && args.PathToProject is null)
         {
-            throw new Exception("you have to pass one of args: Path, PathToProject");
+            args.PathToProject = Environment.CurrentDirectory;
         }
         IProjectManager projectManager;
         if (args.Path is null)
@@ -56,27 +61,26 @@ internal class FionaCompilerProgram
         }
         else
         {
-            projectManager = await GetProjectManagerForFile(args.Path!, args.PathToProject);
+            projectManager = await GetProject(args.PathToProject);
         }
 
         await projectManager.CreateFileAsync(args.Name, args.Path!);
     }
 
-    private static async Task<IProjectManager> GetProjectManagerForFile(string pathToFile, string? pathToFslnFile)
+    [ArgActionMethod, ArgDescription("Compile all fs files to c#")]
+    public async Task Compile(RunCompilerArg arg)
     {
-        string? pathToProject = pathToFslnFile;
-        if (string.IsNullOrWhiteSpace(pathToFslnFile))
-        {
-            pathToProject = Path.GetDirectoryName(pathToFile);
-        }
-        IProjectManager projectManager = await ProjectManagerFactory.GetInstance(pathToProject!);
+        arg.Project ??= Environment.CurrentDirectory;
+        IProjectManager projectManager = await ProjectManagerFactory.GetInstance(arg.Project);
+        ICompiler compiler = CompilerFactory.Create();
+        await compiler.RunAsync(projectManager.GetFiles().Select(x => new Fiona.Compiler.Parser.Builders.ProjectFile(x.Name, x.Path)));
+    }
+
+    private static async Task<IProjectManager> GetProject(string? pathToFslnFile)
+    {
+        string pathToProject = pathToFslnFile ?? Environment.CurrentDirectory;
+        IProjectManager projectManager = await ProjectManagerFactory.GetInstance(pathToProject);
         return projectManager;
     }
 
-    [ArgActionMethod]
-    public async Task Test()
-    {
-        await Task.CompletedTask;
-        Console.WriteLine("test");
-    }
 }

@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "fiona.compiler.commandline": {
-      "version": "0.0.2",
+      "version": "0.0.4",
       "commands": [
         "Fiona"
       ],

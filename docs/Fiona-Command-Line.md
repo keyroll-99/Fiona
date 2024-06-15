@@ -26,7 +26,7 @@ eg. `dotnet Fiona Create E:\100Commitow\ConsoleApp TestFromConsole`
 
 ## Compile one file
 
-### About Command
+### About command
 
 This command compile only one file to csharp. It's create or override exists file `{fileName}.fn.cs`
 
@@ -34,3 +34,13 @@ This command compile only one file to csharp. It's create or override exists fil
 
 ```dotnet Fiona CompileFile {PathToFile} {PathToFolderWithFsln}```
 eg. `dotnet Fiona `
+
+## Compile all fn files
+
+### About command
+
+This command will be, compile all fn files from solution to c# file
+
+### How to use it
+
+```dotnet Fiona Compile {PathToSolution}``` or just ```dotnet Fiona Compile```
