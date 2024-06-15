@@ -31,16 +31,26 @@ public sealed class FslnFile(string name, List<string> projectFilesPath, string 
         }
 
         await using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read);
-        FslnFile? fslnFile = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
-        if (fslnFile is null)
+        try
         {
-            return null;
+
+            FslnFile? fslnFile = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
+            if (fslnFile is null)
+            {
+                return null;
+            }
+
+            IEnumerable<Task<ProjectFile>> loadingTasks = fslnFile.ProjectFilesPath.Select(ProjectFile.LoadAsync).ToList();
+            await Task.WhenAll(loadingTasks);
+            fslnFile.ProjectFiles = loadingTasks.Select(x => x.Result).ToList();
+            return fslnFile;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
         }
 
-        IEnumerable<Task<ProjectFile>> loadingTasks = fslnFile.ProjectFilesPath.Select(ProjectFile.LoadAsync).ToList();
-        await Task.WhenAll(loadingTasks);
-        fslnFile.ProjectFiles = loadingTasks.Select(x => x.Result).ToList();
-        return fslnFile;
     }
 
     internal async Task AddFile(string name, string path)

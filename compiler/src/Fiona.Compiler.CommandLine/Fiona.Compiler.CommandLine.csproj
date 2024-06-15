@@ -8,7 +8,7 @@
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>Fiona</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
-        <PackageVersion>0.0.3</PackageVersion>
+        <PackageVersion>0.0.4</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

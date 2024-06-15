@@ -23,7 +23,14 @@ internal class CompileFileArgs
 
 internal class CreateFnFileArgs
 {
+    [ArgDescription("Name of file"), ArgPosition(1)]
+    public required string Name { get; init; }
     
+    [ArgDescription("Path to file location"), ArgPosition(2)]
+    public string? Path { get; set; }
+    
+    [ArgDescription("Path to fsln file (required if file is in different folder)"), ArgPosition(3)]
+    public string? PathToProject { get; init; }
 }
 
 internal class RunCompilerArg

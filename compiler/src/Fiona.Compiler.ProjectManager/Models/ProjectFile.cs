@@ -35,9 +35,17 @@ public sealed class ProjectFile
 
     internal static async Task<ProjectFile> LoadAsync(string path)
     {
-        Class classInstance = await Class.Load(path);
-        string name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
-        return new ProjectFile(path, name, classInstance);
+        try
+        {
+            Class classInstance = await Class.Load(path);
+            string name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
+            return new ProjectFile(path, name, classInstance);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        } 
     }
 
     internal static async Task<ProjectFile> CreateAsync(string path)

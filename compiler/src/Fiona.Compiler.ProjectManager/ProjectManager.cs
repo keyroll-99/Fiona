@@ -75,13 +75,14 @@ public static class ProjectManagerFactory
 {
     private static IProjectManager? _instace;
 
-    private static object locker = new();
+    private static readonly object CreateLocker = new();
+    private static readonly object CreateWithLoadLocker = new();
     
-    public static IProjectManager GetOrCreate()
+    public static IProjectManager GetInstance()
     {
         if (_instace is null)
         {
-            lock (locker)
+            lock (CreateLocker)
             {
                 if (_instace is null)
                 {
@@ -93,4 +94,22 @@ public static class ProjectManagerFactory
 
         return _instace;
     }
+
+    public static async Task<IProjectManager> GetInstance(string projectPath)
+    {
+        
+        if (_instace is not null)
+        {
+            if (_instace.GetPath() == projectPath)
+            {
+                return _instace;
+            }
+            _instace = null;
+        }
+
+        IProjectManager instance = GetInstance();
+        await instance.LoadProject(projectPath);
+        return instance;
+    }
+
 }
