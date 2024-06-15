@@ -21,7 +21,7 @@ Create project create a new project. It's create a new
 
 ### How to use it
 
-dotnet Fiona Create ```{pathToDestinationFolder} {ProjectName}```
+``` dotnet Fiona Create {pathToDestinationFolder} {ProjectName}```
 eg. `dotnet Fiona Create E:\100Commitow\ConsoleApp TestFromConsole`
 
 ## Compile one file
@@ -33,4 +33,4 @@ This command compile only one file to csharp. It's create or override exists fil
 ### How to use it
 
 ```dotnet Fiona CompileFile {PathToFile} {PathToFolderWithFsln}```
-eg. `dotnet Fiona 
+eg. `dotnet Fiona `
