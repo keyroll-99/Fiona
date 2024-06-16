@@ -284,7 +284,7 @@ public class IndexController
 {
     private readonly IUserService userService;
     private readonly ILogger<TestController> logger;
-    public aaabqeq(IUserService userService, ILogger<TestController> logger)
+    public IndexController(IUserService userService, ILogger<TestController> logger)
     {
         this.userService = userService;
         this.logger = logger;
