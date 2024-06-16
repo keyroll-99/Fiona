@@ -9,6 +9,9 @@ Currently, the tool is not published on nuget, so you have to install it locally
 
 this tool will develop equally with ui, for user which prefer work from console instead of UI.
 
+In each commend which has {PathToFolderWithFsln}, the default value is current folder.
+So If you run a command where you have fsln file you don't have.
+
 ## Create project
 
 ### About command

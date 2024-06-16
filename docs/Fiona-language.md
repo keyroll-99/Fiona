@@ -108,7 +108,7 @@ inject:
 
 ## Endpoint define
 
-We can define an endpoint by using the keyword `endpoint {name};`. each endpoint always finishes with `bodyEnd` keyword
+We can define an endpoint by using the keyword `endpoint: {name};`. each endpoint always finishes with `bodyEnd` keyword
 
 endpoint can have 5 fields, the order doesn't matter except
 
