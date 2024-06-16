@@ -21,7 +21,7 @@ List<string> compileSolutionArgs = new()
 };
 
 //CompileFile  E:\100comitow\ConsoleApp\TestFromConsole\aaa.fn E:\100comitow\ConsoleApp
-await Args.InvokeActionAsync<FionaCompilerProgram>(createProjectArgs.ToArray());
+await Args.InvokeActionAsync<FionaCompilerProgram>(compileSolutionArgs.ToArray());
 
 [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
 internal class FionaCompilerProgram

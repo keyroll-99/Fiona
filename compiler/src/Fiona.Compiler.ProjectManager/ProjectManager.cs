@@ -2,6 +2,7 @@
 using Fiona.Compiler.ProjectManager.Models;
 using Serilog;
 using Serilog.Core;
+using System.Xml;
 
 namespace Fiona.Compiler.ProjectManager;
 
@@ -72,7 +73,31 @@ internal sealed class ProjectManager(ICommandRunner commandRunner, ILogger logge
         Directory.CreateDirectory($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}AppSettings");
         await File.WriteAllTextAsync($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}AppSettings{Path.DirectorySeparatorChar}AppSettings.json", "{}");
         await File.WriteAllTextAsync($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}AppSettings{Path.DirectorySeparatorChar}ServerSetting.json", Constans.DefaultServerSettings);
+        AddCopyToOutputDirectory("AppSettings", $"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}{name}.csproj");
+    }
 
+    private void AddCopyToOutputDirectory(string folderName, string csprojPath)
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.Load(csprojPath);
+        XmlNode projectNode = xmlDoc.SelectSingleNode("Project");
+        if (projectNode == null)
+        {
+            throw new InvalidOperationException("The .csproj file is not valid.");
+        }
+
+        XmlElement itemGroup = xmlDoc.CreateElement("ItemGroup");
+        XmlElement none = xmlDoc.CreateElement("None");
+        none.SetAttribute("Update", $"{folderName}\\**\\*");
+
+        XmlElement copyToOutputDirectory = xmlDoc.CreateElement("CopyToOutputDirectory");
+        copyToOutputDirectory.InnerText = "Always";
+
+        none.AppendChild(copyToOutputDirectory);
+        itemGroup.AppendChild(none);
+        projectNode.AppendChild(itemGroup);
+
+        xmlDoc.Save(csprojPath);
     }
 }
 
