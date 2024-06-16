@@ -7,21 +7,21 @@ using ProjectFile=Fiona.Compiler.ProjectManager.Models.ProjectFile;
 
 List<string> createEndpointArgs = new()
 {
-    "CreateEndpoint", "TestFile3", "E:\\100comitow\\ConsoleApp\\FnFiles", "E:\\100comitow\\ConsoleApp"
+    "CreateEndpoint", "TestController", "-Pr", "E:\\Test100comitow\\ConsoleApp"
 };
 
 List<string> createProjectArgs = new()
 {
-    "Create", "E:\\100comitow\\ConsoleApp", "TestConsole"
+    "Create", "E:\\Test100comitow\\ConsoleApp", "TestConsole"
 };
 
 List<string> compileSolutionArgs = new()
 {
-    "Compile", "E:\\100comitow\\ConsoleApp"
+    "Compile", "E:\\Test100comitow\\ConsoleApp"
 };
 
 //CompileFile  E:\100comitow\ConsoleApp\TestFromConsole\aaa.fn E:\100comitow\ConsoleApp
-await Args.InvokeActionAsync<FionaCompilerProgram>(compileSolutionArgs.ToArray());
+await Args.InvokeActionAsync<FionaCompilerProgram>(createProjectArgs.ToArray());
 
 [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
 internal class FionaCompilerProgram
@@ -49,20 +49,12 @@ internal class FionaCompilerProgram
     [ArgActionMethod, ArgDescription("Create new fn file")]
     public async Task CreateEndpoint(CreateFnFileArgs args)
     {
-        if (args.Path is null && args.PathToProject is null)
+        if (args.Path is null && args.Project is null)
         {
-            args.PathToProject = Environment.CurrentDirectory;
+            args.Project = Environment.CurrentDirectory;
         }
-        IProjectManager projectManager;
-        if (args.Path is null)
-        {
-            projectManager = await ProjectManagerFactory.GetInstance(args.PathToProject!);
-            args.Path = $"{args.PathToProject}{Path.DirectorySeparatorChar}{projectManager.GetName()}";
-        }
-        else
-        {
-            projectManager = await GetProject(args.PathToProject);
-        }
+        IProjectManager projectManager = await GetProject(args.Project);;
+        args.Path ??= $"{args.Project}{Path.DirectorySeparatorChar}{projectManager.GetName()}";
 
         await projectManager.CreateFileAsync(args.Name, args.Path!);
     }

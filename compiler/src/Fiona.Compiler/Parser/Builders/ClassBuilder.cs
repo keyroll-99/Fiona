@@ -25,6 +25,10 @@ internal sealed class ClassBuilder(IReadOnlyCollection<EndpointBuilder> endpoint
         {
             sourceCode.AppendLine($"[Controller(\"{route}\")]");
         }
+        else
+        {
+            sourceCode.AppendLine("[Controller]");
+        }
     }
 
     private void AddClassDeclaration(StringBuilder sourceCode)

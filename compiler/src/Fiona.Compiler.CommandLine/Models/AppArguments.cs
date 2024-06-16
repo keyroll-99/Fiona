@@ -29,8 +29,8 @@ internal class CreateFnFileArgs
     [ArgDescription("Path to file location"), ArgExistingDirectory, ArgPosition(2)]
     public string? Path { get; set; }
 
-    [ArgDescription("Path to fsln file (required if file is in different folder)"), ArgExistingDirectory, ArgPosition(3)]
-    public string? PathToProject { get; set; }
+    [ArgDescription("Path to folder with project"), ArgExistingDirectory ,ArgPosition(3)]
+    public string? Project { get; set; }
 }
 
 internal class RunCompilerArg

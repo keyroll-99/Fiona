@@ -31,33 +31,24 @@ public sealed class FslnFile(string name, List<string> projectFilesPath, string 
         }
 
         await using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read);
-        try
-        {
 
-            FslnFile? fslnFile = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
-            if (fslnFile is null)
-            {
-                return null;
-            }
-
-            IEnumerable<Task<ProjectFile>> loadingTasks = fslnFile.ProjectFilesPath.Select(ProjectFile.LoadAsync).ToList();
-            await Task.WhenAll(loadingTasks);
-            fslnFile.ProjectFiles = loadingTasks.Select(x => x.Result).ToList();
-            return fslnFile;
-        }
-        catch (Exception ex)
+        FslnFile? fslnFile = await JsonSerializer.DeserializeAsync<FslnFile>(fs);
+        if (fslnFile is null)
         {
-            Console.WriteLine(ex);
-            throw;
+            return null;
         }
+
+        IEnumerable<Task<ProjectFile>> loadingTasks = fslnFile.ProjectFilesPath.Select(ProjectFile.LoadAsync).ToList();
+        await Task.WhenAll(loadingTasks);
+        fslnFile.ProjectFiles = loadingTasks.Select(x => x.Result).ToList();
+        return fslnFile;
 
     }
 
     internal async Task AddFile(string name, string path)
     {
         string filePath = $"{path}{System.IO.Path.DirectorySeparatorChar}{name}.{ProjectFile.Extension}";
-        ProjectFiles!.Add(
-        await ProjectFile.CreateAsync(filePath));
+        ProjectFiles!.Add(await ProjectFile.CreateAsync(filePath));
         ProjectFilesPath.Add(filePath);
         await SaveAsync();
     }

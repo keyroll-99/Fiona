@@ -35,17 +35,10 @@ public sealed class ProjectFile
 
     internal static async Task<ProjectFile> LoadAsync(string path)
     {
-        try
-        {
-            Class classInstance = await Class.Load(path);
-            string name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
-            return new ProjectFile(path, name, classInstance);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            throw;
-        } 
+        Class classInstance = await Class.Load(path);
+        string name = path.Split(System.IO.Path.DirectorySeparatorChar).Last();
+        return new ProjectFile(path, name, classInstance);
+
     }
 
     internal static async Task<ProjectFile> CreateAsync(string path)
@@ -55,7 +48,7 @@ public sealed class ProjectFile
             throw new FileAlreadyExistsException(path);
         }
 
-        await using (FileStream fileHandler = File.Create(path))
+        await using (File.Create(path))
         {
         }
 

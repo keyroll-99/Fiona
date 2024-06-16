@@ -30,7 +30,7 @@ internal sealed class ProjectManager(ICommandRunner commandRunner, ILogger logge
 
         await CreateSln(path, name);
         await CreateFsln(name, path);
-        
+
         logger.Information("Project {name} created", name);
         return fullPath;
     }
@@ -68,8 +68,14 @@ internal sealed class ProjectManager(ICommandRunner commandRunner, ILogger logge
         await commandRunner.RunCommandAsync($"dotnet new sln --name {name}", path);
         await commandRunner.RunCommandAsync("dotnet add package Fiona.Hosting", $"{path}{Path.DirectorySeparatorChar}{name}");
         await commandRunner.RunCommandAsync($"dotnet sln add {path}{Path.DirectorySeparatorChar}{name}", path);
+        await File.WriteAllTextAsync($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}program.cs", Constans.DefaultProgramCsValue);
+        Directory.CreateDirectory($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}AppSettings");
+        await File.WriteAllTextAsync($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}AppSettings{Path.DirectorySeparatorChar}AppSettings.json", "{}");
+        await File.WriteAllTextAsync($"{path}{Path.DirectorySeparatorChar}{name}{Path.DirectorySeparatorChar}AppSettings{Path.DirectorySeparatorChar}ServerSetting.json", Constans.DefaultServerSettings);
+
     }
 }
+
 
 public static class ProjectManagerFactory
 {
@@ -77,7 +83,7 @@ public static class ProjectManagerFactory
 
     private static readonly object CreateLocker = new();
     private static readonly object CreateWithLoadLocker = new();
-    
+
     public static IProjectManager GetInstance()
     {
         if (_instace is null)
@@ -97,7 +103,7 @@ public static class ProjectManagerFactory
 
     public static async Task<IProjectManager> GetInstance(string projectPath)
     {
-        
+
         if (_instace is not null)
         {
             if (_instace.GetPath() == projectPath)
