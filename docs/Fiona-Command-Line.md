@@ -5,7 +5,7 @@
 Currently, the tool is not published on nuget, so you have to install it locally
 
 1. Download nuget package from realise (in the future it will be available on the nuget)
-2. Install dotnet tool ```dotnet tool install --global --add-source {pathToNupkgFile}
+2. Install dotnet tool ```dotnet tool install --global --add-source {pathToNupkgFile}```
 
 this tool will develop equally with ui, for user which prefer work from console instead of UI.
 
