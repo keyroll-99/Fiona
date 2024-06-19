@@ -5,12 +5,12 @@
 Currently, the tool is not published on nuget, so you have to install it locally
 
 1. Download nuget package from realise (in the future it will be available on the nuget)
-2. Install dotnet tool ```dotnet tool install --global --add-source {pathToNupkgFile}
+2. Install dotnet tool ```dotnet tool install --global --add-source {pathToFolderWithNupkg}```
 
-this tool will develop equally with ui, for user which prefer work from console instead of UI.
+This tool will develop equally with ui, for user which prefers a work from console instead of UI.
 
-In each commend which has {PathToFolderWithFsln}, the default value is current folder.
-So If you run a command where you have fsln file you don't have.
+In each command which has {PathToFolderWithFsln}, the default value is the current folder.
+So If you run a command where you have fsln file you don't have to.
 
 ## Create project
 
@@ -31,7 +31,7 @@ eg. `dotnet Fiona Create E:\100Commitow\ConsoleApp TestFromConsole`
 
 ### About command
 
-This command compile only one file to csharp. It's create or override exists file `{fileName}.fn.cs`
+This command compiles only one file to csharp. It's created or override exists file `{filename}. Fn.cs`
 
 ### How to use it
 
