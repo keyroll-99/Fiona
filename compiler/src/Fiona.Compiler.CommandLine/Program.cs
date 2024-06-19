@@ -20,8 +20,14 @@ List<string> compileSolutionArgs = new()
     "Compile", "E:\\Test100comitow\\ConsoleApp"
 };
 
+
+List<string> runSolutionArgs = new()
+{
+    "Run", "E:\\Test100comitow\\ConsoleApp"
+};
+
 //CompileFile  E:\100comitow\ConsoleApp\TestFromConsole\aaa.fn E:\100comitow\ConsoleApp
-await Args.InvokeActionAsync<FionaCompilerProgram>(args);
+await Args.InvokeActionAsync<FionaCompilerProgram>(compileSolutionArgs.ToArray());
 
 [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
 internal class FionaCompilerProgram
@@ -49,10 +55,6 @@ internal class FionaCompilerProgram
     [ArgActionMethod, ArgDescription("Create new fn file")]
     public async Task CreateEndpoint(CreateFnFileArgs args)
     {
-        if (args.Path is null && args.Project is null)
-        {
-            args.Project = Environment.CurrentDirectory;
-        }
         IProjectManager projectManager = await GetProject(args.Project);;
         args.Path ??= $"{args.Project}{Path.DirectorySeparatorChar}{projectManager.GetName()}";
 
@@ -62,10 +64,18 @@ internal class FionaCompilerProgram
     [ArgActionMethod, ArgDescription("Compile all fs files to c#")]
     public async Task Compile(RunCompilerArg arg)
     {
-        arg.Project ??= Environment.CurrentDirectory;
-        IProjectManager projectManager = await ProjectManagerFactory.GetInstance(arg.Project);
+        IProjectManager projectManager = await GetProject(arg.Project);
         ICompiler compiler = CompilerFactory.Create();
         await compiler.RunAsync(projectManager.GetFiles().Select(x => new Fiona.Compiler.Parser.Builders.ProjectFile(x.Name, x.Path)));
+    }
+
+    [ArgActionMethod, ArgDescription("Run project")]
+    public async Task Run(RunProjectArg arg)
+    {
+        IProjectManager projectManager = await GetProject(arg.Project);
+        ICompiler compiler = CompilerFactory.Create();
+        await compiler.RunAsync(projectManager.GetFiles().Select(x => new Fiona.Compiler.Parser.Builders.ProjectFile(x.Name, x.Path)));
+        await projectManager.RunAsync();
     }
 
     private static async Task<IProjectManager> GetProject(string? pathToFslnFile)

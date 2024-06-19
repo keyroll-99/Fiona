@@ -13,5 +13,6 @@ public interface IProjectManager
     ProjectFile GetProjectFileByNamespaceAndName(string @namespace, string name);
     Task CreateFileAsync(string name, string folderPath);
     Task RemoveFile(ProjectFile projectFile);
+    Task RunAsync();
 
 }

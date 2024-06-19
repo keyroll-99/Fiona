@@ -12,6 +12,10 @@ internal sealed partial class Url : IEquatable<Uri>
     private Url(string url)
     {
         NormalizeUrl = NormalizeUrlRegex().Replace(url, ParamMark);
+        if (NormalizeUrl.StartsWith("/"))
+        {
+            NormalizeUrl = NormalizeUrl[1..];
+        }
         OriginalUrl = url;
         SplitUrl = url.Split('/');
         IndexesOfParameters = GetIndexesOfParameters();

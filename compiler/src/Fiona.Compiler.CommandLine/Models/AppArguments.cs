@@ -38,3 +38,10 @@ internal class RunCompilerArg
     [ArgDescription("Path to folder with fsln file"), ArgExistingDirectory, ArgPosition(1)]
     public string? Project { get; set; }
 }
+
+
+internal class RunProjectArg
+{
+    [ArgDescription("Path to folder with fsln file"), ArgExistingDirectory, ArgPosition(1)]
+    public string? Project { get; set; }
+}

@@ -45,6 +45,31 @@ internal class CommandRunner : ICommandRunner
         }
         
     }
+    public async Task RunCommandInBackground(string command,  string? workingDirectory = null)
+    {
+        _logger.Information("Run command {Command}", command);
+        string shellArgs = GetShellArgs(command);
+        ProcessStartInfo processStartInfo = new()
+        {
+            FileName = _shell,
+            Arguments = shellArgs,
+            WorkingDirectory = workingDirectory,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
+
+        using Process process = new();
+        process.StartInfo = processStartInfo;
+        process.OutputDataReceived += (sender, e) => _logger.Information(e.Data);
+        process.ErrorDataReceived += (sender, e) => _logger.Error(e.Data);
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        await process.WaitForExitAsync();
+
+    }
 
     private static string GetShellArgs(string command)
     {

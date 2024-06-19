@@ -51,6 +51,10 @@ internal sealed class ProjectManager(ICommandRunner commandRunner, ILogger logge
     {
         await Project!.RemoveFile(projectFile);
     }
+    public async Task RunAsync()
+    {
+        await commandRunner.RunCommandInBackground($"dotnet run --project {Project.Path}{Path.DirectorySeparatorChar}{Project.Name}{Path.DirectorySeparatorChar}{Project.Name}.csproj");
+    }
 
     public bool IsLoaded()
         => Project is not null;
