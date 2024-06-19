@@ -1,5 +1,8 @@
 # Routing
 
+!!! there is a known issue, when the route starts `/` Fiona maps the URL incorrectly, so I can't find the method. It will be fixed with next version !!!
+
+
 Routing is defined by the `Route` attribute. An endpoint can be only a public method. If the public method doesn't have a Route attribute that mean the method will be available under the GET method.
 
 For example, the Index method will be w available under `GET /home`
@@ -48,7 +51,7 @@ One method can handle two or more types of HTTP types. If you want to do this, y
 ## Route
 
 By default method got the route from the Controller attribute, if you want to add a new part you can just pass a route argument.
-For example method index will be available under the`/home/controller` route, because the route from Route attribute always is added to the route from the Controller
+For example method index will be available under the`/home/controller` route because the route from the Route attribute always is added to the route from the Controller
 
 ```c#
 [Controller("home")]
